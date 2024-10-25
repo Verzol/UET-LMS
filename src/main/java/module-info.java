@@ -6,6 +6,6 @@ module com.example.uetlms {
     requires com.dlsc.formsfx;
     requires com.almasb.fxgl.all;
 
-    opens com.example.uetlms to javafx.fxml;
-    exports com.example.uetlms;
+    opens com.dashboard.uetlms to javafx.fxml;
+    exports com.dashboard.uetlms;
 }
