@@ -1,12 +1,79 @@
-.white-background {
-    -fx-background-color: #fff;
-}
-
 .transparent {
     -fx-background-color: rgba(0, 0, 0, 0);
 }
 
 .round-layout {
-    -fx-border-radius: 45;
-    -fx-border-color: #E4E0E1;
+    -fx-background-radius: 5;
+    -fx-border-color: #CDCDCD;
+}
+
+.textFiled {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+}
+
+.button:hover {
+    -fx-background-color: #6B65C4;
+}
+
+.selected {
+    -fx-background-color: #4943A7;
+    -fx-text-fill: white;
+    -fx-border-width: 2;
+    -fx-background-radius: 5;
+}
+
+.close-button {
+    -fx-background-color: #3C3F41;
+    -fx-text-fill: white;
+    -fx-font-weight: BOLD;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.close-button:hover {
+    -fx-background-color: #C73228;
+}
+
+.close-button:selected {
+    -fx-background-color: #B32F23;
+    -fx-border-width: 2;
+}
+
+.close-button:focused {
+    -fx-background-color: #B32F23;
+    -fx-border-width: 2;
+}
+
+.close-button:disabled {
+    -fx-background-color: #A9A9A9;
+    -fx-text-fill: #D3D3D3;
+    -fx-border-color: transparent;
+}
+
+.minimize-button {
+    -fx-background-color: #E0E0E0;
+    -fx-text-fill: black;
+    -fx-font-weight: BOLD;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.minimize-button:hover {
+    -fx-background-color: #C0C0C0;
+}
+
+.minimize-button:selected {
+    -fx-background-color: #A0A0A0;
+    -fx-border-width: 2;
+}
+
+.minimize-button:focused {
+    -fx-background-color: #A0A0A0;
+    -fx-border-width: 2;
 }

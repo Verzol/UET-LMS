@@ -5,7 +5,8 @@ module com.example.uetlms {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
 
-    opens com.dashboard.uetlms to javafx.fxml;
-    exports com.dashboard.uetlms;
+    opens controller to javafx.fxml;
+    exports controller;
 }
