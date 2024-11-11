@@ -15,8 +15,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Load FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
             Parent root = loader.load();
 
             root.setOnMousePressed(event -> {
@@ -29,7 +28,6 @@ public class MainApp extends Application {
                 primaryStage.setY(event.getScreenY() - yOffset);
             });
 
-            // Tạo Scene
             Scene scene = new Scene(root);
 
             primaryStage.initStyle(StageStyle.UNDECORATED);

@@ -19,12 +19,11 @@
     -fx-background-color: #6B65C4;
 }
 
-.selected {
-    -fx-background-color: #4943A7;
-    -fx-text-fill: white;
-    -fx-border-width: 2;
-    -fx-background-radius: 5;
+.selected-button {
+    -fx-background-color: #4040A1;
+    -fx-font-weight: bold;
 }
+
 
 .close-button {
     -fx-background-color: #3C3F41;

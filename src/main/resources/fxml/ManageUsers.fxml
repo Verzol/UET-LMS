@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="manageUsersButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManageUsersController">
     <children>
-        <Text text="This is the Manage Users Page" layoutX="50.0" layoutY="50.0" />
+        <Label layoutX="300.0" layoutY="50.0" text="Manage Users">
+            <font>
+                <Font name="Segoe UI" size="24.0" />
+            </font>
+        </Label>
+        <Button layoutX="300.0" layoutY="120.0" prefWidth="150.0" text="Add New User" />
+        <Button layoutX="500.0" layoutY="120.0" prefWidth="150.0" text="View Users" />
     </children>
 </AnchorPane>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefWidth="970.0" prefHeight="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LogoutController">
+    <children>
+        <Label text="Log Out" layoutX="300.0" layoutY="150.0">
+            <font>
+                <Font name="Segoe UI" size="24.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
