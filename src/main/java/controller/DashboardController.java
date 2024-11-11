@@ -3,24 +3,113 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DashboardController {
 
     @FXML
-    private BorderPane borderPane;
+    private AnchorPane mainContent;
+
+    @FXML
+    private Button HomeButton;
+
+    @FXML
+    private Button manageBooksButton;
+
+    @FXML
+    private Button manageUsersButton;
+
+    @FXML
+    private Button issueBooksButton;
+
+    @FXML
+    private Button insightsButton;
+
+    @FXML
+    private Button settingsButton;
+
+    @FXML
+    private Button logoutButton;
+
+    private Button selectedButton;
+
+    @FXML
+    public void initialize() {
+        loadScene("Home.fxml");
+        setSelectedButton(HomeButton);
+    }
+
+    private void loadScene(String fxmlFile) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
+            Parent scene = loader.load();
+            mainContent.getChildren().setAll(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setSelectedButton(Button button) {
+        if (selectedButton != null) {
+            selectedButton.getStyleClass().remove("selected-button");
+        }
+        button.getStyleClass().add("selected-button");
+        selectedButton = button;
+    }
+
+    @FXML
+    private void Home() {
+        loadScene("Home.fxml");
+        setSelectedButton(HomeButton);
+    }
+
+    @FXML
+    private void manageBooks() {
+        loadScene("ManageBooks.fxml");
+        setSelectedButton(manageBooksButton);
+    }
+
+    @FXML
+    private void manageUsers() {
+        loadScene("ManageUsers.fxml");
+        setSelectedButton(manageUsersButton);
+    }
+
+    @FXML
+    private void issueBooks() {
+        loadScene("IssueBooks.fxml");
+        setSelectedButton(issueBooksButton);
+    }
+
+    @FXML
+    private void insights() {
+        loadScene("Insights.fxml");
+        setSelectedButton(insightsButton);
+    }
+
+    @FXML
+    private void settings() {
+        loadScene("Settings.fxml");
+        setSelectedButton(settingsButton);
+    }
+
+    @FXML
+    private void logout() {
+        loadScene("LogOut.fxml");
+        setSelectedButton(logoutButton);
+    }
 
     @FXML
     private TextField searchBox;
@@ -50,29 +139,6 @@ public class DashboardController {
             }
         }
     }
-    @FXML
-    private Button HomeButton;
-
-    @FXML
-    private void Home(javafx.event.ActionEvent event) {
-        loadView("Home.fxml");
-    }
-
-    @FXML
-    private Button manageBooksButton;
-
-    @FXML
-    private void manageBooks(javafx.event.ActionEvent event) {
-        loadView("ManageBooks.fxml");
-    }
-
-    @FXML
-    private Button manageUsersButton;
-
-    @FXML
-    private void manageUsers(javafx.event.ActionEvent event) {
-        loadView("ManageUsers.fxml");
-    }
 
     @FXML
     private Button exitButton;
@@ -101,13 +167,10 @@ public class DashboardController {
     private void loadView(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
-            Region view = loader.load();
-            borderPane.setCenter(view);
+            Parent view = loader.load();
+            mainContent.getChildren().setAll(view);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
 }
