@@ -7,6 +7,8 @@ module com.example.uetlms {
     requires com.almasb.fxgl.all;
     requires java.desktop;
 
+    requires java.sql;
+
     opens controller to javafx.fxml;
     exports controller;
 }
