@@ -1,4 +1,4 @@
-package controller;
+package adminController;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,8 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,6 +41,9 @@ public class DashboardController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private Button returnBooksButton;
+
     private Button selectedButton;
 
     @FXML
@@ -53,7 +54,7 @@ public class DashboardController {
 
     private void loadScene(String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/" + fxmlFile));
             Parent scene = loader.load();
             mainContent.getChildren().setAll(scene);
         } catch (IOException e) {
@@ -112,6 +113,12 @@ public class DashboardController {
     }
 
     @FXML
+    private void returnBooks() {
+        loadScene("ReturnBooks.fxml");
+        setSelectedButton(returnBooksButton);
+    }
+
+    @FXML
     private TextField searchBox;
 
     @FXML
@@ -166,7 +173,7 @@ public class DashboardController {
 
     private void loadView(String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/" + fxmlFile));
             Parent view = loader.load();
             mainContent.getChildren().setAll(view);
         } catch (IOException e) {

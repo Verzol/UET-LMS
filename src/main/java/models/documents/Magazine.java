@@ -4,6 +4,10 @@ public class Magazine extends Document {
     private String publishNumber;
     private String month;
 
+    public Magazine() {
+        super();
+    }
+
     public Magazine(String id, String title, String author, int edtion, int quantityInStock
             , String publishNumber, String month) {
         super(id, title, author, edtion, quantityInStock);

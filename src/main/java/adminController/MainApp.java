@@ -1,5 +1,6 @@
-package controller;
+package adminController;
 
+import DAO.DatabaseConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +16,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/Dashboard.fxml"));
             Parent root = loader.load();
 
             root.setOnMousePressed(event -> {
@@ -32,8 +33,11 @@ public class MainApp extends Application {
 
             primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.setScene(scene);
+
             primaryStage.setTitle("UET Library Management");
             primaryStage.show();
+
+            DatabaseConnection.getInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }

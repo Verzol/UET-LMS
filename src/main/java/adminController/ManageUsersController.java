@@ -1,4 +1,4 @@
-package controller;
+package adminController;
 
 public class ManageUsersController {
 }
