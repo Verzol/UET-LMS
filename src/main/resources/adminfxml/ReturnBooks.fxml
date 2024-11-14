@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="manageUsersButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ManageUsersController">
+<AnchorPane fx:id="returnBooksButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ReturnBooksController">
     <children>
-        <Label layoutX="300.0" layoutY="50.0" text="Manage Users">
+        <Label layoutX="300.0" layoutY="50.0" text="Return Books">
             <font>
                 <Font name="Segoe UI" size="24.0" />
             </font>

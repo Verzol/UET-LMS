@@ -5,6 +5,10 @@ public class Thesis extends Document {
     private String supervisor;
     private String field;
 
+    public Thesis() {
+        super();
+    }
+
     public Thesis(String id, String title, String author, int edition
             , int quantityInStock, String university, String supervisor, String field) {
         super(id, title, author, edition, quantityInStock);

@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefWidth="970.0" prefHeight="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LogoutController">
+<AnchorPane fx:id="insightsButton" prefHeight="670.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.InsightsController">
     <children>
-        <Label text="Log Out" layoutX="300.0" layoutY="150.0">
+        <Label layoutX="300.0" layoutY="150.0" text="Insights">
             <font>
                 <Font name="Segoe UI" size="24.0" />
             </font>

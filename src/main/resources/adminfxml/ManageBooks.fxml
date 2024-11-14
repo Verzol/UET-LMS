@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="manageBooksPane" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageDocumentController">
+   <children>
+      <Label layoutX="44.0" layoutY="18.0" text="Manage Document">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+
+      <Label layoutX="44.0" layoutY="65.0" text="Select Item:" />
+      <ComboBox fx:id="itemSelectorComboBox" layoutX="128.0" layoutY="60.0" prefHeight="21.0" prefWidth="200.0" style="-fx-background-radius: 8;" />
+
+      <TableView fx:id="itemTableView" layoutX="47.0" layoutY="104.0" prefHeight="456.0" prefWidth="886.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" styleClass="colored-table" stylesheets="@../styles/styles.css">
+         <columns>
+            <TableColumn fx:id="idColumn" prefWidth="69.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="ID" />
+            <TableColumn fx:id="titleColumn" prefWidth="142.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="Title" />
+            <TableColumn fx:id="authorColumn" prefWidth="109.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="Author" />
+            <TableColumn fx:id="editionColumn" prefWidth="80.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="Edition" />
+            <TableColumn fx:id="quantityInStockColumn" prefWidth="151.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="Quantity In Stock" />
+            <TableColumn fx:id="genreColumn" prefWidth="116.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="Genre" />
+            <TableColumn fx:id="pageCountColumn" prefWidth="101.0" style="-fx-background-color: #E1DAF9; -fx-alignment: CENTER;" text="Page Count" />
+         </columns>
+      </TableView>
+
+      <HBox layoutX="215.0" layoutY="582.0" prefHeight="31.0" prefWidth="551.0" spacing="20.0">
+         <children>
+            <Button fx:id="addBookButton" onAction="#addDocument" prefHeight="33.0" prefWidth="170.0" style="-fx-background-color: #8F98E3; -fx-text-fill: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 3);" stylesheets="@../styles/styles.css" text="Add New Document" />
+            <Button fx:id="updateDocumentButton" onAction="#updateDocument" prefWidth="170.0" style="-fx-background-color: #8F98E3; -fx-text-fill: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 3);" stylesheets="@../styles/styles.css" text="Update Document" />
+            <Button fx:id="deleteBookButton" onAction="#deleteDocument" prefWidth="170.0" style="-fx-background-color: #8F98E3; -fx-text-fill: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 3);" stylesheets="@../styles/styles.css" text="Delete Document" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
