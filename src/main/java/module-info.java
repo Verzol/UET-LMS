@@ -6,9 +6,10 @@ module com.example.uetlms {
     requires com.dlsc.formsfx;
     requires com.almasb.fxgl.all;
     requires java.desktop;
-
     requires java.sql;
+    requires mysql.connector.j;
 
-    opens controller to javafx.fxml;
-    exports controller;
+    opens adminController to javafx.fxml;
+    exports adminController;
+    opens models.documents to javafx.base;
 }

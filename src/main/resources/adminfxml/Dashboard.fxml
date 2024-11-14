@@ -3,7 +3,6 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -14,16 +13,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.DashboardController">
     <children>
         <BorderPane layoutY="7.0" prefHeight="720.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
                 <VBox maxWidth="-Infinity" prefHeight="648.0" prefWidth="220.0" style="-fx-background-color: #5652AB;" stylesheets="@../styles/styles.css" BorderPane.alignment="CENTER">
                     <children>
-                        <ImageView fitHeight="60.0" fitWidth="220.0" pickOnBounds="true" preserveRatio="true" />
+                  <Pane prefHeight="98.0" prefWidth="220.0" />
                         <Button fx:id="HomeButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#Home" prefHeight="50.0" prefWidth="216.0" stylesheets="@../styles/styles.css" text="Home" textFill="WHITE">
                             <font>
-                                <Font name="Segoe UI" size="16.0" />
+                                <Font size="16.0" />
                             </font>
                             <graphic>
                                 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
@@ -46,7 +45,7 @@
                                 <String fx:value="selected" />
                             </styleClass>
                         </Button>
-                        <Button fx:id="manageBooksButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#manageBooks" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Manage books" textFill="WHITE">
+                        <Button fx:id="manageBooksButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#manageBooks" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Manage documents" textFill="WHITE">
                             <font>
                                 <Font name="Segoe UI" size="16.0" />
                             </font>
@@ -88,6 +87,24 @@
                                 <Insets />
                             </VBox.margin>
                         </Button>
+                  <Button fx:id="returnBooksButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#returnBooks" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Return books" textFill="WHITE">
+                     <font>
+                        <Font name="Segoe UI" size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/return.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </opaqueInsets>
+                  </Button>
                         <Button fx:id="issueBooksButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#issueBooks" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Issue books" textFill="WHITE">
                             <font>
                                 <Font name="Segoe UI" size="16.0" />
@@ -176,11 +193,7 @@
                 </VBox>
             </left>
             <center>
-                <AnchorPane fx:id="mainContent" prefHeight="670.0" prefWidth="980.0" stylesheets="@../styles/styles.css">
-               <padding>
-                  <Insets top="20.0" />
-               </padding>
-                </AnchorPane>
+                <AnchorPane fx:id="mainContent" stylesheets="@../styles/styles.css" />
             </center>
          <top>
                   <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
@@ -192,7 +205,7 @@
                   </Pane>
                           <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="307.0" styleClass="textFiled" stylesheets="@../styles/styles.css">
                               <children>
-                                  <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="22.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
+                                  <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
                                       <opaqueInsets>
                                           <Insets />
                                       </opaqueInsets>
@@ -221,14 +234,6 @@
                               <children>
                                   <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="176.0" style="-fx-background-color: #fff;">
                                       <children>
-                                          <Label text="Verzol">
-                                              <HBox.margin>
-                                                  <Insets right="10.0" />
-                                              </HBox.margin>
-                                              <font>
-                                                  <Font name="Nunito Regular" size="18.0" />
-                                              </font>
-                                          </Label>
                                           <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                                               <HBox.margin>
                                                   <Insets right="10.0" />

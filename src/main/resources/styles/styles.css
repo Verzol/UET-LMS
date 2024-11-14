@@ -76,3 +76,77 @@
     -fx-background-color: #A0A0A0;
     -fx-border-width: 2;
 }
+
+.card {
+    -fx-background-radius: 10;
+}
+
+.colored-table .column-header-background {
+    -fx-background-color: #9DAAF2;
+}
+
+.colored-table .table-row-cell:odd {
+    -fx-background-color: #E3EAFD;
+}
+
+.colored-table .table-row-cell:even {
+    -fx-background-color: #F7F9FF;
+}
+
+.colored-table .column-header .label {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.colored-table .table-cell {
+    -fx-text-fill: #333333;
+}
+
+.save-button {
+    -fx-background-color: #27AE60;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.save-button:hover {
+    -fx-background-color: #2ECC71;
+}
+
+.save-button:selected,
+.save-button:focused {
+    -fx-background-color: #229954;
+    -fx-border-width: 2;
+}
+
+.save-button:disabled {
+    -fx-background-color: #A9A9A9;
+    -fx-text-fill: #D3D3D3;
+    -fx-border-color: transparent;
+}
+
+.cancel-button {
+    -fx-background-color: #C0392B;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #E74C3C;
+}
+
+.cancel-button:selected,
+.cancel-button:focused {
+    -fx-background-color: #A93226;
+    -fx-border-width: 2;
+}
+
+.cancel-button:disabled {
+    -fx-background-color: #A9A9A9;
+    -fx-text-fill: #D3D3D3;
+    -fx-border-color: transparent;
+}
+

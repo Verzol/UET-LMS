@@ -11,6 +11,15 @@ public abstract class Document implements Borrowable, Identifiable {
     private int quantityInStock;
     private int borrowedQuantity;
 
+    public Document() {
+        this.id = "";
+        this.title = "";
+        this.author = "";
+        this.edition = 0;
+        this.quantityInStock = 0;
+        this.borrowedQuantity = 0;
+    }
+
     public Document(String id, String title, String author, int edition, int quantityInStock) {
         this.id = id;
         this.title = title;
@@ -40,13 +49,20 @@ public abstract class Document implements Borrowable, Identifiable {
         }
     }
 
-    @Override
-    public String getIsbn() {
+    public int getAvailableQuantity() {
+        return quantityInStock - borrowedQuantity;
+    }
+
+    public boolean isAvailable() {
+        return borrowedQuantity < quantityInStock;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setIsbn(String isbn) {
-        this.id = isbn;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -87,13 +103,5 @@ public abstract class Document implements Borrowable, Identifiable {
 
     public void setBorrowedQuantity(int borrowedQuantity) {
         this.borrowedQuantity = borrowedQuantity;
-    }
-
-    public int getAvailableQuantity() {
-        return quantityInStock - borrowedQuantity;
-    }
-
-    public boolean isAvailable() {
-        return borrowedQuantity < quantityInStock;
     }
 }

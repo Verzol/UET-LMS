@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="insightsButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InsightsController">
+<AnchorPane fx:id="issueBooksButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.IssueBooksController">
     <children>
-        <Label layoutX="300.0" layoutY="150.0" text="Insights">
+        <Label layoutX="300.0" layoutY="150.0" text="Issue Books">
             <font>
                 <Font name="Segoe UI" size="24.0" />
             </font>
