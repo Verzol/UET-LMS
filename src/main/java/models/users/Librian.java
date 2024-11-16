@@ -1,5 +1,5 @@
 package models.users;
 
-public class Librian extends User {
+public class Librian {
 
 }

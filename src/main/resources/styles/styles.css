@@ -16,7 +16,7 @@
 }
 
 .button:hover {
-    -fx-background-color: #6B65C4;
+    -fx-background-color: #1f78b4; /* Màu nền đậm hơn khi hover */
 }
 
 .selected-button {
