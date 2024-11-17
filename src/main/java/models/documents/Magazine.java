@@ -3,16 +3,18 @@ package models.documents;
 public class Magazine extends Document {
     private String publishNumber;
     private String month;
+    private String imageUrl;
 
     public Magazine() {
         super();
     }
 
-    public Magazine(String id, String title, String author, int edtion, int quantityInStock
-            , String publishNumber, String month) {
-        super(id, title, author, edtion, quantityInStock);
+    public Magazine(String id, String title, String author, int edition, int quantityInStock,
+                    String publishNumber, String month, String imageUrl) {
+        super(id, title, author, edition, quantityInStock);
         this.publishNumber = publishNumber;
         this.month = month;
+        this.imageUrl = imageUrl;
     }
 
     public String getPublishNumber() {
@@ -29,5 +31,13 @@ public class Magazine extends Document {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

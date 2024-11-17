@@ -1,18 +1,32 @@
 package models.documents;
 
 public class Book extends Document {
+    private String ISBN;
     private String genre;
     private int pageCount;
+    private String imageUrl;
 
     public Book() {
         super();
     }
 
-    public Book(String id, String title, String author, int edition, int quantityInStock, String genre, int pageCount) {
+    public Book(String id, String title, String author, int edition, int quantityInStock,
+                String genre, int pageCount, String ISBN, String imageUrl) {
         super(id, title, author, edition, quantityInStock);
         this.genre = genre;
         this.pageCount = pageCount;
+        this.ISBN = ISBN;
+        this.imageUrl = imageUrl;
     }
+
+    public Book(String id, String title, String author, int edition, int quantityInStock,
+                String genre, int pageCount, String isbn) {
+        super(id, title, author, edition, quantityInStock);
+        this.genre = genre;
+        this.pageCount = pageCount;
+        this.ISBN = isbn;
+    }
+
 
     public String getGenre() {
         return genre;
@@ -30,4 +44,19 @@ public class Book extends Document {
         this.pageCount = pageCount;
     }
 
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

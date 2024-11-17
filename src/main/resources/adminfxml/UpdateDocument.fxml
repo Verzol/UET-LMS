@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="371.0" prefWidth="471.0" style="-fx-background-color: #F5F5F5;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="adminController.UpdateDocumentController">
+    <children>
+        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Update Document">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+
+        <Label layoutX="20.0" layoutY="60.0" text="Title:" />
+        <TextField fx:id="titleTextField" layoutX="150.0" layoutY="56.0" prefWidth="300.0" />
+
+        <Label layoutX="20.0" layoutY="100.0" text="Author:" />
+        <TextField fx:id="authorTextField" layoutX="150.0" layoutY="96.0" prefWidth="300.0" />
+
+        <Label fx:id="additionalField1Label" layoutX="20.0" layoutY="140.0" text="Field 1:" visible="false" />
+        <TextField fx:id="additionalField1" layoutX="150.0" layoutY="136.0" prefWidth="300.0" visible="false" />
+
+        <Label fx:id="additionalField2Label" layoutX="20.0" layoutY="180.0" text="Field 2:" visible="false" />
+        <TextField fx:id="additionalField2" layoutX="150.0" layoutY="176.0" prefWidth="300.0" visible="false" />
+
+        <Label fx:id="additionalField3Label" layoutX="20.0" layoutY="220.0" text="Field 3:" visible="false" />
+        <TextField fx:id="additionalField3" layoutX="150.0" layoutY="216.0" prefWidth="300.0" visible="false" />
+
+        <Label fx:id="additionalField4Label" layoutX="20.0" layoutY="260.0" text="Field 4:" visible="false" />
+        <TextField fx:id="additionalField4" layoutX="150.0" layoutY="256.0" prefWidth="300.0" visible="false" />
+      <HBox layoutX="136.0" layoutY="315.0" prefHeight="31.0" prefWidth="200.0">
+         <children>
+              <Button fx:id="cancelButton" onAction="#cancelUpdate" prefWidth="100.0" styleClass="cancel-button" stylesheets="@../styles/styles.css" text="Cancel">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Button>
+      
+              <Button fx:id="saveButton" onAction="#saveChanges" prefWidth="100.0" styleClass="save-button" stylesheets="@../styles/styles.css" text="Save" />
+         </children>
+      </HBox>
+    </children>
+</AnchorPane>
