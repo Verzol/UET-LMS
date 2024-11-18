@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Hyperlink;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,6 +54,7 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
     private void openDashboardScreen() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminfxml/Dashboard.fxml"));
@@ -61,11 +63,27 @@ public class LoginController {
             Scene currentScene = loginButton.getScene();
             currentScene.setRoot(dashboardRoot);
 
+            Stage stage = (Stage) currentScene.getWindow();
+
+            final double[] dragAnchorX = new double[1];
+            final double[] dragAnchorY = new double[1];
+
+            dashboardRoot.setOnMousePressed(event -> {
+                dragAnchorX[0] = event.getSceneX();
+                dragAnchorY[0] = event.getSceneY();
+            });
+
+            dashboardRoot.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - dragAnchorX[0]);
+                stage.setY(event.getScreenY() - dragAnchorY[0]);
+            });
+
         } catch (IOException e) {
             showErrorAlert("Error", "Unable to open the dashboard screen.");
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void cancelButtonAction(ActionEvent event) {
