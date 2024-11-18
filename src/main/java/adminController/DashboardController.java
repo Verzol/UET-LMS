@@ -15,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.Scene;
+import service.BookDetailController;
+
 
 public class DashboardController {
 
@@ -129,14 +133,53 @@ public class DashboardController {
     @FXML
     private void handleSearch() {
         String query = searchBox.getText().trim();
+
         if (query.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Please enter a title to search.");
+            alert.setHeaderText(null);
+            alert.setContentText("Please enter a title to search.");
             alert.showAndWait();
         } else {
             service.GoogleBooksAPI.searchBookByTitle(query, searchResultsList);
+
+            if (!searchResultsList.getItems().isEmpty()) {
+                searchResultsList.setVisible(true);
+                searchResultsList.setManaged(true);
+                closeListViewButton.setVisible(true);
+                closeListViewButton.setManaged(true);
+            } else {
+                searchResultsList.setVisible(false);
+                searchResultsList.setManaged(false);
+
+                Alert noResultsAlert = new Alert(Alert.AlertType.INFORMATION);
+                noResultsAlert.setHeaderText(null);
+                noResultsAlert.setContentText("No results found for: " + query);
+                noResultsAlert.showAndWait();
+            }
         }
     }
+
+    @FXML
+    private void handleBookClick(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            String selectedBook = searchResultsList.getSelectionModel().getSelectedItem();
+            if (selectedBook != null) {
+                String[] bookDetails = selectedBook.split("\n");
+
+                String title = bookDetails[0].split(" - ")[0].trim(); // Giả định tiêu đề sách nằm trước dấu " - "
+                String author = bookDetails[0].contains("-") ? bookDetails[0].split(" - ")[1].trim() : "Unknown Author";
+                String publisher = bookDetails[1].replace("Publisher: ", "").trim();
+                String publishedDate = bookDetails[2].replace("Published: ", "").trim();
+                String description = bookDetails[3].replace("Description: ", "").trim();
+                String imageUrl = bookDetails[4].replace("Image URL: ", "").trim();
+
+                openBookDetailWindow(selectedBook,title, author, publisher, publishedDate, "", description, imageUrl);
+            }
+        }
+    }
+
+
+
 
     @FXML
     private Button exitButton;
@@ -171,4 +214,46 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private Button closeListViewButton; // Kết nối nút từ FXML
+
+    @FXML
+    private void handleCloseListView() {
+        searchResultsList.setVisible(false);
+        searchResultsList.setManaged(false);
+        closeListViewButton.setVisible(false);
+        closeListViewButton.setManaged(false);
+
+        searchResultsList.getItems().clear();
+    }
+    private void openBookDetailWindow(String selectedBook, String title, String author, String publisher,
+                                      String publishedDate, String rating, String description,
+                                       String imageUrl) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/BookDetail.fxml"));
+            Parent root = loader.load();
+
+            BookDetailController detailController = loader.getController();
+
+            detailController.setBookDetails(
+                    title,
+                    author,
+                    publisher,
+                    publishedDate,
+
+                    rating,
+                    description,
+                    imageUrl
+            );
+
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Book Details");
+            detailStage.setScene(new Scene(root));
+            detailStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

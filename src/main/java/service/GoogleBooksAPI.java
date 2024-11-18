@@ -3,7 +3,12 @@ package service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import javafx.scene.control.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,12 +52,23 @@ public class GoogleBooksAPI {
             }
 
             JSONArray items = json.getJSONArray("items");
+            System.out.println("Updating ListView...");
             listView.getItems().clear();
             for (int i = 0; i < items.length(); i++) {
                 JSONObject book = items.getJSONObject(i).getJSONObject("volumeInfo");
+
                 String bookTitle = book.getString("title");
                 String authors = book.has("authors") ? book.getJSONArray("authors").join(", ").replaceAll("\"", "") : "Unknown Author";
-                listView.getItems().add(bookTitle + " - " + authors);
+                String publisher = book.has("publisher") ? book.getString("publisher") : "Unknown Publisher";
+                String publishedDate = book.has("publishedDate") ? book.getString("publishedDate") : "Unknown Year";
+                String description = book.has("description") ? book.getString("description") : "No description available.";
+                String imageUrl = book.has("imageLinks") ?
+                        book.getJSONObject("imageLinks").optString("thumbnail", "No image available") :
+                        "No image available";
+
+                String bookDetails = bookTitle + " - " + authors + "\nPublisher: " + publisher + "\nPublished: " + publishedDate + "\nDescription: " + description + "\nImage URL: " + imageUrl;
+                listView.getItems().add(bookDetails);
+                System.out.println("Added book: " + bookTitle);
             }
 
         } catch (Exception e) {
@@ -62,4 +78,5 @@ public class GoogleBooksAPI {
             e.printStackTrace();
         }
     }
+
 }

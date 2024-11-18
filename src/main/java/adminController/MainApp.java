@@ -16,7 +16,8 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            // Thay đổi đường dẫn để tải Dashboard.fxml thay vì Login.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/Dashboard.fxml"));
             Parent root = loader.load();
 
             root.setOnMousePressed(event -> {
@@ -37,6 +38,7 @@ public class MainApp extends Application {
             primaryStage.setTitle("UET Library Management");
             primaryStage.show();
 
+            // Khởi tạo kết nối database
             DatabaseConnection.getInstance();
         } catch (Exception e) {
             e.printStackTrace();
