@@ -1,4 +1,4 @@
-.button {
+.login-button {
     -fx-background-color: #1F51FF;
     -fx-border-color: transparent;
     -fx-border-radius: 6;
@@ -9,11 +9,11 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 3, 0.0, 0, 1);
 }
 
-.button:hover {
+.login-button:hover {
     -fx-background-color: #000080;
 }
 
-.button:focused {
+.login-button:focused {
     -fx-background-color: #000080;
     -fx-border-width: 1px;
     -fx-border-color: #4facfd;

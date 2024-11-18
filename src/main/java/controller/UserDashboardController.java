@@ -5,9 +5,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.chart.BarChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -41,6 +43,12 @@ public class UserDashboardController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private BarChart<String, Number> barChart;
+
+    @FXML
+    private ListView<String> topBooksList;
+
     private void loadScene(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
@@ -52,9 +60,9 @@ public class UserDashboardController {
     }
 
     @FXML
-    public void initialize() {
-        loadScene("UserHome.fxml");
-        setSelectedButton(homeButton);
+    public void borrowDocument() {
+        loadScene("BorrowDocument.fxml");
+        setSelectedButton(borrowDocumentButton);
     }
 
     @FXML
@@ -64,9 +72,8 @@ public class UserDashboardController {
     }
 
     @FXML
-    public void borrowDocument() {
-        loadScene("BorrowDocument.fxml");
-        setSelectedButton(borrowDocumentButton);
+    public void selectHome() {
+        home();
     }
 
     @FXML
@@ -83,7 +90,7 @@ public class UserDashboardController {
 
     @FXML
     public void setting() {
-        loadScene("Settings.fxml");
+        loadScene("Setting.fxml");
         setSelectedButton(settingButton);
     }
 

@@ -45,14 +45,35 @@
                                 <String fx:value="selected" />
                             </styleClass>
                         </Button>
-                        <Button fx:id="borrowDocumentButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#borrowDocument" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Borrow documents" textFill="WHITE">
+                        <Button fx:id="borrowDocumentButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#borrowDocument" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Borrow document" textFill="WHITE">
                             <font>
                                 <Font name="Segoe UI" size="16.0" />
                             </font>
                             <graphic>
                                 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../image/icons8-borrow-book-32%20(2).png" />
+                                        <Image url="@../image/borrow.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <padding>
+                                <Insets left="30.0" />
+                            </padding>
+                            <opaqueInsets>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </opaqueInsets>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Button>
+                        <Button fx:id="returnDocumentButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#returnDocument" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Return document" textFill="WHITE">
+                            <font>
+                                <Font name="Segoe UI" size="16.0" />
+                            </font>
+                            <graphic>
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../image/return.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
@@ -63,24 +84,6 @@
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </opaqueInsets>
                         </Button>
-                  <Button fx:id="returnDocumentButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#returnDocument" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Return documents" textFill="WHITE">
-                     <font>
-                        <Font name="Segoe UI" size="16.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/return.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <padding>
-                        <Insets left="30.0" />
-                     </padding>
-                     <opaqueInsets>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </opaqueInsets>
-                  </Button>
                   <Button fx:id="entertainmentButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#entertainment" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Entertainment" textFill="WHITE">
                      <font>
                         <Font name="Segoe UI" size="16.0" />
@@ -88,7 +91,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../image/icons8-game-32.png" />
+                              <Image url="@../image/entertainment.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -157,7 +160,7 @@
                         </Pane>
                         <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="307.0" styleClass="textFiled" stylesheets="@../styles/styles.css">
                             <children>
-                                <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
                                     <opaqueInsets>
                                         <Insets />
                                     </opaqueInsets>

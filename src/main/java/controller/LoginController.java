@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Hyperlink;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,36 +54,6 @@ public class LoginController {
         }
     }
 
-    private void openDashboardScreen() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminfxml/Dashboard.fxml"));
-            Parent dashboardRoot = fxmlLoader.load();
-
-            Scene currentScene = loginButton.getScene();
-            currentScene.setRoot(dashboardRoot);
-
-            Stage stage = (Stage) currentScene.getWindow();
-
-            final double[] dragAnchorX = new double[1];
-            final double[] dragAnchorY = new double[1];
-
-            dashboardRoot.setOnMousePressed(event -> {
-                dragAnchorX[0] = event.getSceneX();
-                dragAnchorY[0] = event.getSceneY();
-            });
-
-            dashboardRoot.setOnMouseDragged(event -> {
-                stage.setX(event.getScreenX() - dragAnchorX[0]);
-                stage.setY(event.getScreenY() - dragAnchorY[0]);
-            });
-
-        } catch (IOException e) {
-            showErrorAlert("Error", "Unable to open the dashboard screen.");
-            e.printStackTrace();
-        }
-    }
-
-
     @FXML
     public void cancelButtonAction(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
@@ -93,14 +62,17 @@ public class LoginController {
 
     @FXML
     public void loginButtonAction(ActionEvent event) {
-        if (!accountField.getText().isEmpty() && !passwordField.getText().isEmpty()) {
-            validateLogin();
+        String username = accountField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (!username.isEmpty() && !password.isEmpty()) {
+            validateLogin(username, password);
         } else {
-            loginMessageLabel.setText("Please enter valid account and password!");
+            loginMessageLabel.setText("Please enter a valid username and password!");
         }
     }
 
-    public void validateLogin() {
+    public void validateLogin(String username, String password) {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         try (Connection connection = databaseConnection.getConnection()) {
             if (connection == null) {
@@ -108,22 +80,67 @@ public class LoginController {
                 return;
             }
 
-            String verifyLogin = "SELECT count(1) FROM users WHERE username = ? AND password = ?";
+            String verifyLogin = "SELECT role FROM users WHERE username = ? AND password = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(verifyLogin)) {
-                preparedStatement.setString(1, accountField.getText());
-                preparedStatement.setString(2, passwordField.getText());
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
                 ResultSet querySet = preparedStatement.executeQuery();
 
-                if (querySet.next() && querySet.getInt(1) == 1) {
-                    loginMessageLabel.setText("Login Successful!");
-                    openDashboardScreen();
+                if (querySet.next()) {
+                    String role = querySet.getString("role");
+
+                    if ("admin".equalsIgnoreCase(role)) {
+                        loginMessageLabel.setText("Login Successful! Welcome Admin.");
+                        openAdminDashboardScreen();
+                    } else if ("user".equalsIgnoreCase(role)) {
+                        loginMessageLabel.setText("Login Successful! Welcome User.");
+                        openUserDashboardScreen();
+                    } else {
+                        loginMessageLabel.setText("Invalid role assigned.");
+                    }
                 } else {
-                    loginMessageLabel.setText("Login Failed!");
+                    loginMessageLabel.setText("Login Failed! Incorrect username or password.");
                 }
             }
         } catch (Exception e) {
             showErrorAlert("Database Error", "An error occurred while validating login.");
+            e.printStackTrace();
+        }
+    }
+
+    private void openAdminDashboardScreen() {
+        switchToScene("/adminfxml/Dashboard.fxml", "Unable to open the admin dashboard screen.");
+    }
+
+    private void openUserDashboardScreen() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
+            Parent dashboardRoot = fxmlLoader.load();
+
+            // Lấy controller của UserDashboard và gọi phương thức khởi tạo Home
+            UserDashboardController userDashboardController = fxmlLoader.getController();
+            userDashboardController.selectHome(); // Chọn Home khi chuyển màn hình
+
+            Scene currentScene = loginButton.getScene();
+            currentScene.setRoot(dashboardRoot);
+
+        } catch (IOException e) {
+            showErrorAlert("Error", "Unable to open the user dashboard screen.");
+            e.printStackTrace();
+        }
+    }
+
+    private void switchToScene(String fxmlPath, String errorMessage) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent newRoot = fxmlLoader.load();
+
+            Scene currentScene = loginButton.getScene();
+            currentScene.setRoot(newRoot);
+
+        } catch (IOException e) {
+            showErrorAlert("Error", errorMessage);
             e.printStackTrace();
         }
     }

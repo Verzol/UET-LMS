@@ -16,7 +16,6 @@ public class DatabaseConnection {
         String databaseUrl = "jdbc:mysql://171.244.63.61:2005/" + databaseName;
 
         try {
-            // Đảm bảo bạn đã thêm thư viện MySQL JDBC đúng cách
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.databaseLink = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
         } catch (Exception e) {
