@@ -47,6 +47,9 @@ public class AddDocumentController {
     private TextField pageCountTextField;
 
     @FXML
+    private TextField imageUrlTextFieldBook;
+
+    @FXML
     private Label editionLabel;
 
     @FXML
@@ -66,6 +69,9 @@ public class AddDocumentController {
 
     @FXML
     private TextField monthTextField;
+
+    @FXML
+    private TextField imageUrlTextFieldMagazine;
 
     @FXML
     private Label publishNumberLabelMagazine;
@@ -102,6 +108,9 @@ public class AddDocumentController {
 
     @FXML
     private TextField publishNumberTextFieldJournal;
+
+    @FXML
+    private TextField imageUrlTextFieldJournal;
 
     @FXML
     private Label volumeLabel;
@@ -214,15 +223,17 @@ public class AddDocumentController {
         quantityInStockTextField.clear();
         genreTextField.clear();
         pageCountTextField.clear();
+        imageUrlTextFieldBook.clear();
         publishNumberTextFieldMagazine.clear();
         monthTextField.clear();
+        imageUrlTextFieldMagazine.clear();
         universityTextField.clear();
         supervisorTextField.clear();
         fieldTextField.clear();
         volumeTextField.clear();
         publishNumberTextFieldJournal.clear();
+        imageUrlTextFieldJournal.clear();
     }
-
 
     private void saveBook() {
         Book newBook = new Book();
@@ -233,6 +244,7 @@ public class AddDocumentController {
         newBook.setQuantityInStock(Integer.parseInt(quantityInStockTextField.getText()));
         newBook.setGenre(genreTextField.getText());
         newBook.setPageCount(Integer.parseInt(pageCountTextField.getText()));
+        newBook.setImageUrl(imageUrlTextFieldBook.getText());
         bookDAO.addBook(newBook);
     }
 
@@ -243,6 +255,7 @@ public class AddDocumentController {
         newMagazine.setAuthor(authorTextField.getText());
         newMagazine.setPublishNumber(publishNumberTextFieldMagazine.getText());
         newMagazine.setMonth(monthTextField.getText());
+        newMagazine.setImageUrl(imageUrlTextFieldMagazine.getText());
         magazineDAO.addMagazine(newMagazine);
     }
 
@@ -264,6 +277,7 @@ public class AddDocumentController {
         newJournal.setAuthor(authorTextField.getText());
         newJournal.setVolume(Integer.parseInt(volumeTextField.getText()));
         newJournal.setPublishNumber(Integer.parseInt(publishNumberTextFieldJournal.getText()));
+        newJournal.setImageUrl(imageUrlTextFieldJournal.getText());
         journalDAO.addJournal(newJournal);
     }
 

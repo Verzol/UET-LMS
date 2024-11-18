@@ -170,14 +170,4 @@ public class DashboardController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setIconified(true);
     }
-
-    private void loadView(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/" + fxmlFile));
-            Parent view = loader.load();
-            mainContent.getChildren().setAll(view);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

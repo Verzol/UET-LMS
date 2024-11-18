@@ -16,7 +16,7 @@ public class JournalDAO {
     public boolean addJournal(Journal journal) {
         String queryDocuments = "INSERT INTO documents (id, title, author, edition, " +
                 "quantity_in_stock, borrowed_quantity) VALUES (?, ?, ?, ?, ?, ?)";
-        String queryJournals = "INSERT INTO journals (id, volume, publish_number) VALUES (?, ?, ?)";
+        String queryJournals = "INSERT INTO journals (id, volume, publish_number, image_url) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
              PreparedStatement journalStatement = connection.prepareStatement(queryJournals)) {
@@ -32,6 +32,7 @@ public class JournalDAO {
             journalStatement.setString(1, journal.getId());
             journalStatement.setInt(2, journal.getVolume());
             journalStatement.setInt(3, journal.getPublishNumber());
+            journalStatement.setString(4, journal.getImageUrl());
             journalStatement.executeUpdate();
 
             return true;
@@ -44,7 +45,7 @@ public class JournalDAO {
     public List<Journal> getAllJournals() {
         List<Journal> journals = new ArrayList<>();
         String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, "
-                + "j.volume, j.publish_number "
+                + "j.volume, j.publish_number, j.image_url "
                 + "FROM documents d JOIN journals j ON d.id = j.id";
 
         try (Statement statement = connection.createStatement();
@@ -59,8 +60,9 @@ public class JournalDAO {
                 int borrowedQuantity = resultSet.getInt("borrowed_quantity");
                 int volume = resultSet.getInt("volume");
                 int publishNumber = resultSet.getInt("publish_number");
+                String imageUrl = resultSet.getString("image_url");
 
-                Journal journal = new Journal(id, title, author, edition, quantityInStock, volume, publishNumber);
+                Journal journal = new Journal(id, title, author, edition, quantityInStock, volume, publishNumber, imageUrl);
                 journal.setBorrowedQuantity(borrowedQuantity);
                 journals.add(journal);
             }
@@ -75,7 +77,7 @@ public class JournalDAO {
     public boolean updateJournal(Journal journal) {
         String queryDocuments = "UPDATE documents SET title = ?, author = ?, edition = ?"
                 + ", quantity_in_stock = ?, borrowed_quantity = ? WHERE id = ?";
-        String queryJournals = "UPDATE journals SET volume = ?, publish_number = ? WHERE id = ?";
+        String queryJournals = "UPDATE journals SET volume = ?, publish_number = ?, image_url = ? WHERE id = ?";
 
         try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
              PreparedStatement journalStatement = connection.prepareStatement(queryJournals)) {
@@ -90,7 +92,8 @@ public class JournalDAO {
 
             journalStatement.setInt(1, journal.getVolume());
             journalStatement.setInt(2, journal.getPublishNumber());
-            journalStatement.setString(3, journal.getId());
+            journalStatement.setString(3, journal.getImageUrl());
+            journalStatement.setString(4, journal.getId());
             journalStatement.executeUpdate();
 
             return true;
@@ -102,10 +105,16 @@ public class JournalDAO {
 
     public boolean deleteJournal(String id) {
         String queryDocuments = "DELETE FROM documents WHERE id = ?";
+        String queryJournals = "DELETE FROM journals WHERE id = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(queryDocuments)) {
-            statement.setString(1, id);
-            return statement.executeUpdate() > 0;
+        try (PreparedStatement journalStatement = connection.prepareStatement(queryJournals);
+             PreparedStatement docStatement = connection.prepareStatement(queryDocuments)) {
+
+            journalStatement.setString(1, id);
+            journalStatement.executeUpdate();
+
+            docStatement.setString(1, id);
+            return docStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,5 +134,4 @@ public class JournalDAO {
         }
         return false;
     }
-
 }

@@ -3,16 +3,18 @@ package models.documents;
 public class Journal extends Document {
     private int volume;
     private int publishNumber;
+    private String imageUrl;
 
     public Journal() {
         super();
     }
 
-    public Journal (String id, String title, String author, int edtion
-            , int quanityInStock, int volume, int publishNumber) {
-        super(id, title, author, edtion, quanityInStock);
+    public Journal(String id, String title, String author, int edition,
+                   int quantityInStock, int volume, int publishNumber, String imageUrl) {
+        super(id, title, author, edition, quantityInStock);
         this.volume = volume;
         this.publishNumber = publishNumber;
+        this.imageUrl = imageUrl;
     }
 
     public int getVolume() {
@@ -29,5 +31,13 @@ public class Journal extends Document {
 
     public void setPublishNumber(int publishNumber) {
         this.publishNumber = publishNumber;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

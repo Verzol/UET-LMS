@@ -15,7 +15,7 @@ public class MagazineDAO {
 
     public boolean addMagazine(Magazine magazine) {
         String queryDocuments = "INSERT INTO documents (id, title, author, edition, quantity_in_stock, borrowed_quantity) VALUES (?, ?, ?, ?, ?, ?)";
-        String queryMagazines = "INSERT INTO magazines (id, publish_number, month) VALUES (?, ?, ?)";
+        String queryMagazines = "INSERT INTO magazines (id, publish_number, month, image_url) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
              PreparedStatement magazineStatement = connection.prepareStatement(queryMagazines)) {
@@ -31,6 +31,7 @@ public class MagazineDAO {
             magazineStatement.setString(1, magazine.getId());
             magazineStatement.setString(2, magazine.getPublishNumber());
             magazineStatement.setString(3, magazine.getMonth());
+            magazineStatement.setString(4, magazine.getImageUrl());
             magazineStatement.executeUpdate();
 
             return true;
@@ -43,7 +44,7 @@ public class MagazineDAO {
     public List<Magazine> getAllMagazines() {
         List<Magazine> magazines = new ArrayList<>();
         String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, "
-                + "m.publish_number, m.month "
+                + "m.publish_number, m.month, m.image_url "
                 + "FROM documents d JOIN magazines m ON d.id = m.id";
 
         try (Statement statement = connection.createStatement();
@@ -58,8 +59,9 @@ public class MagazineDAO {
                 int borrowedQuantity = resultSet.getInt("borrowed_quantity");
                 String publishNumber = resultSet.getString("publish_number");
                 String month = resultSet.getString("month");
+                String imageUrl = resultSet.getString("image_url");
 
-                Magazine magazine = new Magazine(id, title, author, edition, quantityInStock, publishNumber, month);
+                Magazine magazine = new Magazine(id, title, author, edition, quantityInStock, publishNumber, month, imageUrl);
                 magazine.setBorrowedQuantity(borrowedQuantity);
                 magazines.add(magazine);
             }
@@ -71,9 +73,10 @@ public class MagazineDAO {
         return magazines;
     }
 
+
     public boolean updateMagazine(Magazine magazine) {
         String queryDocuments = "UPDATE documents SET title = ?, author = ?, edition = ?, quantity_in_stock = ?, borrowed_quantity = ? WHERE id = ?";
-        String queryMagazines = "UPDATE magazines SET publish_number = ?, month = ? WHERE id = ?";
+        String queryMagazines = "UPDATE magazines SET publish_number = ?, month = ?, image_url = ? WHERE id = ?";
 
         try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
              PreparedStatement magazineStatement = connection.prepareStatement(queryMagazines)) {
@@ -88,7 +91,8 @@ public class MagazineDAO {
 
             magazineStatement.setString(1, magazine.getPublishNumber());
             magazineStatement.setString(2, magazine.getMonth());
-            magazineStatement.setString(3, magazine.getId());
+            magazineStatement.setString(3, magazine.getImageUrl());
+            magazineStatement.setString(4, magazine.getId());
             magazineStatement.executeUpdate();
 
             return true;
@@ -99,11 +103,17 @@ public class MagazineDAO {
     }
 
     public boolean deleteMagazine(String id) {
+        String queryMagazines = "DELETE FROM magazines WHERE id = ?";
         String queryDocuments = "DELETE FROM documents WHERE id = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(queryDocuments)) {
-            statement.setString(1, id);
-            return statement.executeUpdate() > 0;
+        try (PreparedStatement magazineStatement = connection.prepareStatement(queryMagazines);
+             PreparedStatement docStatement = connection.prepareStatement(queryDocuments)) {
+
+            magazineStatement.setString(1, id);
+            magazineStatement.executeUpdate();
+
+            docStatement.setString(1, id);
+            return docStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
