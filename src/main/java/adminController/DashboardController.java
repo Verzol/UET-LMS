@@ -173,12 +173,10 @@ public class DashboardController {
                 String description = bookDetails[3].replace("Description: ", "").trim();
                 String imageUrl = bookDetails[4].replace("Image URL: ", "").trim();
 
-                openBookDetailWindow(selectedBook,title, author, publisher, publishedDate, "", description, imageUrl);
+                openBookDetailWindow(selectedBook, title, author, publisher, publishedDate, "", description, imageUrl);
             }
         }
     }
-
-
 
 
     @FXML
@@ -218,9 +216,10 @@ public class DashboardController {
 
         searchResultsList.getItems().clear();
     }
+
     private void openBookDetailWindow(String selectedBook, String title, String author, String publisher,
                                       String publishedDate, String rating, String description,
-                                       String imageUrl) {
+                                      String imageUrl) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/BookDetail.fxml"));
             Parent root = loader.load();
@@ -246,6 +245,5 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
-
-
 }
+
