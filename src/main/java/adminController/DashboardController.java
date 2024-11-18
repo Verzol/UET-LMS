@@ -205,15 +205,7 @@ public class DashboardController {
         stage.setIconified(true);
     }
 
-    private void loadView(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/" + fxmlFile));
-            Parent view = loader.load();
-            mainContent.getChildren().setAll(view);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
     @FXML
     private Button closeListViewButton; // Kết nối nút từ FXML
 
