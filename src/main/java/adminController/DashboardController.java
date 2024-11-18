@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import javafx.scene.control.ListView;
 
 public class DashboardController {
 
@@ -122,28 +123,18 @@ public class DashboardController {
     private TextField searchBox;
 
     @FXML
+    private ListView<String> searchResultsList;
+
+
+    @FXML
     private void handleSearch() {
-        String query = searchBox.getText();
+        String query = searchBox.getText().trim();
         if (query.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("You want to search something?");
+            alert.setHeaderText("Please enter a title to search.");
             alert.showAndWait();
         } else {
-            List<String> data = Arrays.asList("Harry Potter", "OOP", "DSA", "Boruto");
-
-            List<String> results = data.stream()
-                    .filter(item -> item.toLowerCase().contains(query.toLowerCase()))
-                    .toList();
-
-            if (results.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("No Results");
-                alert.setHeaderText(null);
-                alert.setContentText("No results found for: " + query);
-                alert.showAndWait();
-            } else {
-                System.out.println("Search results: " + results);
-            }
+            service.GoogleBooksAPI.searchBookByTitle(query, searchResultsList);
         }
     }
 
