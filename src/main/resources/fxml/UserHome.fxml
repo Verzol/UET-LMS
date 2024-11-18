@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserDashboardController">
+    <children>
+        <Label layoutX="59.0" layoutY="22.0" prefHeight="52.0" prefWidth="355.0" text="Dashboard">
+            <font>
+                <Font name="System Bold" size="25.0" />
+            </font>
+        </Label>
+        <HBox layoutX="59.0" layoutY="82.0" prefHeight="121.0" prefWidth="852.0" spacing="10.0">
+            <children>
+                <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #38AFFF;" styleClass="card" stylesheets="@../styles/styles.css">
+                    <children>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="205.0">
+                            <children>
+                                <Label prefHeight="25.0" prefWidth="132.0" text="Total Users">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+                                <Pane prefHeight="48.0" prefWidth="27.0" />
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../image/icons8-user-32.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </HBox>
+                        <Label prefHeight="57.0" prefWidth="77.0" text="30">
+                            <font>
+                                <Font name="Segoe UI Bold" size="47.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+            </children>
+        </HBox>
+        <BarChart fx:id="barChart" layoutX="59.0" layoutY="255.0" prefHeight="400.0" prefWidth="515.0">
+            <xAxis>
+                <CategoryAxis side="BOTTOM" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT" />
+            </yAxis>
+        </BarChart>
+        <ListView fx:id="topBooksList" layoutX="609.0" layoutY="270.0" prefHeight="358.0" prefWidth="301.0" />
+        <Label layoutX="609.0" layoutY="243.0" prefHeight="21.0" prefWidth="104.0" text="Top Books">
+            <font>
+                <Font name="Segoe UI Bold" size="20.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

@@ -53,19 +53,6 @@ public class LoginController {
             e.printStackTrace();
         }
     }
-    private void openDashboardScreen() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/adminfxml/Dashboard.fxml"));
-            Parent dashboardRoot = fxmlLoader.load();
-
-            Scene currentScene = loginButton.getScene();
-            currentScene.setRoot(dashboardRoot);
-
-        } catch (IOException e) {
-            showErrorAlert("Error", "Unable to open the dashboard screen.");
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     public void cancelButtonAction(ActionEvent event) {
@@ -75,14 +62,17 @@ public class LoginController {
 
     @FXML
     public void loginButtonAction(ActionEvent event) {
-        if (!accountField.getText().isEmpty() && !passwordField.getText().isEmpty()) {
-            validateLogin();
+        String username = accountField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (!username.isEmpty() && !password.isEmpty()) {
+            validateLogin(username, password);
         } else {
-            loginMessageLabel.setText("Please enter valid account and password!");
+            loginMessageLabel.setText("Please enter a valid username and password!");
         }
     }
 
-    public void validateLogin() {
+    public void validateLogin(String username, String password) {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         try (Connection connection = databaseConnection.getConnection()) {
             if (connection == null) {
@@ -90,18 +80,35 @@ public class LoginController {
                 return;
             }
 
-            String verifyLogin = "SELECT count(1) FROM users WHERE username = ? AND password = ?";
+            String verifyLogin = """
+                SELECT p.id, p.username, u.id AS user_id, a.id AS admin_id
+                FROM person p
+                LEFT JOIN user u ON p.id = u.id
+                LEFT JOIN admin a ON p.id = a.id
+                WHERE p.username = ? AND p.password = ?
+            """;
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(verifyLogin)) {
-                preparedStatement.setString(1, accountField.getText());
-                preparedStatement.setString(2, passwordField.getText());
-                ResultSet querySet = preparedStatement.executeQuery();
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (querySet.next() && querySet.getInt(1) == 1) {
-                    loginMessageLabel.setText("Login Successful!");
-                    openDashboardScreen();
+                if (resultSet.next()) {
+                    int personId = resultSet.getInt("id");
+                    boolean isAdmin = resultSet.getObject("admin_id") != null;
+                    boolean isUser = resultSet.getObject("user_id") != null;
+
+                    if (isAdmin) {
+                        loginMessageLabel.setText("Login Successful! Welcome Admin.");
+                        openAdminDashboardScreen();
+                    } else if (isUser) {
+                        loginMessageLabel.setText("Login Successful! Welcome User.");
+                        openUserDashboardScreen();
+                    } else {
+                        loginMessageLabel.setText("Invalid role assigned.");
+                    }
                 } else {
-                    loginMessageLabel.setText("Login Failed!");
+                    loginMessageLabel.setText("Login Failed! Incorrect username or password.");
                 }
             }
         } catch (Exception e) {
@@ -109,6 +116,43 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
+    private void openAdminDashboardScreen() {
+        switchToScene("/adminfxml/Dashboard.fxml", "Unable to open the admin dashboard screen.");
+    }
+
+    private void openUserDashboardScreen() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
+            Parent dashboardRoot = fxmlLoader.load();
+
+
+            UserDashboardController userDashboardController = fxmlLoader.getController();
+            userDashboardController.selectHome();
+
+            Scene currentScene = loginButton.getScene();
+            currentScene.setRoot(dashboardRoot);
+
+        } catch (IOException e) {
+            showErrorAlert("Error", "Unable to open the user dashboard screen.");
+            e.printStackTrace();
+        }
+    }
+
+    private void switchToScene(String fxmlPath, String errorMessage) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent newRoot = fxmlLoader.load();
+
+            Scene currentScene = loginButton.getScene();
+            currentScene.setRoot(newRoot);
+
+        } catch (IOException e) {
+            showErrorAlert("Error", errorMessage);
+            e.printStackTrace();
+        }
+    }
+
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);

@@ -7,18 +7,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 import service.BookDetailController;
 
+import java.io.IOException;
+import java.util.Optional;
 
 public class DashboardController {
 
@@ -50,6 +48,15 @@ public class DashboardController {
     private Button returnBooksButton;
 
     private Button selectedButton;
+
+    @FXML
+    private TextField searchBox;
+
+    @FXML
+    private ListView<String> searchResultsList;
+
+    @FXML
+    private Button closeListViewButton;
 
     @FXML
     public void initialize() {
@@ -124,13 +131,6 @@ public class DashboardController {
     }
 
     @FXML
-    private TextField searchBox;
-
-    @FXML
-    private ListView<String> searchResultsList;
-
-
-    @FXML
     private void handleSearch() {
         String query = searchBox.getText().trim();
 
@@ -164,9 +164,10 @@ public class DashboardController {
         if (event.getClickCount() == 2) {
             String selectedBook = searchResultsList.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
+                // Xử lý lấy thông tin chi tiết từ Google Books API
                 String[] bookDetails = selectedBook.split("\n");
 
-                String title = bookDetails[0].split(" - ")[0].trim(); // Giả định tiêu đề sách nằm trước dấu " - "
+                String title = bookDetails[0].split(" - ")[0].trim();
                 String author = bookDetails[0].contains("-") ? bookDetails[0].split(" - ")[1].trim() : "Unknown Author";
                 String publisher = bookDetails[1].replace("Publisher: ", "").trim();
                 String publishedDate = bookDetails[2].replace("Published: ", "").trim();
@@ -178,9 +179,34 @@ public class DashboardController {
         }
     }
 
+    private void openBookDetailWindow(String selectedBook, String title, String author, String publisher,
+                                      String publishedDate, String rating, String description,
+                                      String imageUrl) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/BookDetail.fxml"));
+            Parent root = loader.load();
+
+            BookDetailController detailController = loader.getController();
+            detailController.setBookDetails(title, author, publisher, publishedDate, rating, description, imageUrl);
+
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Book Details");
+            detailStage.setScene(new Scene(root));
+            detailStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
-    private Button exitButton;
+    private void handleCloseListView() {
+        searchResultsList.setVisible(false);
+        searchResultsList.setManaged(false);
+        closeListViewButton.setVisible(false);
+        closeListViewButton.setManaged(false);
+
+        searchResultsList.getItems().clear();
+    }
 
     @FXML
     private void exitApplication() {
@@ -195,55 +221,8 @@ public class DashboardController {
     }
 
     @FXML
-    private Button minimizeButton;
-
-    @FXML
     private void minimizeApplication(javafx.event.ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setIconified(true);
     }
-
-
-    @FXML
-    private Button closeListViewButton; // Kết nối nút từ FXML
-
-    @FXML
-    private void handleCloseListView() {
-        searchResultsList.setVisible(false);
-        searchResultsList.setManaged(false);
-        closeListViewButton.setVisible(false);
-        closeListViewButton.setManaged(false);
-
-        searchResultsList.getItems().clear();
-    }
-
-    private void openBookDetailWindow(String selectedBook, String title, String author, String publisher,
-                                      String publishedDate, String rating, String description,
-                                      String imageUrl) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/BookDetail.fxml"));
-            Parent root = loader.load();
-
-            BookDetailController detailController = loader.getController();
-
-            detailController.setBookDetails(
-                    title,
-                    author,
-                    publisher,
-                    publishedDate,
-
-                    rating,
-                    description,
-                    imageUrl
-            );
-
-            Stage detailStage = new Stage();
-            detailStage.setTitle("Book Details");
-            detailStage.setScene(new Scene(root));
-            detailStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
-

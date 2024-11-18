@@ -1,79 +1,72 @@
-/* Định dạng chung cho nút */
-.button {
-    -fx-background-color: #1F51FF; /* Màu nền xanh khi không hover */
+.login-button {
+    -fx-background-color: #1F51FF;
     -fx-border-color: transparent;
-    -fx-border-radius: 3px; /* Bo góc nhẹ */
-    -fx-text-fill: white; /* Màu chữ */
-    -fx-font-size: 12px; /* Font chữ nhỏ hơn */
-    -fx-padding: 5px 10px; /* Khoảng cách bên trong nhỏ hơn */
-    -fx-cursor: hand; /* Con trỏ chuột */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 3, 0.0, 0, 1); /* Hiệu ứng bóng */
+    -fx-border-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 3, 0.0, 0, 1);
 }
 
-/* Hiệu ứng hover cho nút */
-.button:hover {
-    -fx-background-color: #000080; /* Màu xanh đậm hơn khi hover */
+.login-button:hover {
+    -fx-background-color: #000080;
 }
 
-/* Khi được chọn (focused) */
-.button:focused {
-    -fx-background-color: #000080; /* Màu xanh đậm */
-    -fx-border-width: 1px; /* Đường viền mỏng hơn */
-    -fx-border-color: #4facfd; /* Viền xanh nhạt khi chọn */
+.login-button:focused {
+    -fx-background-color: #000080;
+    -fx-border-width: 1px;
+    -fx-border-color: #4facfd;
 }
 
-
-/* Định dạng chung cho nút Cancel */
 .cancel-button {
-    -fx-background-color: #EE4B2B; /* Màu đỏ nhạt khi chưa chọn */
-    -fx-border-color: transparent; /* Không viền */
-    -fx-background-radius: 5px; /* Bo góc mềm */
-    -fx-text-fill: white; /* Màu chữ trắng */
-    -fx-font-size: 12px; /* Font chữ nhỏ */
-    -fx-padding: 5px 10px; /* Khoảng cách bên trong */
-    -fx-cursor: hand; /* Con trỏ chuột khi di chuột qua */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 4, 0.0, 0, 1); /* Hiệu ứng bóng nhẹ */
+    -fx-background-color: #C0392B;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
 }
 
-/* Hiệu ứng khi hover vào nút Cancel */
 .cancel-button:hover {
-    -fx-background-color: #880808; /* Màu đỏ đậm hơn khi hover */
+    -fx-background-color: #E74C3C;
 }
 
-/* Hiệu ứng khi nút Cancel được chọn (focused) */
+.cancel-button:selected,
 .cancel-button:focused {
-    -fx-background-color: #900C3F; /* Màu đỏ đậm khi được chọn */
-    -fx-border-width: 1px; /* Đường viền mỏng */
-    -fx-border-color: #B32F23; /* Viền đỏ đậm */
+    -fx-background-color: #A93226;
+    -fx-border-width: 2;
+}
+
+.cancel-button:disabled {
+    -fx-background-color: #A9A9A9;
+    -fx-text-fill: #D3D3D3;
+    -fx-border-color: transparent;
 }
 
 
-/* Định dạng cho TextField và PasswordField */
 .text-field, .password-field {
-    -fx-background-color: white; /* Màu nền trắng */
-    -fx-border-color: #ccc; /* Màu viền xám nhạt */
-    -fx-border-radius: 5px; /* Bo góc nhẹ */
-    -fx-padding: 5px; /* Khoảng cách bên trong nhỏ */
-    -fx-font-size: 12px; /* Kích thước chữ nhỏ hơn */
-    -fx-text-fill: #333; /* Màu chữ đậm */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 1); /* Hiệu ứng bóng */
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 12px;
+    -fx-text-fill: #333;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 1);
 }
 
-/* Khi được chọn (focused) cho TextField và PasswordField */
 .text-field:focused, .password-field:focused {
-    -fx-border-color: #007bff; /* Viền xanh khi chọn */
-    -fx-background-color: #ffffff; /* Nền trắng khi chọn */
-    -fx-effect: innershadow(gaussian, rgba(0, 123, 255, 0.5), 3, 0, 0, 0); /* Hiệu ứng bóng */
+    -fx-border-color: #007bff;
+    -fx-background-color: #ffffff;
+    -fx-effect: innershadow(gaussian, rgba(0, 123, 255, 0.5), 3, 0, 0, 0);
 }
 
-/* Khi hover cho TextField và PasswordField */
 .text-field:hover, .password-field:hover {
-    -fx-border-color: #0056b3; /* Màu viền đậm hơn khi hover */
+    -fx-border-color: #0056b3;
 }
 
-/* Khi không hoạt động cho TextField và PasswordField */
+
 .text-field:disabled, .password-field:disabled {
-    -fx-background-color: #e0e0e0; /* Nền xám khi không hoạt động */
-    -fx-border-color: #b0b0b0; /* Viền xám khi không hoạt động */
-    -fx-text-fill: #7a7a7a; /* Chữ xám khi không hoạt động */
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #b0b0b0;
+    -fx-text-fill: #7a7a7a;
 }
