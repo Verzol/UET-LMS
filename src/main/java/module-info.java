@@ -14,4 +14,6 @@ module com.example.uetlms {
     opens models.documents to javafx.base;
     exports controller;
     opens controller to javafx.fxml;
+    exports service;
+    opens service to javafx.fxml;
 }

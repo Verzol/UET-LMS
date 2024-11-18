@@ -41,7 +41,7 @@ public class BookDetailController {
      * @param imageUrl      URL hình ảnh sách.
      */
     public void setBookDetails(String title, String author, String publisher, String publishedDate,
-                                String rating, String description,  String imageUrl) {
+                               String rating, String description, String imageUrl) {
         bookTitle.setText(title);
         authorLabel.setText("Author: " + author);
         publisherLabel.setText("Publisher: " + publisher);
@@ -51,10 +51,24 @@ public class BookDetailController {
 
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            Image bookImage = new Image(imageUrl, true);
-            bookImageView.setImage(bookImage);
+            try {
+                // Nếu có URL hợp lệ, tải hình ảnh từ URL
+                Image bookImage = new Image(imageUrl, true); // 'true' để tải hình ảnh không đồng bộ
+                bookImageView.setImage(bookImage);
+            } catch (IllegalArgumentException e) {
+                // Nếu URL không hợp lệ, hiển thị hình ảnh mặc định
+                System.out.println("Lỗi khi tải hình ảnh: " + e.getMessage());
+                bookImageView.setImage(loadDefaultImage());
+            }
         } else {
-            bookImageView.setImage(null);
+            // Nếu không có imageUrl, sử dụng hình ảnh mặc định
+            System.out.println("Không có imageUrl, sử dụng hình ảnh mặc định.");
+            bookImageView.setImage(loadDefaultImage());
         }
+    }
+
+    // Phương thức giúp tải hình ảnh mặc định từ resources
+    private Image loadDefaultImage() {
+        return new Image(getClass().getResource("/image/book.png").toString());
     }
 }
