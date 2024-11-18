@@ -15,7 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.security.SecureRandom;
+import java.sql.ResultSet;
 
 public class RegisterController {
 
@@ -27,6 +27,12 @@ public class RegisterController {
 
     @FXML
     private TextField usernameField;
+
+    @FXML
+    private TextField emailField;
+
+    @FXML
+    private TextField phoneField;
 
     @FXML
     private PasswordField passwordField;
@@ -60,6 +66,8 @@ public class RegisterController {
         return !firstNameField.getText().isEmpty() &&
                 !lastNameField.getText().isEmpty() &&
                 !usernameField.getText().isEmpty() &&
+                !emailField.getText().isEmpty() &&
+                !phoneField.getText().isEmpty() &&
                 !passwordField.getText().isEmpty() &&
                 !confirmPasswordField.getText().isEmpty();
     }
@@ -73,41 +81,56 @@ public class RegisterController {
             return;
         }
 
-        String randomId = generateRandomId(10);
+        try {
+            // Kiểm tra username hoặc email đã tồn tại chưa
+            String checkUserQuery = "SELECT * FROM person WHERE username = ? OR email = ?";
+            try (PreparedStatement checkUserStatement = connection.prepareStatement(checkUserQuery)) {
+                checkUserStatement.setString(1, usernameField.getText());
+                checkUserStatement.setString(2, emailField.getText());
+                ResultSet resultSet = checkUserStatement.executeQuery();
 
-        String insertUser = "INSERT INTO users (id, firstName, lastName, username, password, role) VALUES (?, ?, ?, ?, ?, ?)";
+                if (resultSet.next()) {
+                    registrationMessageLabel.setText("Username or email already exists!");
+                    return;
+                }
+            }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertUser)) {
-            preparedStatement.setString(1, randomId); // Chèn ID ngẫu nhiên
-            preparedStatement.setString(2, firstNameField.getText());
-            preparedStatement.setString(3, lastNameField.getText());
-            preparedStatement.setString(4, usernameField.getText());
-            preparedStatement.setString(5, passwordField.getText());
-            preparedStatement.setString(6, "user"); // Gán vai trò mặc định là "user"
+            // Thêm người dùng vào bảng `person`
+            String insertPersonQuery = "INSERT INTO person (username, password, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement insertPersonStatement = connection.prepareStatement(insertPersonQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                insertPersonStatement.setString(1, usernameField.getText());
+                insertPersonStatement.setString(2, passwordField.getText());
+                insertPersonStatement.setString(3, firstNameField.getText());
+                insertPersonStatement.setString(4, lastNameField.getText());
+                insertPersonStatement.setString(5, emailField.getText());
+                insertPersonStatement.setString(6, phoneField.getText());
+                int affectedRows = insertPersonStatement.executeUpdate();
 
-            int result = preparedStatement.executeUpdate();
-            if (result > 0) {
-                registrationMessageLabel.setText("Registration Successful!");
-                clearFields();
-            } else {
-                registrationMessageLabel.setText("Registration Failed!");
+                if (affectedRows > 0) {
+                    // Lấy ID tự tăng từ bảng `person`
+                    ResultSet generatedKeys = insertPersonStatement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        int personId = generatedKeys.getInt(1);
+
+                        // Thêm thông tin vào bảng `user`
+                        String insertUserQuery = "INSERT INTO user (id, max_documents_allowed) VALUES (?, ?)";
+                        try (PreparedStatement insertUserStatement = connection.prepareStatement(insertUserQuery)) {
+                            insertUserStatement.setInt(1, personId);
+                            insertUserStatement.setInt(2, 5); // Số lượng tài liệu tối đa mặc định
+                            insertUserStatement.executeUpdate();
+                        }
+                    }
+
+                    registrationMessageLabel.setText("Registration Successful!");
+                    clearFields();
+                } else {
+                    registrationMessageLabel.setText("Registration Failed!");
+                }
             }
         } catch (Exception e) {
             registrationMessageLabel.setText("An error occurred: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-    private String generateRandomId(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        SecureRandom random = new SecureRandom();
-        StringBuilder id = new StringBuilder();
-
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characters.length());
-            id.append(characters.charAt(index));
-        }
-
-        return id.toString();
     }
 
     @FXML
@@ -137,6 +160,8 @@ public class RegisterController {
         firstNameField.clear();
         lastNameField.clear();
         usernameField.clear();
+        emailField.clear();
+        phoneField.clear();
         passwordField.clear();
         confirmPasswordField.clear();
     }

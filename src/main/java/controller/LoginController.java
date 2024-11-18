@@ -80,20 +80,28 @@ public class LoginController {
                 return;
             }
 
-            String verifyLogin = "SELECT role FROM users WHERE username = ? AND password = ?";
+            String verifyLogin = """
+                SELECT p.id, p.username, u.id AS user_id, a.id AS admin_id
+                FROM person p
+                LEFT JOIN user u ON p.id = u.id
+                LEFT JOIN admin a ON p.id = a.id
+                WHERE p.username = ? AND p.password = ?
+            """;
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(verifyLogin)) {
                 preparedStatement.setString(1, username);
                 preparedStatement.setString(2, password);
-                ResultSet querySet = preparedStatement.executeQuery();
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                if (querySet.next()) {
-                    String role = querySet.getString("role");
+                if (resultSet.next()) {
+                    int personId = resultSet.getInt("id");
+                    boolean isAdmin = resultSet.getObject("admin_id") != null;
+                    boolean isUser = resultSet.getObject("user_id") != null;
 
-                    if ("admin".equalsIgnoreCase(role)) {
+                    if (isAdmin) {
                         loginMessageLabel.setText("Login Successful! Welcome Admin.");
                         openAdminDashboardScreen();
-                    } else if ("user".equalsIgnoreCase(role)) {
+                    } else if (isUser) {
                         loginMessageLabel.setText("Login Successful! Welcome User.");
                         openUserDashboardScreen();
                     } else {
@@ -118,9 +126,9 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
             Parent dashboardRoot = fxmlLoader.load();
 
-            // Lấy controller của UserDashboard và gọi phương thức khởi tạo Home
+
             UserDashboardController userDashboardController = fxmlLoader.getController();
-            userDashboardController.selectHome(); // Chọn Home khi chuyển màn hình
+            userDashboardController.selectHome();
 
             Scene currentScene = loginButton.getScene();
             currentScene.setRoot(dashboardRoot);
@@ -144,6 +152,7 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);
