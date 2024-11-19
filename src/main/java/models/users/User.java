@@ -1,62 +1,56 @@
 package models.users;
 
-public class User {
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String password;
-    private String role;
+import javafx.fxml.FXML;
+import models.documents.Book;
+import models.documents.Document;
 
-    public User(int id, String firstName, String lastName, String username, String password, String role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
+import java.util.ArrayList;
+import java.util.List;
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
+public class User extends Person {
+    private List<Document> borrowedDocuments;
+    private int maxDocumentAllowed;
+
+    public User(String username, String password, String firstName, String lastName,
+                String email, String phone, int maxDocumentAllowed) {
+        super(username, password, firstName, lastName, email, phone);
+        this.borrowedDocuments = new ArrayList<Document>();
+        this.maxDocumentAllowed = maxDocumentAllowed;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public List<Document> getBorrowedDocuments() {
+        return borrowedDocuments;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public int getMaxDocumentAllowed() {
+        return maxDocumentAllowed;
     }
 
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
+    public void setBorrowedDocuments(List<Document> borrowedDocuments) {
+        this.borrowedDocuments = borrowedDocuments;
     }
 
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMaxDocumentAllowed(int maxDocumentAllowed) {
+        this.maxDocumentAllowed = maxDocumentAllowed;
     }
 
-    public String getRole() {
-        return role;
-    }
-    public void setRole(String role) {
-        this.role = role;
+    public boolean borrowDocument(Document document) {
+        if (borrowedDocuments.size() < maxDocumentAllowed && document.isAvailable()) {
+            borrowedDocuments.add(document);
+            document.borrowItem();
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    public boolean returnDocument(Document document) {
+        if(borrowedDocuments.contains(document)) {
+            borrowedDocuments.remove(document);
+            document.returnItem();
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

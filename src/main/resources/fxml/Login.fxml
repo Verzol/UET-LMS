@@ -21,7 +21,7 @@
             <Image url="@../image/Background.gif" />
          </image>
       </ImageView>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/styles.css">
+      <AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../styles/styles.css">
          <children>
             <Rectangle arcHeight="60.0" arcWidth="60.0" fill="#e8e8e8" height="623.0" layoutX="623.0" layoutY="60.0" opacity="0.59" stroke="BLACK" strokeType="INSIDE" width="528.0" />
             <Label alignment="CENTER" layoutX="723.0" layoutY="109.0" prefHeight="43.0" prefWidth="328.0" text="Welcome to UET - LMS" textFill="#003e8a">
@@ -33,7 +33,8 @@
             <TextField fx:id="accountField" layoutX="727.0" layoutY="223.0" prefHeight="40.0" prefWidth="320.0" promptText="Enter username" styleClass="text-field" stylesheets="@../styles/login_and_register_style.css">
                <font>
                   <Font size="20.0" />
-               </font></TextField>
+               </font>
+            </TextField>
             <PasswordField fx:id="passwordField" layoutX="727.0" layoutY="288.0" prefHeight="40.0" prefWidth="320.0" promptText="Enter password" styleClass="text-field" stylesheets="@../styles/login_and_register_style.css" />
             <Hyperlink fx:id="registerLink" layoutX="790.0" layoutY="462.0" onAction="#openRegisterScreen" stylesheets="@../styles/login_and_register_style.css" text="Don't have an account? Sign up" textFill="#3300ff">
                <font>
