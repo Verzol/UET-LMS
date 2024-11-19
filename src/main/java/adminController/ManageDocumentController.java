@@ -342,12 +342,10 @@ public class ManageDocumentController {
     @FXML
     private void viewDocumentCover() {
         Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
-
         if (selectedItem == null) {
             showErrorAlert("No item selected!");
             return;
         }
-
         String imageUrl = null;
 
         if (selectedItem instanceof Book book) {
@@ -360,12 +358,10 @@ public class ManageDocumentController {
             showErrorAlert("This document type does not support cover images!");
             return;
         }
-
         if (imageUrl == null || imageUrl.isEmpty()) {
             showErrorAlert("This document does not have a cover image URL!");
             return;
         }
-
         try {
             Dialog<Void> dialog = new Dialog<>();
             dialog.setTitle("Document Cover");
