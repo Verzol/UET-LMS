@@ -1,6 +1,7 @@
 package service;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -49,7 +50,6 @@ public class BookDetailController {
             publishedDateLabel.setText("Published Date: " + publishedDate);
             ratingLabel.setText("Rating: " + rating);
             descriptionArea.setText(description);
-
 
             if (imageUrl != null && !imageUrl.isEmpty()) {
 
