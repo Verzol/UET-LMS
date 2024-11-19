@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="service.BookDetailController">
+    <children>
+        <VBox layoutX="20.0" layoutY="20.0" spacing="10">
+
+            <ImageView fx:id="bookImageView" fitWidth="200.0" fitHeight="300.0" preserveRatio="true" />
+
+            <Label fx:id="bookTitle" text="Book Title" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+            <Label fx:id="authorLabel" text="Author: " />
+
+            <Label fx:id="publisherLabel" text="Publisher: " />
+
+            <Label fx:id="publishedDateLabel" text="Published Date: " />
+
+
+            <Label fx:id="ratingLabel" text="Rating: " />
+
+            <TextArea fx:id="descriptionArea" wrapText="true" editable="false" prefHeight="100.0" />
+
+        </VBox>
+    </children>
+</AnchorPane>
