@@ -204,7 +204,6 @@ public class DashboardController {
         searchResultsList.setManaged(false);
         closeListViewButton.setVisible(false);
         closeListViewButton.setManaged(false);
-
         searchResultsList.getItems().clear();
     }
 
