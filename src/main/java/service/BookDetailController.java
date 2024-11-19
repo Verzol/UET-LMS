@@ -66,6 +66,7 @@ public class BookDetailController {
                 bookImageView.setImage(loadDefaultImage());
             }
         }
+
         private Image loadDefaultImage() {
             return new Image(getClass().getResource("/image/book.png").toString());
         }
