@@ -195,6 +195,7 @@
             </left>
             <center>
                 <AnchorPane fx:id="mainContent" stylesheets="@../styles/styles.css" />
+
             </center>
             <top>
                 <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">

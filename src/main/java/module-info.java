@@ -8,6 +8,7 @@ module com.example.uetlms {
     requires java.desktop;
     requires java.sql;
     requires org.json;
+    requires java.net.http;
 
     opens adminController to javafx.fxml;
     exports adminController;
