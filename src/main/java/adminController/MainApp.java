@@ -37,6 +37,7 @@ public class MainApp extends Application {
             primaryStage.setTitle("UET Library Management");
             primaryStage.show();
 
+            // Khởi tạo kết nối database
             DatabaseConnection.getInstance();
         } catch (Exception e) {
             e.printStackTrace();
