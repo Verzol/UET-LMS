@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ListView?>
 <AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserDashboardController">
     <children>
         <BorderPane layoutY="7.0" prefHeight="720.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -158,32 +159,22 @@
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </Pane>
-                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="307.0" styleClass="textFiled" stylesheets="@../styles/styles.css">
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="307.0" spacing="5.0">
                             <children>
-                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
-                                    <opaqueInsets>
-                                        <Insets />
-                                    </opaqueInsets>
-                                    <HBox.margin>
-                                        <Insets right="5.0" />
-                                    </HBox.margin>
+                                <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
                                     <font>
                                         <Font name="Segoe UI" size="15.0" />
                                     </font>
                                 </TextField>
-                                <ImageView fitHeight="23.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/icons8-search-32.png" />
-                                    </image>
-                                </ImageView>
+                                <ListView fx:id="searchResultsList" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="307.0" onMouseClicked="#handleBookClick" styleClass="search-results-list" visible="false"
+                                          managed="false" />
+                                <Button fx:id="closeListViewButton"
+                                        text="Close Results"
+                                        onAction="#handleCloseListView"
+                                        visible="false"
+                                        managed="false" />
                             </children>
-                            <opaqueInsets>
-                                <Insets />
-                            </opaqueInsets>
-                            <HBox.margin>
-                                <Insets />
-                            </HBox.margin>
-                        </HBox>
+                        </VBox>
                         <Pane prefHeight="62.0" prefWidth="417.0" style="-fx-background-color: #fff;" />
                         <HBox prefHeight="52.0" prefWidth="169.0">
                             <children>
