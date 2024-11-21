@@ -7,9 +7,11 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="game.QuizGameController">
+    <ToggleButton fx:id="modeToggle" text="Mode: Find Books by Author" onAction="#switchMode" />
     <children>
 
         <Label fx:id="questionLabel" layoutX="50" layoutY="30" text="Question will appear here"/>
+
 
 
         <TextField fx:id="keywordTextField" layoutX="50" layoutY="70" promptText="Enter book keyword" />

@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -20,35 +21,34 @@ public class QuizGameAPI {
 
 
     public static List<String> fetchBooks(String query) {
-        return fetchBooksByQuery(query);
+        return fetchBooksByQuery(query,true);
     }
 
 
     public static List<String> fetchBooksByAuthor(String author) {
         String authorQuery = "inauthor:" + author;
-        return fetchBooksByQuery(authorQuery);
+        return fetchBooksByQuery(authorQuery, true);
     }
 
+    public static List<String> fetchAuthorsByBook(String bookTitle) {
+        return fetchBooksByQuery(bookTitle, false);
+    }
 
-    private static List<String> fetchBooksByQuery(String query) {
-        List<String> bookList = new ArrayList<>();
+    private static List<String> fetchBooksByQuery(String query, boolean isAuthorSearch) {
+        List<String> resultList = new ArrayList<>();
 
         try {
-
             String encodedQuery = URLEncoder.encode(query, "UTF-8");
             String requestUrl = API_URL + encodedQuery + "&key=" + API_KEY;
-
 
             HttpURLConnection connection = (HttpURLConnection) new URL(requestUrl).openConnection();
             connection.setRequestMethod("GET");
 
-
             int responseCode = connection.getResponseCode();
             if (responseCode != 200) {
-                bookList.add("Error: Unable to fetch data (HTTP " + responseCode + ")");
-                return bookList;
+                resultList.add("Error: Unable to fetch data (HTTP " + responseCode + ")");
+                return resultList;
             }
-
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder response = new StringBuilder();
@@ -58,31 +58,38 @@ public class QuizGameAPI {
             }
             reader.close();
 
-
             JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
             if (!jsonResponse.has("items")) {
-                bookList.add("No books found for query: " + query);
-                return bookList;
+                resultList.add("No results found for query: " + query);
+                return resultList;
             }
 
             JsonArray items = jsonResponse.getAsJsonArray("items");
             for (JsonElement item : items) {
                 JsonObject book = item.getAsJsonObject().getAsJsonObject("volumeInfo");
 
-                String title = book.has("title") ? book.get("title").getAsString() : "Unknown Title";
-                String authors = book.has("authors")
-                        ? book.getAsJsonArray("authors").toString().replaceAll("[\\[\\]\"]", "")
-                        : "Unknown Author";
-
-                bookList.add("Title: " + title );
+                if (isAuthorSearch) {
+                    // Nếu là tìm sách theo tác giả, trả về tên sách
+                    String title = book.has("title") ? book.get("title").getAsString() : "Unknown Title";
+                    resultList.add("Title: " + title);
+                } else {
+                    // Nếu là tìm tác giả theo sách, trả về tên tác giả
+                    String authors = book.has("authors")
+                            ? book.getAsJsonArray("authors").toString().replaceAll("[\\[\\]\"]", "")
+                            : "Unknown Author";
+                    resultList.add(authors);
+                }
             }
 
         } catch (Exception e) {
-            bookList.add("Error: " + e.getMessage());
+            resultList.add("Error: " + e.getMessage());
             e.printStackTrace();
         }
 
-        return bookList;
+        return resultList;
     }
+
+
+
 
 }
