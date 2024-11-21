@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
-import javafx.concurrent.Task;
 import service.BookDataService;
 
 import java.sql.Connection;
@@ -13,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class UserHomeController {
 
@@ -28,73 +29,71 @@ public class UserHomeController {
     @FXML
     public void initialize() {
         if (BookDataService.getLoadedBooks().isEmpty()) {
-            loadBooksFromDatabase();
+            preLoadBooks();
         } else {
-            displayBooks();
+            displayBooks(BookDataService.getLoadedBooks());
         }
     }
 
-    private void loadBooksFromDatabase() {
-        Task<Void> loadTask = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                String query = "SELECT id, genre, image_url FROM books";
-
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    List<Node> booksToAdd = new ArrayList<>();
-                    int row = 0;
-                    int col = 0;
-                    while (resultSet.next()) {
-                        String genre = resultSet.getString("genre");
-                        String imageUrl = resultSet.getString("image_url");
-
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Book.fxml"));
-                        Node bookNode = loader.load();
-
-                        BookController controller = loader.getController();
-                        controller.setBookDetails(imageUrl, genre);
-
-                        booksToAdd.add(bookNode);
-
-                        col++;
-                        if (col == 4) {
-                            col = 0;
-                            row++;
-                        }
-                    }
-
-                    Platform.runLater(() -> {
-                        for (int i = 0; i < booksToAdd.size(); i++) {
-                            Node bookNode = booksToAdd.get(i);
-                            int finalRow = i / 4;
-                            int finalCol = i % 4;
-                            bookContainer.add(bookNode, finalCol, finalRow);
-                        }
-
-                        BookDataService.setLoadedBooks(booksToAdd);
-                    });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
+    private void preLoadBooks() {
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        executor.submit(() -> {
+            try {
+                List<Node> bookNodes = loadBooksFromDatabase();
+                Platform.runLater(() -> {
+                    BookDataService.setLoadedBooks(bookNodes);
+                    displayBooks(bookNodes);
+                });
+            } finally {
+                executor.shutdown();
             }
-        };
-
-        new Thread(loadTask).start();
+        });
     }
 
-    private void displayBooks() {
-        int row = 0;
-        int col = 0;
-        for (Node bookNode : BookDataService.getLoadedBooks()) {
-            final int finalRow = row;
-            final int finalCol = col;
+    private List<Node> loadBooksFromDatabase() {
+        List<Node> bookNodes = new ArrayList<>();
+        String query = """
+                SELECT b.id, d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
+                       d.author, d.quantity_in_stock, d.borrowed_quantity 
+                FROM books b 
+                INNER JOIN documents d ON b.id = d.id 
+                LIMIT 6
+                """;
 
-            Platform.runLater(() -> bookContainer.add(bookNode, finalCol, finalRow));
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            while (resultSet.next()) {
+                String id = resultSet.getString("id");
+                String title = resultSet.getString("title");
+                String genre = resultSet.getString("genre");
+                int pageCount = resultSet.getInt("page_count");
+                String isbn = resultSet.getString("ISBN");
+                String imageUrl = resultSet.getString("image_url");
+                String author = resultSet.getString("author");
+                int quantityInStock = resultSet.getInt("quantity_in_stock");
+                int borrowedQuantity = resultSet.getInt("borrowed_quantity");
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Book.fxml"));
+                Node bookNode = loader.load();
+
+                BookController controller = loader.getController();
+                controller.setBookDetails(id, title, genre, pageCount, isbn, imageUrl, author, quantityInStock, borrowedQuantity);
+
+                bookNodes.add(bookNode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookNodes;
+    }
+
+    private void displayBooks(List<Node> bookNodes) {
+        bookContainer.getChildren().clear();
+        int row = 0, col = 0;
+
+        for (Node bookNode : bookNodes) {
+            bookContainer.add(bookNode, col, row);
             col++;
             if (col == 4) {
                 col = 0;
