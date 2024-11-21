@@ -70,4 +70,6 @@ public class BookDetailController {
         private Image loadDefaultImage() {
             return new Image(getClass().getResource("/image/book.png").toString());
         }
+
+
     }

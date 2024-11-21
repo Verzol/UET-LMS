@@ -14,4 +14,8 @@ public class BookDataService {
     public static void setLoadedBooks(List<Node> books) {
         loadedBooks = books;
     }
+
+    public static boolean isBooksLoaded() {
+        return !loadedBooks.isEmpty();
+    }
 }
