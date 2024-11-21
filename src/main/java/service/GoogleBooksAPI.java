@@ -1,17 +1,34 @@
 package service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import javafx.scene.control.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import javax.json.*;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import javax.json.JsonObject;
 
 public class GoogleBooksAPI {
 
@@ -78,5 +95,7 @@ public class GoogleBooksAPI {
             e.printStackTrace();
         }
     }
+
+
 
 }

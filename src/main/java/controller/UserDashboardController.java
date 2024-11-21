@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import models.documents.Book;
 import service.BookDetailController;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,50 @@ public class UserDashboardController {
 
     @FXML
     private Button entertainmentButton;
+
+
+
+    @FXML
+    private Label questionLabel;
+    @FXML
+    private Button option1, option2, option3, option4;
+
+    public void loadQuestion() {
+
+        String question = "Which book is written by Author X?";
+        questionLabel.setText(question);
+        option1.setText("Option 1");
+        option2.setText("Option 2");
+        option3.setText("Option 3");
+        option4.setText("Option 4");
+    }
+
+    @FXML
+    private void checkAnswer(ActionEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        if (clickedButton.getText().equals("Correct Answer")) {
+            System.out.println("Correct!");
+        } else {
+            System.out.println("Wrong!");
+        }
+    }
+
+    @FXML
+    public void entertainment() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/QuizGame.fxml"));
+            Scene scene = new Scene(loader.load());
+
+
+            Stage stage = new Stage();
+            stage.setTitle("Book Quiz Game");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private Button settingButton;
@@ -91,11 +136,6 @@ public class UserDashboardController {
         setSelectedButton(returnDocumentButton);
     }
 
-    @FXML
-    public void entertainment() {
-        loadScene("Entertainment.fxml");
-        setSelectedButton(entertainmentButton);
-    }
 
     @FXML
     public void setting() {
