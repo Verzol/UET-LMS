@@ -207,12 +207,26 @@
                         </Pane>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="307.0" spacing="5.0">
                             <children>
-                                <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
+                                <TextField fx:id="searchBox"
+                                           maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                                           onAction="#handleSearch"
+                                           prefHeight="30.0" prefWidth="268.0"
+                                           promptText="Search" styleClass="transparent"
+                                           stylesheets="@../styles/styles.css">
                                     <font>
                                         <Font name="Segoe UI" size="15.0" />
                                     </font>
                                 </TextField>
-                                <ListView fx:id="searchResultsList" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="307.0"  onMouseClicked="#handleBookClick" styleClass="search-results-list" visible="false"
+                                <ListView fx:id="searchResultsList"
+                                          maxHeight="-Infinity"
+                                          maxWidth="-Infinity"
+                                          minHeight="-Infinity"
+                                          minWidth="-Infinity"
+                                          prefHeight="195.0"
+                                          prefWidth="307.0"
+                                          onMouseClicked="#handleBookClick"
+                                          styleClass="search-results-list"
+                                          visible="false"
                                           managed="false" />
                                 <Button fx:id="closeListViewButton"
                                         text="Close Results"

@@ -166,7 +166,16 @@
                                         <Font name="Segoe UI" size="15.0" />
                                     </font>
                                 </TextField>
-                                <ListView fx:id="searchResultsList" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="307.0" onMouseClicked="#handleBookClick" styleClass="search-results-list" visible="false"
+                                <ListView fx:id="searchResultsList"
+                                          maxHeight="-Infinity"
+                                          maxWidth="-Infinity"
+                                          minHeight="-Infinity"
+                                          minWidth="-Infinity"
+                                          prefHeight="195.0"
+                                          prefWidth="307.0"
+                                          onMouseClicked="#handleBookClick"
+                                          styleClass="search-results-list"
+                                          visible="false"
                                           managed="false" />
                                 <Button fx:id="closeListViewButton"
                                         text="Close Results"
