@@ -82,6 +82,30 @@ public class UserDashboardController {
         }
     }
 
+    private boolean isFindBooksByAuthorMode = true; // true: Tìm sách từ tác giả, false: Tìm tác giả từ sách
+
+    @FXML
+    private ToggleButton modeToggle;
+
+    @FXML
+    private TextField keywordTextField;
+
+    @FXML
+    private void switchMode() {
+        isFindBooksByAuthorMode = !isFindBooksByAuthorMode;
+
+        if (isFindBooksByAuthorMode) {
+
+            questionLabel.setText("Enter an author name:");
+            keywordTextField.setPromptText("Author name...");
+        } else {
+
+            questionLabel.setText("Enter a book title:");
+            keywordTextField.setPromptText("Book title...");
+        }
+    }
+
+
     @FXML
     private Button settingButton;
 
