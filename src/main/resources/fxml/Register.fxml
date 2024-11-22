@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -13,10 +12,10 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" style="-fx-background-color: #2d0ea8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <children>
         <!-- Background -->
-        <ImageView fitHeight="720.0" fitWidth="1300.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="700.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../image/Background.gif" />
             </image>
@@ -25,23 +24,23 @@
         <!-- Form Container -->
         <AnchorPane prefHeight="720.0" prefWidth="1200.0">
             <children>
-                <Rectangle arcHeight="60.0" arcWidth="60.0" fill="WHITE" height="650.0" layoutX="633.0" layoutY="50.0" opacity="0.59" stroke="BLACK" strokeType="INSIDE" width="528.0" />
+                <Rectangle arcHeight="60.0" arcWidth="60.0" fill="WHITE" height="623.0" layoutX="623.0" layoutY="60.0" opacity="0.59" stroke="BLACK" strokeType="INSIDE" width="528.0" />
 
                 <!-- Title -->
-                <Label alignment="CENTER" layoutX="737.0" layoutY="80.0" prefHeight="30.0" prefWidth="300.0" text="Register to UET - LMS">
+                <Label alignment="CENTER" layoutX="723.0" layoutY="109.0" prefHeight="30.0" prefWidth="300.0" text="Register to UET - LMS">
                     <font>
                         <Font name="Nunito ExtraBold" size="24.0" />
                     </font>
                 </Label>
 
                 <!-- Form Fields -->
-                <TextField fx:id="firstNameField" layoutX="727.0" layoutY="150.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter first name" stylesheets="@../styles/login_and_register_style.css" />
-                <TextField fx:id="lastNameField" layoutX="727.0" layoutY="200.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter last name" stylesheets="@../styles/login_and_register_style.css" />
-                <TextField fx:id="usernameField" layoutX="727.0" layoutY="250.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter your username" stylesheets="@../styles/login_and_register_style.css" />
-                <TextField fx:id="emailField" layoutX="727.0" layoutY="300.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter your email" stylesheets="@../styles/login_and_register_style.css" />
-                <TextField fx:id="phoneField" layoutX="727.0" layoutY="350.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter your phone number" stylesheets="@../styles/login_and_register_style.css" />
-                <PasswordField fx:id="passwordField" layoutX="727.0" layoutY="400.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter password" stylesheets="@../styles/login_and_register_style.css" />
-                <PasswordField fx:id="confirmPasswordField" layoutX="727.0" layoutY="450.0" prefHeight="36.0" prefWidth="320.0" promptText="Confirm password" stylesheets="@../styles/login_and_register_style.css" />
+                <TextField fx:id="firstNameField" layoutX="727.0" layoutY="180.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter first name" stylesheets="@../styles/login_and_register_style.css" />
+                <TextField fx:id="lastNameField" layoutX="727.0" layoutY="230.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter last name" stylesheets="@../styles/login_and_register_style.css" />
+                <TextField fx:id="usernameField" layoutX="727.0" layoutY="280.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter your username" stylesheets="@../styles/login_and_register_style.css" />
+                <TextField fx:id="emailField" layoutX="727.0" layoutY="330.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter your email" stylesheets="@../styles/login_and_register_style.css" />
+                <TextField fx:id="phoneField" layoutX="727.0" layoutY="380.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter your phone number" stylesheets="@../styles/login_and_register_style.css" />
+                <PasswordField fx:id="passwordField" layoutX="727.0" layoutY="430.0" prefHeight="36.0" prefWidth="320.0" promptText="Enter password" stylesheets="@../styles/login_and_register_style.css" />
+                <PasswordField fx:id="confirmPasswordField" layoutX="727.0" layoutY="480.0" prefHeight="36.0" prefWidth="320.0" promptText="Confirm password" stylesheets="@../styles/login_and_register_style.css" />
 
                 <!-- Registration Message -->
                 <Label fx:id="registrationMessageLabel" alignment="CENTER" layoutX="727.0" layoutY="570.0" prefHeight="20.0" prefWidth="320.0" textFill="RED">
@@ -51,23 +50,17 @@
                 </Label>
 
                 <!-- Buttons -->
-                <HBox layoutX="782.0" layoutY="500.0" prefHeight="32.0" prefWidth="210.0">
-                    <children>
-                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonAction" prefHeight="32.0" prefWidth="90.0" styleClass="cancel-button" stylesheets="@../styles/login_and_register_style.css" text="Cancel" textFill="WHITE">
-                            <font>
-                                <Font size="17.0" />
-                            </font>
-                            <HBox.margin>
-                                <Insets right="30.0" />
-                            </HBox.margin>
-                        </Button>
-                        <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUpButtonAction" prefHeight="32.0" prefWidth="90.0" stylesheets="@../styles/login_and_register_style.css" text="Sign up" textFill="WHITE">
-                            <font>
-                                <Font size="13.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </HBox>
+                <HBox layoutX="782.0" layoutY="500.0" prefHeight="32.0" prefWidth="210.0" />
+                  <Button fx:id="cancelButton" layoutX="771.0" layoutY="538.0" mnemonicParsing="false" onAction="#cancelButtonAction" prefHeight="32.0" prefWidth="90.0" styleClass="cancel-button" stylesheets="@../styles/login_and_register_style.css" text="Cancel" textFill="WHITE">
+                      <font>
+                          <Font size="17.0" />
+                      </font>
+                  </Button>
+                  <Button fx:id="signUpButton" layoutX="902.0" layoutY="538.0" mnemonicParsing="false" onAction="#signUpButtonAction" prefHeight="32.0" prefWidth="90.0" stylesheets="@../styles/login_and_register_style.css" text="Sign up" textFill="WHITE">
+                      <font>
+                          <Font size="13.0" />
+                      </font>
+                  </Button>
             </children>
         </AnchorPane>
     </children>
