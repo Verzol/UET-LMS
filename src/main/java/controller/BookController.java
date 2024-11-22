@@ -33,7 +33,7 @@ public class BookController {
     private String bookId;
 
     public void setBookDetails(String bookId, String title, String genre, int pageCount, String isbn,
-                               String imageUrl, String author, int quantityInStock, int borrowedQuantity) {
+                               String imageUrl, String author, int quantityInStock, int borrowedQuantity, String bookdescription) {
         this.bookId = bookId;
         if (this.bookTitleLabel == null) {
             this.bookTitleLabel = new Label("Title1");
@@ -67,7 +67,7 @@ public class BookController {
             Connection connection = new DatabaseConnection().getConnection();
             String query = """
                     SELECT d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
-                           d.author, d.quantity_in_stock, d.borrowed_quantity 
+                           d.author, d.quantity_in_stock, d.borrowed_quantity, d.bookdescription
                     FROM books b 
                     INNER JOIN documents d ON b.id = d.id 
                     WHERE b.id = ?
@@ -87,7 +87,7 @@ public class BookController {
                         resultSet.getString("author"),
                         resultSet.getInt("quantity_in_stock"),
                         resultSet.getInt("borrowed_quantity"),
-                        null
+                        resultSet.getString("bookdescription")
                 );
             }
 

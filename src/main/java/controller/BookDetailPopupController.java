@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 public class BookDetailPopupController {
@@ -34,6 +35,9 @@ public class BookDetailPopupController {
     private Label borrowedQuantityLabel;
 
     @FXML
+    private TextArea descriptionTextArea;
+
+    @FXML
     private Button closeButton;
 
     @FXML
@@ -42,6 +46,7 @@ public class BookDetailPopupController {
         stage.close();
     }
 
+    // Method to set book details, including description
     public void setBookDetails(String title, String genre, int pageCount, String isbn, String imageUrl,
                                String author, int quantityInStock, int borrowedQuantity, String description) {
         bookTitleLabel.setText(title != null ? title : "N/A");
@@ -61,5 +66,8 @@ public class BookDetailPopupController {
         } else {
             bookCoverImageView.setImage(new Image("/images/default_book_cover.png"));
         }
+
+        // Set the description in the TextArea
+        descriptionTextArea.setText(description != null && !description.isEmpty() ? description : "No description available.");
     }
 }
