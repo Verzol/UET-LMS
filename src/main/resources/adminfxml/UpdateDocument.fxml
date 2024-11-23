@@ -5,43 +5,64 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="371.0" prefWidth="471.0" style="-fx-background-color: #F5F5F5;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="adminController.UpdateDocumentController">
+<AnchorPane prefHeight="572.0" prefWidth="480.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.UpdateDocumentController">
     <children>
-        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Update Document">
-         <font>
-            <Font size="16.0" />
-         </font></Label>
+        <VBox alignment="CENTER" layoutX="40.0" layoutY="30.0" spacing="10.0">
+            <children>
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Update Document" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Please fill out all fields below to update the document details." />
+            </children>
+        </VBox>
 
-        <Label layoutX="20.0" layoutY="60.0" text="Title:" />
-        <TextField fx:id="titleTextField" layoutX="150.0" layoutY="56.0" prefWidth="300.0" />
+        <GridPane hgap="20.0" layoutX="21.0" layoutY="95.0" prefHeight="383.0" prefWidth="419.0" vgap="15.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Title:" />
+                <TextField fx:id="titleTextField" prefHeight="32.0" prefWidth="156.0" styleClass="textFiled" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Author:" GridPane.rowIndex="1" />
+                <TextField fx:id="authorTextField" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Quantity:" GridPane.rowIndex="2" />
+                <TextField fx:id="quantityField" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label fx:id="additionalField1Label" style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Field 1:" visible="false" GridPane.rowIndex="3" />
+                <TextField fx:id="additionalField1" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label fx:id="additionalField2Label" style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Field 2:" visible="false" GridPane.rowIndex="4" />
+                <TextField fx:id="additionalField2" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label fx:id="additionalField3Label" style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Field 3:" visible="false" GridPane.rowIndex="5" />
+                <TextField fx:id="additionalField3" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <Label fx:id="additionalField4Label" style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Field 4:" visible="false" GridPane.rowIndex="6" />
+                <TextField fx:id="additionalField4" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #333333;" text="Edition:" GridPane.rowIndex="7" />
+                <TextField fx:id="editionField" prefHeight="25.0" prefWidth="400.0" styleClass="textFiled" stylesheets="@../styles/styles.css" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </GridPane>
 
-        <Label layoutX="20.0" layoutY="100.0" text="Author:" />
-        <TextField fx:id="authorTextField" layoutX="150.0" layoutY="96.0" prefWidth="300.0" />
-
-        <Label fx:id="additionalField1Label" layoutX="20.0" layoutY="140.0" text="Field 1:" visible="false" />
-        <TextField fx:id="additionalField1" layoutX="150.0" layoutY="136.0" prefWidth="300.0" visible="false" />
-
-        <Label fx:id="additionalField2Label" layoutX="20.0" layoutY="180.0" text="Field 2:" visible="false" />
-        <TextField fx:id="additionalField2" layoutX="150.0" layoutY="176.0" prefWidth="300.0" visible="false" />
-
-        <Label fx:id="additionalField3Label" layoutX="20.0" layoutY="220.0" text="Field 3:" visible="false" />
-        <TextField fx:id="additionalField3" layoutX="150.0" layoutY="216.0" prefWidth="300.0" visible="false" />
-
-        <Label fx:id="additionalField4Label" layoutX="20.0" layoutY="260.0" text="Field 4:" visible="false" />
-        <TextField fx:id="additionalField4" layoutX="150.0" layoutY="256.0" prefWidth="300.0" visible="false" />
-      <HBox layoutX="136.0" layoutY="315.0" prefHeight="31.0" prefWidth="200.0">
-         <children>
-              <Button fx:id="cancelButton" onAction="#cancelUpdate" prefWidth="100.0" styleClass="cancel-button" stylesheets="@../styles/styles.css" text="Cancel">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Button>
-      
-              <Button fx:id="saveButton" onAction="#saveChanges" prefWidth="100.0" styleClass="save-button" stylesheets="@../styles/styles.css" text="Save" />
-         </children>
-      </HBox>
+        <HBox alignment="CENTER" layoutX="90.0" layoutY="499.0" prefHeight="40.0" prefWidth="300.0" spacing="20.0">
+            <children>
+                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelUpdate" prefHeight="31.0" prefWidth="80.0" styleClass="cancel-button" stylesheets="@../styles/styles.css" text="Cancel" />
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveChanges" prefHeight="31.0" prefWidth="80.0" styleClass="save-button" stylesheets="@../styles/styles.css" text="Save" />
+            </children>
+        </HBox>
     </children>
 </AnchorPane>

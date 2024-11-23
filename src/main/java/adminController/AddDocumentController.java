@@ -185,31 +185,6 @@ public class AddDocumentController {
         journalFields.setManaged(true);
     }
 
-    @FXML
-    private void saveItem() {
-        String selectedType = itemTypeComboBox.getValue();
-        if (selectedType == null) return;
-
-        try {
-            boolean isDuplicate = checkDuplicate(idTextField.getText());
-
-            if (isDuplicate) {
-                showErrorAlert("Document ID already exists. Please use another ID");
-            } else {
-                switch (selectedType) {
-                    case "Book" -> saveBook();
-                    case "Magazine" -> saveMagazine();
-                    case "Thesis" -> saveThesis();
-                    case "Journal" -> saveJournal();
-                }
-                showSuccessAlert(selectedType + " has been added successfully!");
-                clearFields();
-            }
-        } catch (NumberFormatException e) {
-            showErrorAlert("Please enter valid values for each fields");
-        }
-    }
-
     private boolean checkDuplicate(String id) {
         return bookDAO.exists(id) || magazineDAO.exists(id) || thesisDAO.exists(id) || journalDAO.exists(id);
     }
@@ -233,6 +208,31 @@ public class AddDocumentController {
         volumeTextField.clear();
         publishNumberTextFieldJournal.clear();
         imageUrlTextFieldJournal.clear();
+    }
+
+    @FXML
+    private void saveItem() {
+        String selectedType = itemTypeComboBox.getValue();
+        if (selectedType == null) return;
+
+        try {
+            boolean isDuplicate = checkDuplicate(idTextField.getText());
+
+            if (isDuplicate) {
+                showErrorAlert("Document ID already exists. Please use another ID");
+            } else {
+                switch (selectedType) {
+                    case "Book" -> saveBook();
+                    case "Magazine" -> saveMagazine();
+                    case "Thesis" -> saveThesis();
+                    case "Journal" -> saveJournal();
+                }
+                showSuccessAlert(selectedType + " has been added successfully!");
+                clearFields();
+            }
+        } catch (NumberFormatException e) {
+            showErrorAlert("Please enter valid values for each field");
+        }
     }
 
     private void saveBook() {
@@ -307,4 +307,5 @@ public class AddDocumentController {
     private void cancelAddDocument() {
         closeWindow();
     }
+
 }

@@ -16,14 +16,12 @@
 
 <AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserDashboardController">
     <children>
-        <!-- Header -->
         <Label layoutX="59.0" layoutY="22.0" prefHeight="52.0" prefWidth="355.0" text="Dashboard">
             <font>
                 <Font name="System Bold" size="25.0" />
             </font>
         </Label>
 
-        <!-- Dashboard Statistics Cards -->
         <HBox layoutX="59.0" layoutY="82.0" prefHeight="121.0" prefWidth="852.0" spacing="10.0">
             <children>
                 <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #38AFFF;" styleClass="card" stylesheets="@../styles/styles.css">
@@ -50,13 +48,8 @@
                         </Label>
                     </children>
                 </VBox>
-
-                <!-- Similar structure for other cards -->
-                <!-- Add more cards if needed -->
             </children>
         </HBox>
-
-        <!-- Chart Section -->
         <BarChart fx:id="barChart" layoutX="59.0" layoutY="255.0" prefHeight="400.0" prefWidth="515.0">
             <xAxis>
                 <CategoryAxis side="BOTTOM" />
@@ -65,8 +58,6 @@
                 <NumberAxis side="LEFT" />
             </yAxis>
         </BarChart>
-
-        <!-- Top Books List -->
         <ListView fx:id="topBooksList" layoutX="609.0" layoutY="270.0" prefHeight="358.0" prefWidth="301.0" />
         <Label layoutX="609.0" layoutY="243.0" prefHeight="21.0" prefWidth="104.0" text="Top Books">
             <font>

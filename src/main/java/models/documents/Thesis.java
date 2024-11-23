@@ -9,9 +9,9 @@ public class Thesis extends Document {
         super();
     }
 
-    public Thesis(String id, String title, String author, int edition
-            , int quantityInStock, String university, String supervisor, String field) {
-        super(id, title, author, edition, quantityInStock);
+    public Thesis(String id, String title, String author, int edition, int quantityInStock,
+                  int timesBorrowed, String university, String supervisor, String field) {
+        super(id, title, author, edition, quantityInStock, timesBorrowed);
         this.university = university;
         this.supervisor = supervisor;
         this.field = field;

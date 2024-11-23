@@ -2,7 +2,7 @@ package models.users;
 
 public abstract class Person {
     private static int counter = 0;
-    private final String id;
+    private final int id;
     private String username;
     private String password;
     private String firstName;
@@ -11,7 +11,7 @@ public abstract class Person {
     private String phone;
 
     public Person(String username, String password, String firstName, String lastName, String email, String phone) {
-        this.id = String.valueOf(counter++);
+        this.id = ++counter;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -20,7 +20,7 @@ public abstract class Person {
         this.phone = phone;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

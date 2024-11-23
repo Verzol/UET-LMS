@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Hyperlink;
+import utils.SessionManager;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -98,6 +99,10 @@ public class LoginController {
                     boolean isAdmin = resultSet.getObject("admin_id") != null;
                     boolean isUser = resultSet.getObject("user_id") != null;
 
+                    // Lưu thông tin người dùng vào SessionManager
+                    SessionManager.setCurrentUserId(personId);
+                    SessionManager.setCurrentUsername(username);
+
                     if (isAdmin) {
                         loginMessageLabel.setText("Login Successful! Welcome Admin.");
                         openAdminDashboardScreen();
@@ -126,7 +131,7 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
             Parent dashboardRoot = fxmlLoader.load();
 
-
+            // Gửi thông tin người dùng vào UserDashboardController
             UserDashboardController userDashboardController = fxmlLoader.getController();
             userDashboardController.selectHome();
 
@@ -152,7 +157,6 @@ public class LoginController {
             e.printStackTrace();
         }
     }
-
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);

@@ -2,17 +2,47 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BorrowDocumentController">
+<AnchorPane prefHeight="670.0" prefWidth="980.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BorrowDocumentController">
     <children>
-        <Label layoutX="300.0" layoutY="50.0" text="Borrow Documents">
+        <Label layoutX="30.0" layoutY="16.0" text="Borrow Documents">
             <font>
-                <Font name="Segoe UI" size="24.0" />
+                <Font name="Segoe UI Bold" size="24" />
             </font>
         </Label>
-        <Button layoutX="300.0" layoutY="120.0" prefWidth="150.0" text="Request Borrow" />
-        <Button layoutX="500.0" layoutY="120.0" prefWidth="150.0" text="View Borrowed" />
+
+        <HBox layoutX="30.0" layoutY="56.0" spacing="10">
+            <children>
+                <TextField fx:id="searchField" onKeyReleased="#handleSearchKeyPress" prefWidth="300" promptText="Search by Title, Author, or ID" styleClass="textFiled" />
+                <Button fx:id="searchButton" onAction="#handleSearch" style="-fx-border-radius: 20; -fx-background-radius: 20;" styleClass="save-button" text="Search" />
+            </children>
+        </HBox>
+
+        <ScrollPane fx:id="searchSuggestionsPane" hbarPolicy="NEVER" layoutX="30" layoutY="100" prefHeight="171.0" prefWidth="300" visible="false">
+            <content>
+                <ListView fx:id="searchSuggestions" onMouseClicked="#handleSuggestionClick" />
+            </content>
+        </ScrollPane>
+
+        <TableView fx:id="tableDocuments" layoutX="30.0" layoutY="100.0" prefHeight="520.0" prefWidth="920.0" styleClass="colored-table">
+            <columns>
+                <TableColumn fx:id="columnDocumentId" prefWidth="100" style="-fx-background-color: transparent;" text="ID" />
+                <TableColumn fx:id="columnTitle" prefWidth="250" style="-fx-background-color: transparent;" text="Title" />
+                <TableColumn fx:id="columnAuthor" prefWidth="200" style="-fx-background-color: transparent;" text="Author" />
+                <TableColumn fx:id="columnEdition" prefWidth="100" style="-fx-background-color: transparent;" text="Edition" />
+                <TableColumn fx:id="columnAvailable" prefWidth="150" style="-fx-background-color: transparent;" text="Available Copies" />
+                <TableColumn fx:id="columnBorrowStatus" prefWidth="120" style="-fx-background-color: transparent;" text="Borrow Status" />
+            </columns>
+        </TableView>
+
+        <Button layoutX="425.0" layoutY="631.0" onAction="#handleBorrowDocument" style="-fx-background-color: #4123; -fx-background-radius: 10;" text="Borrow Document" />
     </children>
 </AnchorPane>

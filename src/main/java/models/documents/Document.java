@@ -10,32 +10,34 @@ public abstract class Document implements Borrowable, Identifiable {
     private int edition;
     private int quantityInStock;
     private int borrowedQuantity;
+    private int timesBorrowed;
+    private String borrowStatus;
 
-    public Document() {
-        this.id = "";
-        this.title = "";
-        this.author = "";
-        this.edition = 0;
-        this.quantityInStock = 0;
-        this.borrowedQuantity = 0;
-    }
-
-    public Document(String id, String title, String author, int edition, int quantityInStock) {
+    public Document(String id, String title, String author, int edition, int quantityInStock, int timesBorrowed) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.edition = edition;
         this.quantityInStock = quantityInStock;
         this.borrowedQuantity = 0;
+        this.timesBorrowed = timesBorrowed;
+        this.borrowStatus = "Available";
+    }
+
+    public Document() {
+        this.borrowStatus = "Available";
+        this.borrowedQuantity = 0;
+        this.timesBorrowed = 0;
     }
 
     @Override
     public void borrowItem() {
-        if (borrowedQuantity >= quantityInStock) {
-            System.out.println(title + " not available for borrowing.");
-        } else {
+        if (borrowedQuantity < quantityInStock) {
             borrowedQuantity++;
-            System.out.println(title + " has been borrowed. Available: " + getAvailableQuantity());
+            timesBorrowed++;
+            updateBorrowStatus();
+        } else {
+            throw new IllegalStateException("No available copies to borrow.");
         }
     }
 
@@ -43,9 +45,17 @@ public abstract class Document implements Borrowable, Identifiable {
     public void returnItem() {
         if (borrowedQuantity > 0) {
             borrowedQuantity--;
-            System.out.println(title + " has been returned. Available: " + getAvailableQuantity());
+            updateBorrowStatus();
         } else {
-            System.out.println("No borrowed copies of " + title + " to return.");
+            throw new IllegalStateException("No borrowed copies to return.");
+        }
+    }
+
+    public void updateBorrowStatus() {
+        if (borrowedQuantity < quantityInStock) {
+            this.borrowStatus = "Available";
+        } else {
+            this.borrowStatus = "Cannot borrow (Out of stock)";
         }
     }
 
@@ -55,6 +65,33 @@ public abstract class Document implements Borrowable, Identifiable {
 
     public boolean isAvailable() {
         return borrowedQuantity < quantityInStock;
+    }
+
+    public int getTimesBorrowed() {
+        return timesBorrowed;
+    }
+
+    public void setTimesBorrowed(int timesBorrowed) {
+        this.timesBorrowed = timesBorrowed;
+    }
+
+    public void resetTimesBorrowed() {
+        this.timesBorrowed = 0;
+    }
+
+    public String showDetail() {
+        StringBuilder details = new StringBuilder();
+        details.append("Document Details:\n");
+        details.append("ID: ").append(id).append("\n");
+        details.append("Title: ").append(title).append("\n");
+        details.append("Author: ").append(author).append("\n");
+        details.append("Edition: ").append(edition).append("\n");
+        details.append("Quantity in Stock: ").append(quantityInStock).append("\n");
+        details.append("Borrowed Quantity: ").append(borrowedQuantity).append("\n");
+        details.append("Available Quantity: ").append(getAvailableQuantity()).append("\n");
+        details.append("Times Borrowed: ").append(timesBorrowed).append("\n");
+        details.append("Borrow Status: ").append(borrowStatus).append("\n");
+        return details.toString();
     }
 
     public String getId() {
@@ -95,6 +132,7 @@ public abstract class Document implements Borrowable, Identifiable {
 
     public void setQuantityInStock(int quantityInStock) {
         this.quantityInStock = quantityInStock;
+        updateBorrowStatus();
     }
 
     public int getBorrowedQuantity() {
@@ -103,5 +141,18 @@ public abstract class Document implements Borrowable, Identifiable {
 
     public void setBorrowedQuantity(int borrowedQuantity) {
         this.borrowedQuantity = borrowedQuantity;
+        updateBorrowStatus();
+    }
+
+    public String getBorrowStatus() {
+        return borrowStatus;
+    }
+
+    public void setBorrowStatus(String borrowStatus) {
+        this.borrowStatus = borrowStatus;
+    }
+
+    public void incrementTimesBorrowed() {
+        this.timesBorrowed++;
     }
 }

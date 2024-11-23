@@ -11,8 +11,8 @@ public class Book extends Document {
     }
 
     public Book(String id, String title, String author, int edition, int quantityInStock,
-                String genre, int pageCount, String ISBN, String imageUrl) {
-        super(id, title, author, edition, quantityInStock);
+                int timesBorrowed, String genre, int pageCount, String ISBN, String imageUrl) {
+        super(id, title, author, edition, quantityInStock, timesBorrowed);
         this.genre = genre;
         this.pageCount = pageCount;
         this.ISBN = ISBN;
@@ -20,13 +20,12 @@ public class Book extends Document {
     }
 
     public Book(String id, String title, String author, int edition, int quantityInStock,
-                String genre, int pageCount, String isbn) {
-        super(id, title, author, edition, quantityInStock);
+                int timesBorrowed, String genre, int pageCount, String ISBN) {
+        super(id, title, author, edition, quantityInStock, timesBorrowed);
         this.genre = genre;
         this.pageCount = pageCount;
-        this.ISBN = isbn;
+        this.ISBN = ISBN;
     }
-
 
     public String getGenre() {
         return genre;

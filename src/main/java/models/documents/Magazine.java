@@ -10,8 +10,8 @@ public class Magazine extends Document {
     }
 
     public Magazine(String id, String title, String author, int edition, int quantityInStock,
-                    String publishNumber, String month, String imageUrl) {
-        super(id, title, author, edition, quantityInStock);
+                    int timesBorrowed, String publishNumber, String month, String imageUrl) {
+        super(id, title, author, edition, quantityInStock, timesBorrowed);
         this.publishNumber = publishNumber;
         this.month = month;
         this.imageUrl = imageUrl;
