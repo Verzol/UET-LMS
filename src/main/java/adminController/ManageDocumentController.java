@@ -13,13 +13,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import models.documents.Book;
-import models.documents.Journal;
-import models.documents.Magazine;
-import models.documents.Thesis;
+import models.documents.*;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -32,41 +32,13 @@ public class ManageDocumentController {
     private TableView<Object> itemTableView;
 
     @FXML
-    private Label editionLabel;
+    private Button showDocumentDetails;
 
     @FXML
-    private Label quantityInStockLabel;
+    private Button searchButton;
 
     @FXML
-    private Label genreLabel;
-
-    @FXML
-    private Label pageCountLabel;
-
-    @FXML
-    private Label publishNumberLabel;
-
-    @FXML
-    private Label monthLabel;
-
-    @FXML
-    private Label universityLabel;
-
-    @FXML
-    private Label supervisorLabel;
-
-    @FXML
-    private Label fieldLabel;
-
-    @FXML
-    private Label volumeLabel;
-
-    @FXML
-    private ImageView documentImageView;
-
-    @FXML
-    private Button viewCoverButton;
-
+    private TextField searchBar;
 
     private BookDAO bookDAO;
     private MagazineDAO magazineDAO;
@@ -87,133 +59,234 @@ public class ManageDocumentController {
                 loadDataForType(newValue);
             }
         });
-
         itemSelectorComboBox.setValue("Book");
     }
 
+    @FXML
     private void configureTableViewForType(String type) {
         itemTableView.getColumns().clear();
 
+        itemTableView.getStyleClass().add("colored-table");
+
+        TableColumn<Object, String> idColumn = createStyledColumn("ID", "id", 80);
+        TableColumn<Object, String> titleColumn = createStyledColumn("Title", "title", 200);
+        TableColumn<Object, String> authorColumn = createStyledColumn("Author", "author", 150);
+        TableColumn<Object, Integer> editionColumn = createStyledColumn("Edition", "edition", 100);
+        TableColumn<Object, Integer> quantityColumn = createStyledColumn("Quantity", "quantityInStock", 100);
+        TableColumn<Object, Integer> borrowedQuantityColumn = createStyledColumn("Borrowed", "borrowedQuantity", 100);
+        TableColumn<Object, Integer> timesBorrowedColumn = createStyledColumn("Times Borrowed", "timesBorrowed", 120); // Thêm cột
+
+        itemTableView.getColumns().addAll(idColumn, titleColumn, authorColumn, editionColumn, quantityColumn, borrowedQuantityColumn, timesBorrowedColumn);
+
         switch (type) {
-            case "Book":
-                TableColumn<Object, String> idColumn = new TableColumn<>("ID");
-                idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-                TableColumn<Object, String> isbnColumn = new TableColumn<>("ISBN");
-                isbnColumn.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
-
-                TableColumn<Object, String> titleColumn = new TableColumn<>("Title");
-                titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-                TableColumn<Object, String> authorColumn = new TableColumn<>("Author");
-                authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-
-                TableColumn<Object, Integer> editionColumn = new TableColumn<>("Edition");
-                editionColumn.setCellValueFactory(new PropertyValueFactory<>("edition"));
-
-                TableColumn<Object, Integer> quantityInStockColumn = new TableColumn<>("Quantity In Stock");
-                quantityInStockColumn.setCellValueFactory(new PropertyValueFactory<>("quantityInStock"));
-
-                TableColumn<Object, String> genreColumn = new TableColumn<>("Genre");
-                genreColumn.setCellValueFactory(new PropertyValueFactory<>("genre"));
-
-                TableColumn<Object, Integer> pageCountColumn = new TableColumn<>("Page Count");
-                pageCountColumn.setCellValueFactory(new PropertyValueFactory<>("pageCount"));
-
-                TableColumn<Object, String> imageUrlColumnBook = new TableColumn<>("Image URL");
-                imageUrlColumnBook.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
-
-                itemTableView.getColumns().addAll(idColumn, isbnColumn, titleColumn, authorColumn,
-                        editionColumn, quantityInStockColumn, genreColumn, pageCountColumn, imageUrlColumnBook);
-                break;
-
-            case "Magazine":
-                TableColumn<Object, String> idColumnMagazine = new TableColumn<>("ID");
-                idColumnMagazine.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-                TableColumn<Object, String> titleColumnMagazine = new TableColumn<>("Title");
-                titleColumnMagazine.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-                TableColumn<Object, String> authorColumnMagazine = new TableColumn<>("Author");
-                authorColumnMagazine.setCellValueFactory(new PropertyValueFactory<>("author"));
-
-                TableColumn<Object, String> publishNumberColumn = new TableColumn<>("Publish Number");
-                publishNumberColumn.setCellValueFactory(new PropertyValueFactory<>("publishNumber"));
-
-                TableColumn<Object, String> monthColumn = new TableColumn<>("Month");
-                monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
-
-                TableColumn<Object, String> imageUrlColumnMagazine = new TableColumn<>("Image URL");
-                imageUrlColumnMagazine.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
-
-                itemTableView.getColumns().addAll(idColumnMagazine, titleColumnMagazine,
-                        authorColumnMagazine, publishNumberColumn, monthColumn, imageUrlColumnMagazine);
-                break;
-
-            case "Thesis":
-                TableColumn<Object, String> idColumnThesis = new TableColumn<>("ID");
-                idColumnThesis.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-                TableColumn<Object, String> titleColumnThesis = new TableColumn<>("Title");
-                titleColumnThesis.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-                TableColumn<Object, String> authorColumnThesis = new TableColumn<>("Author");
-                authorColumnThesis.setCellValueFactory(new PropertyValueFactory<>("author"));
-
-                TableColumn<Object, String> universityColumn = new TableColumn<>("University");
-                universityColumn.setCellValueFactory(new PropertyValueFactory<>("university"));
-
-                TableColumn<Object, String> supervisorColumn = new TableColumn<>("Supervisor");
-                supervisorColumn.setCellValueFactory(new PropertyValueFactory<>("supervisor"));
-
-                TableColumn<Object, String> fieldColumn = new TableColumn<>("Field");
-                fieldColumn.setCellValueFactory(new PropertyValueFactory<>("field"));
-
-                itemTableView.getColumns().addAll(idColumnThesis, titleColumnThesis,
-                        authorColumnThesis, universityColumn, supervisorColumn, fieldColumn);
-                break;
-
-            case "Journal":
-                TableColumn<Object, String> idColumnJournal = new TableColumn<>("ID");
-                idColumnJournal.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-                TableColumn<Object, String> titleColumnJournal = new TableColumn<>("Title");
-                titleColumnJournal.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-                TableColumn<Object, String> authorColumnJournal = new TableColumn<>("Author");
-                authorColumnJournal.setCellValueFactory(new PropertyValueFactory<>("author"));
-
-                TableColumn<Object, Integer> volumeColumn = new TableColumn<>("Volume");
-                volumeColumn.setCellValueFactory(new PropertyValueFactory<>("volume"));
-
-                TableColumn<Object, Integer> publishNumberColumnJournal = new TableColumn<>("Publish Number");
-                publishNumberColumnJournal.setCellValueFactory(new PropertyValueFactory<>("publishNumber"));
-
-                TableColumn<Object, String> imageUrlColumnJournal = new TableColumn<>("Image URL");
-                imageUrlColumnJournal.setCellValueFactory(new PropertyValueFactory<>("imageUrl"));
-
-                itemTableView.getColumns().addAll(idColumnJournal, titleColumnJournal,
-                        authorColumnJournal, volumeColumn, publishNumberColumnJournal, imageUrlColumnJournal);
-                break;
+            case "Book" -> setupBookColumns();
+            case "Magazine" -> setupMagazineColumns();
+            case "Thesis" -> setupThesisColumns();
+            case "Journal" -> setupJournalColumns();
         }
     }
 
+    private void setupBookColumns() {
+        TableColumn<Object, String> genreColumn = createStyledColumn("Genre", "genre", 120);
+        TableColumn<Object, Integer> pageCountColumn = createStyledColumn("Page Count", "pageCount", 120);
+        TableColumn<Object, String> ISBNColumn = createStyledColumn("ISBN", "ISBN", 150);
+        TableColumn<Object, String> imageUrlColumn = createStyledColumn("Image URL", "imageUrl", 200);
+
+        itemTableView.getColumns().addAll(genreColumn, pageCountColumn, ISBNColumn, imageUrlColumn);
+    }
+
+    private void setupMagazineColumns() {
+        TableColumn<Object, String> publishNumberColumn = createStyledColumn("Publish Number", "publishNumber", 150);
+        TableColumn<Object, String> monthColumn = createStyledColumn("Month", "month", 100);
+        TableColumn<Object, String> imageUrlColumn = createStyledColumn("Image URL", "imageUrl", 200);
+
+        itemTableView.getColumns().addAll(publishNumberColumn, monthColumn, imageUrlColumn);
+    }
+
+    private void setupThesisColumns() {
+        TableColumn<Object, String> universityColumn = createStyledColumn("University", "university", 150);
+        TableColumn<Object, String> supervisorColumn = createStyledColumn("Supervisor", "supervisor", 150);
+        TableColumn<Object, String> fieldColumn = createStyledColumn("Field", "field", 150);
+
+        itemTableView.getColumns().addAll(universityColumn, supervisorColumn, fieldColumn);
+    }
+
+    private void setupJournalColumns() {
+        TableColumn<Object, Integer> volumeColumn = createStyledColumn("Volume", "volume", 100);
+        TableColumn<Object, String> publishNumberColumn = createStyledColumn("Publish Number", "publishNumber", 150);
+        TableColumn<Object, String> imageUrlColumn = createStyledColumn("Image URL", "imageUrl", 200);
+
+        itemTableView.getColumns().addAll(volumeColumn, publishNumberColumn, imageUrlColumn);
+    }
+
+    private <T> TableColumn<Object, T> createStyledColumn(String title, String property, int width) {
+        TableColumn<Object, T> column = new TableColumn<>(title);
+        column.setCellValueFactory(new PropertyValueFactory<>(property));
+        column.setPrefWidth(width);
+
+        column.getStyleClass().add("table-cell");
+        column.setStyle("-fx-alignment: CENTER;");
+        return column;
+    }
+
+
+    @FXML
     private void loadDataForType(String type) {
         switch (type) {
-            case "Book":
-                itemTableView.setItems(FXCollections.observableArrayList(bookDAO.getAllBooks()));
-                break;
-            case "Magazine":
-                itemTableView.setItems(FXCollections.observableArrayList(magazineDAO.getAllMagazines()));
-                break;
-            case "Thesis":
-                itemTableView.setItems(FXCollections.observableArrayList(thesisDAO.getAllThesis()));
-                break;
-            case "Journal":
-                itemTableView.setItems(FXCollections.observableArrayList(journalDAO.getAllJournals()));
-                break;
+            case "Book" -> itemTableView.setItems(FXCollections.observableArrayList(bookDAO.getAllBooks()));
+            case "Magazine" -> itemTableView.setItems(FXCollections.observableArrayList(magazineDAO.getAllMagazines()));
+            case "Thesis" -> itemTableView.setItems(FXCollections.observableArrayList(thesisDAO.getAllThesis()));
+            case "Journal" -> itemTableView.setItems(FXCollections.observableArrayList(journalDAO.getAllJournals()));
         }
     }
+
+    @FXML
+    private void updateDocument() {
+        Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
+        String selectedType = itemSelectorComboBox.getValue();
+
+        if (selectedItem == null) {
+            showErrorAlert("No item selected to update!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/UpdateDocument.fxml"));
+            Parent root = loader.load();
+
+            UpdateDocumentController controller = loader.getController();
+            controller.setDocument(selectedItem, selectedType);
+
+            Stage stage = new Stage();
+            stage.setTitle("Update Document");
+            stage.setScene(new Scene(root));
+            stage.initStyle(StageStyle.UNDECORATED);
+
+            stage.setOnHiding(event -> {
+                if (controller.isUpdated()) {
+                    boolean updated = false;
+
+                    switch (selectedType) {
+                        case "Book" -> updated = bookDAO.updateBook((Book) controller.getUpdatedDocument());
+                        case "Magazine" -> updated = magazineDAO.updateMagazine((Magazine) controller.getUpdatedDocument());
+                        case "Thesis" -> updated = thesisDAO.updateThesis((Thesis) controller.getUpdatedDocument());
+                        case "Journal" -> updated = journalDAO.updateJournal((Journal) controller.getUpdatedDocument());
+                        default -> showErrorAlert("Invalid document type selected!");
+                    }
+
+                    if (updated) {
+                        loadDataForType(selectedType);
+                    } else {
+                        showErrorAlert("Failed to update document. Please try again.");
+                    }
+                }
+            });
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Failed to open Update Document window.");
+        }
+    }
+
+    private void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void showDocumentDetails() {
+        Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedItem instanceof Document document) {
+            Stage stage = new Stage(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            VBox dialogContent = new VBox(20);
+            dialogContent.setStyle(
+                    "-fx-padding: 20; " +
+                            "-fx-background-color: white; " +
+                            "-fx-border-color: #cccccc; " +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);"
+            );
+
+            Label headerLabel = new Label("Document Details");
+            headerLabel.getStyleClass().add("header-label");
+
+            TextArea detailTextArea = new TextArea();
+            detailTextArea.setEditable(false);
+            detailTextArea.setWrapText(true);
+            detailTextArea.setText(document.showDetail());
+            detailTextArea.getStyleClass().add("text-area");
+            detailTextArea.setPrefWidth(300);
+            detailTextArea.setPrefHeight(250);
+
+            ImageView imageView = new ImageView();
+            imageView.setPreserveRatio(true);
+            imageView.setFitWidth(200);
+            imageView.setFitHeight(300);
+            imageView.getStyleClass().add("image-view");
+
+            String imageUrl = null;
+            if (document instanceof Book book) {
+                imageUrl = book.getImageUrl();
+            } else if (document instanceof Magazine magazine) {
+                imageUrl = magazine.getImageUrl();
+            } else if (document instanceof Journal journal) {
+                imageUrl = journal.getImageUrl();
+            }
+
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                try {
+                    imageView.setImage(new Image(imageUrl));
+                } catch (Exception e) {
+                    imageView.setImage(null);
+                    detailTextArea.appendText("\n\n[Image could not be loaded]");
+                }
+            } else {
+                detailTextArea.appendText("\n\n[No Image Available]");
+            }
+
+            HBox contentBox = new HBox(20, detailTextArea, imageView);
+            contentBox.getStyleClass().add("book-detail");
+
+            Button closeButton = new Button("Close");
+            closeButton.setStyle(
+                    "-fx-background-color: #e53935; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-border-radius: 8; " +
+                            "-fx-background-radius: 8;"
+            );
+            closeButton.setOnAction(e -> stage.close());
+
+            HBox buttonBox = new HBox(closeButton);
+            buttonBox.setStyle("-fx-alignment: center;");
+
+            dialogContent.getChildren().addAll(headerLabel, contentBox, buttonBox);
+
+            Scene scene = new Scene(dialogContent);
+            stage.setScene(scene);
+
+            final double[] offset = new double[2];
+            dialogContent.setOnMousePressed(event -> {
+                offset[0] = event.getSceneX();
+                offset[1] = event.getSceneY();
+            });
+            dialogContent.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - offset[0]);
+                stage.setY(event.getScreenY() - offset[1]);
+            });
+
+            stage.showAndWait();
+        } else {
+            showErrorAlert("No document selected or invalid document type!");
+        }
+    }
+
+
 
     @FXML
     private void addDocument() {
@@ -224,13 +297,15 @@ public class ManageDocumentController {
             stage.setTitle("Add Document");
             stage.setScene(new Scene(root));
             stage.initStyle(StageStyle.UNDECORATED);
+
             stage.setOnHidden(e -> loadDataForType(itemSelectorComboBox.getValue()));
+
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showErrorAlert("Failed to open Add Document window.");
         }
     }
-
     @FXML
     private void deleteDocument() {
         Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
@@ -257,141 +332,59 @@ public class ManageDocumentController {
                     case "Magazine" -> magazineDAO.deleteMagazine(((Magazine) selectedItem).getId());
                     case "Journal" -> journalDAO.deleteJournal(((Journal) selectedItem).getId());
                     case "Thesis" -> thesisDAO.deleteThesis(((Thesis) selectedItem).getId());
+                    default -> showErrorAlert("Invalid document type selected.");
                 }
                 loadDataForType(selectedType);
 
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Success");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Document deleted successfully!");
-                successAlert.showAndWait();
+                showSuccessAlert("Document deleted successfully!");
             }
         });
     }
-
-
-    @FXML
-    private void updateDocument() {
-        Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
-        String selectedType = itemSelectorComboBox.getValue();
-
-        if (selectedItem == null) {
-            showErrorAlert("No item selected to update!");
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/UpdateDocument.fxml"));
-            Parent root = loader.load();
-
-
-            UpdateDocumentController controller = loader.getController();
-
-            controller.setDocument(selectedItem, selectedType);
-
-            Stage stage = new Stage();
-            stage.setTitle("Update Document");
-            stage.setScene(new Scene(root));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setOnHidden(e -> loadDataForType(selectedType));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+    private void showSuccessAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
     @FXML
-    private void showDocumentDetails() {
-        Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            if (selectedItem instanceof Book) {
-                Book book = (Book) selectedItem;
-                if (book.getImageUrl() != null && !book.getImageUrl().isEmpty()) {
-                    documentImageView.setImage(new Image(book.getImageUrl()));
-                } else {
-                    documentImageView.setImage(null);
-                }
-            } else if (selectedItem instanceof Magazine) {
-                Magazine magazine = (Magazine) selectedItem;
-                if (magazine.getImageUrl() != null && !magazine.getImageUrl().isEmpty()) {
-                    documentImageView.setImage(new Image(magazine.getImageUrl()));
-                } else {
-                    documentImageView.setImage(null);
-                }
-            } else if (selectedItem instanceof Journal) {
-                Journal journal = (Journal) selectedItem;
-                if (journal.getImageUrl() != null && !journal.getImageUrl().isEmpty()) {
-                    documentImageView.setImage(new Image(journal.getImageUrl()));
-                } else {
-                    documentImageView.setImage(null);
-                }
-            } else {
-                documentImageView.setImage(null);
+    private void searchAndDisplay() {
+        String searchKeyword = searchBar.getText().trim();
+        String selectedType = itemSelectorComboBox.getValue();
+
+        if (searchKeyword.isEmpty()) {
+            showErrorAlert("Please enter a keyword to search.");
+            return;
+        }
+
+        switch (selectedType) {
+            case "Book" -> {
+                var books = bookDAO.searchBooks(searchKeyword);
+                itemTableView.setItems(FXCollections.observableArrayList(books));
             }
+            case "Magazine" -> {
+                var magazines = magazineDAO.searchMagazines(searchKeyword);
+                itemTableView.setItems(FXCollections.observableArrayList(magazines));
+            }
+            case "Thesis" -> {
+                var theses = thesisDAO.searchThesis(searchKeyword);
+                itemTableView.setItems(FXCollections.observableArrayList(theses));
+            }
+            case "Journal" -> {
+                var journals = journalDAO.searchJournal(searchKeyword);
+                itemTableView.setItems(FXCollections.observableArrayList(journals));
+            }
+            default -> showErrorAlert("Invalid document type selected for search.");
         }
     }
 
     @FXML
-    private void viewDocumentCover() {
-        Object selectedItem = itemTableView.getSelectionModel().getSelectedItem();
-        if (selectedItem == null) {
-            showErrorAlert("No item selected!");
-            return;
-        }
-        String imageUrl = null;
+    private Button refreshButton;
 
-        if (selectedItem instanceof Book book) {
-            imageUrl = book.getImageUrl();
-        } else if (selectedItem instanceof Magazine magazine) {
-            imageUrl = magazine.getImageUrl();
-        } else if (selectedItem instanceof Journal journal) {
-            imageUrl = journal.getImageUrl();
-        } else if (selectedItem instanceof Thesis thesis) {
-            showErrorAlert("This document type does not support cover images!");
-            return;
-        }
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            showErrorAlert("This document does not have a cover image URL!");
-            return;
-        }
-        try {
-            Dialog<Void> dialog = new Dialog<>();
-            dialog.setTitle("Document Cover");
-
-            AnchorPane root = new AnchorPane();
-
-            ImageView imageView = new ImageView();
-            imageView.setPreserveRatio(true);
-            imageView.setImage(new Image(imageUrl));
-            imageView.setFitWidth(400);
-            imageView.setFitHeight(400);
-
-            AnchorPane.setTopAnchor(imageView, 0.0);
-            AnchorPane.setLeftAnchor(imageView, 0.0);
-            AnchorPane.setRightAnchor(imageView, 0.0);
-            AnchorPane.setBottomAnchor(imageView, 0.0);
-
-            root.getChildren().addAll(imageView);
-            dialog.getDialogPane().setContent(root);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-            dialog.getDialogPane().lookupButton(ButtonType.CLOSE).setVisible(false);
-
-            dialog.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
-            showErrorAlert("Failed to load the image. Please check the URL!");
-        }
+    @FXML
+    private void refreshTable() {
+        String selectedType = itemSelectorComboBox.getValue();
+        loadDataForType(selectedType);
     }
-
-
-
-
 }

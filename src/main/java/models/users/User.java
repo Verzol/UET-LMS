@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User extends Person {
+    private int id;
     private List<Document> borrowedDocuments;
     private int maxDocumentAllowed;
 
-    public User(String username, String password, String firstName, String lastName,
+    public User(int id, String username, String password, String firstName, String lastName,
                 String email, String phone, int maxDocumentAllowed) {
         super(username, password, firstName, lastName, email, phone);
+        this.id = id;
         this.borrowedDocuments = new ArrayList<Document>();
         this.maxDocumentAllowed = maxDocumentAllowed;
     }
@@ -52,5 +54,14 @@ public class User extends Person {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

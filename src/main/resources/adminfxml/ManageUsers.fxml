@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -9,48 +8,35 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageUsersController">
+<AnchorPane prefHeight="670" prefWidth="980" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageUsersController">
     <children>
-        <Label layoutX="50.0" layoutY="25.0" text="Manage Users">
+        <!-- Tiêu đề -->
+        <Label alignment="CENTER_LEFT" layoutX="20" layoutY="20" styleClass="header-label" text="Manage Users">
             <font>
-                <Font name="Segoe UI Bold" size="24.0" />
+                <Font name="Segoe UI Bold" size="32" />
             </font>
         </Label>
 
-        <TableView fx:id="tableUsers" layoutX="50.0" layoutY="70.0" prefHeight="452.0" prefWidth="870.0" styleClass="column-header" stylesheets="@../styles/styles.css">
+        <!-- Bảng hiển thị danh sách người dùng -->
+        <TableView fx:id="tableUsers" layoutX="20" layoutY="80" prefHeight="480" prefWidth="940" styleClass="colored-table">
             <columns>
-                <TableColumn fx:id="columnUserId" prefWidth="50.0" text="ID" />
-                <TableColumn fx:id="columnUsername" prefWidth="150.0" text="Username" />
-                <TableColumn fx:id="columnFirstName" prefWidth="150.0" text="First Name" />
-                <TableColumn fx:id="columnLastName" prefWidth="150.0" text="Last Name" />
-                <TableColumn fx:id="columnEmail" prefWidth="200.0" text="Email" />
-                <TableColumn fx:id="columnPhone" prefWidth="150.0" text="Phone" />
+                <TableColumn fx:id="columnUserId" prefWidth="50" style="-fx-background-color: rgba(0, 0, 0, 0);" text="ID" />
+                <TableColumn fx:id="columnUsername" prefWidth="150" style="-fx-background-color: rgba(0, 0, 0, 0);" text="Username" />
+                <TableColumn fx:id="columnFirstName" prefWidth="180" style="-fx-background-color: rgba(0, 0, 0, 0);" text="First Name" />
+                <TableColumn fx:id="columnLastName" prefWidth="180" style="-fx-background-color: rgba(0, 0, 0, 0);" text="Last Name" />
+                <TableColumn fx:id="columnEmail" prefWidth="230" style="-fx-background-color: rgba(0, 0, 0, 0);" text="Email" />
+                <TableColumn fx:id="columnPhone" prefWidth="150" style="-fx-background-color: rgba(0, 0, 0, 0);" text="Phone" />
             </columns>
         </TableView>
-      <HBox layoutX="215.0" layoutY="573.0" prefHeight="29.0" prefWidth="541.0">
-         <children>
-      
-              <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="40.0" prefWidth="120.0" text="Add User">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Button>
-              <Button fx:id="editUserButton" mnemonicParsing="false" onAction="#handleEditUser" prefHeight="40.0" prefWidth="120.0" text="Edit User">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Button>
-              <Button fx:id="deleteUserButton" mnemonicParsing="false" onAction="#handleDeleteUser" prefHeight="40.0" prefWidth="120.0" text="Delete User">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Button>
-              <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="40.0" prefWidth="120.0" text="Refresh">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
+
+        <!-- Các nút thao tác -->
+        <HBox alignment="CENTER" layoutX="20" layoutY="580" prefWidth="940" spacing="15">
+            <children>
+                <Button onAction="#handleAddUser" prefWidth="120" styleClass="save-button" text="Add User" />
+                <Button onAction="#handleEditUser" prefWidth="120" styleClass="save-button" text="Edit User" />
+                <Button onAction="#handleDeleteUser" prefWidth="120" styleClass="cancel-button" text="Delete User" />
+                <Button onAction="#handleViewHistory" prefWidth="120" styleClass="close-button" text="View History" />
+            </children>
+        </HBox>
     </children>
 </AnchorPane>

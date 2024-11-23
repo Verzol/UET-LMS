@@ -1,51 +1,45 @@
 package adminController;
 
+import controller.DatabaseConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import models.documents.Document;
 import models.users.User;
 
 import java.sql.*;
 
 public class ManageUsersController {
-
     @FXML
     private TableView<User> tableUsers;
 
     @FXML
     private TableColumn<User, Integer> columnUserId;
-
     @FXML
     private TableColumn<User, String> columnUsername;
-
     @FXML
     private TableColumn<User, String> columnFirstName;
-
     @FXML
     private TableColumn<User, String> columnLastName;
-
     @FXML
     private TableColumn<User, String> columnEmail;
-
     @FXML
     private TableColumn<User, String> columnPhone;
 
     private ObservableList<User> users = FXCollections.observableArrayList();
     private Connection connection;
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void initialize() {
+        setupTableColumns();
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        this.connection = dbConnection.getConnection();
         loadUsersFromDatabase();
     }
 
-    public void initialize() {
-        setupTableColumns();
-    }
-
     private void setupTableColumns() {
-        columnUserId.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty().asObject());
+        columnUserId.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getId()).asObject());
         columnUsername.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getUsername()));
         columnFirstName.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getFirstName()));
         columnLastName.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getLastName()));
@@ -61,13 +55,14 @@ public class ManageUsersController {
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 users.add(new User(
+                        resultSet.getInt("id"),
                         resultSet.getString("username"),
                         resultSet.getString("password"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
                         resultSet.getString("email"),
                         resultSet.getString("phone"),
-                        5 // Giả sử số lượng tài liệu tối đa
+                        5
                 ));
             }
         } catch (SQLException e) {
@@ -79,7 +74,7 @@ public class ManageUsersController {
     private void handleAddUser() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add User");
-        dialog.setHeaderText("Enter the user details:");
+        dialog.setHeaderText("Enter the new user details:");
 
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setPrefWidth(400);
@@ -102,6 +97,10 @@ public class ManageUsersController {
 
         dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
+                if (usernameField.getText().isEmpty() || emailField.getText().isEmpty()) {
+                    showAlert("Validation Error", "Please fill in all required fields.");
+                    return;
+                }
                 try {
                     String insertQuery = "INSERT INTO person (username, password, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?, ?)";
                     PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
@@ -136,7 +135,7 @@ public class ManageUsersController {
         if (selectedUser != null) {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setTitle("Edit User");
-            dialog.setHeaderText("Edit the user details:");
+            dialog.setHeaderText("Edit the details of the selected user:");
 
             DialogPane dialogPane = dialog.getDialogPane();
             dialogPane.setPrefWidth(400);
@@ -152,15 +151,19 @@ public class ManageUsersController {
 
             dialog.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
+                    if (usernameField.getText().isEmpty() || emailField.getText().isEmpty()) {
+                        showAlert("Validation Error", "Please fill in all required fields.");
+                        return;
+                    }
                     try {
-                        String updateQuery = "UPDATE person SET username = ?, first_name = ?, last_name = ?, email = ?, phone = ? WHERE username = ?";
+                        String updateQuery = "UPDATE person SET username = ?, first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?";
                         PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
                         preparedStatement.setString(1, usernameField.getText());
                         preparedStatement.setString(2, firstNameField.getText());
                         preparedStatement.setString(3, lastNameField.getText());
                         preparedStatement.setString(4, emailField.getText());
                         preparedStatement.setString(5, phoneField.getText());
-                        preparedStatement.setString(6, selectedUser.getUsername());
+                        preparedStatement.setInt(6, selectedUser.getId());
                         preparedStatement.executeUpdate();
                         loadUsersFromDatabase();
                     } catch (SQLException e) {
@@ -170,8 +173,7 @@ public class ManageUsersController {
             });
         } else {
             showAlert("Selection Error", "No user selected for editing!");
-        }
-    }
+        }    }
 
     @FXML
     private void handleDeleteUser() {
@@ -185,9 +187,9 @@ public class ManageUsersController {
             confirmationAlert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     try {
-                        String deleteQuery = "DELETE FROM person WHERE username = ?";
+                        String deleteQuery = "DELETE FROM person WHERE id = ?";
                         PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
-                        preparedStatement.setString(1, selectedUser.getUsername());
+                        preparedStatement.setInt(1, selectedUser.getId());
                         preparedStatement.executeUpdate();
                         loadUsersFromDatabase();
                     } catch (SQLException e) {
@@ -197,12 +199,77 @@ public class ManageUsersController {
             });
         } else {
             showAlert("Selection Error", "No user selected for deletion!");
-        }
-    }
+        }    }
 
     @FXML
-    private void handleRefresh() {
-        loadUsersFromDatabase();
+    private void handleViewHistory() {
+        User selectedUser = tableUsers.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            try {
+                String query = "SELECT d.title, d.author, b.borrow_date, b.return_date " +
+                        "FROM borrow_history b " +
+                        "JOIN documents d ON b.document_id = d.id " +
+                        "WHERE b.user_id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setInt(1, selectedUser.getId());
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Borrow History");
+                dialog.setHeaderText("Borrow history for: " + selectedUser.getUsername());
+                dialog.getDialogPane().setPrefSize(800, 600);
+
+                TableView<ObservableList<String>> historyTable = new TableView<>();
+                historyTable.getStyleClass().add("colored-table");
+                TableColumn<ObservableList<String>, String> colTitle = new TableColumn<>("Title");
+                TableColumn<ObservableList<String>, String> colAuthor = new TableColumn<>("Author");
+                TableColumn<ObservableList<String>, String> colBorrowDate = new TableColumn<>("Borrow Date");
+                TableColumn<ObservableList<String>, String> colReturnDate = new TableColumn<>("Return Date");
+
+                colTitle.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(0)));
+                colAuthor.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(1)));
+                colBorrowDate.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(2)));
+                colReturnDate.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(3)));
+
+                historyTable.getColumns().addAll(colTitle, colAuthor, colBorrowDate, colReturnDate);
+
+                ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+                while (resultSet.next()) {
+                    ObservableList<String> row = FXCollections.observableArrayList();
+                    row.add(resultSet.getString("title"));
+                    row.add(resultSet.getString("author"));
+                    row.add(resultSet.getString("borrow_date"));
+                    row.add(resultSet.getString("return_date") != null ? resultSet.getString("return_date") : "Not Returned");
+                    data.add(row);
+                }
+
+                historyTable.setItems(data);
+                historyTable.setPrefHeight(500);
+
+                // Thêm nút "Close" vào Dialog
+                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+                VBox layout = new VBox(10, historyTable);
+                layout.setStyle("-fx-padding: 20; -fx-background-color: white; -fx-border-color: #CDCDCD; -fx-border-radius: 10;");
+
+                dialog.getDialogPane().setContent(layout);
+
+                // Đảm bảo nút Close hoạt động
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == ButtonType.CLOSE) {
+                        dialog.close();
+                    }
+                    return null;
+                });
+
+                dialog.showAndWait();
+
+            } catch (SQLException e) {
+                showAlert("View History Error", e.getMessage());
+            }
+        } else {
+            showAlert("Selection Error", "No user selected to view history!");
+        }
     }
 
     private void showAlert(String title, String message) {

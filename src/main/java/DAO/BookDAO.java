@@ -8,34 +8,25 @@ import java.util.List;
 
 public class BookDAO {
     private Connection connection;
+    private DocumentDAO documentDAO;
 
     public BookDAO() {
         this.connection = DatabaseConnection.getInstance().getConnection();
+        this.documentDAO = new DocumentDAO();
     }
 
     public boolean addBook(Book book) {
-        String queryDocuments = "INSERT INTO documents (id, title, author, edition, quantity_in_stock, ISBN) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
-        String queryBooks = "INSERT INTO books (id, genre, page_count, image_url) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
-             PreparedStatement bookStatement = connection.prepareStatement(queryBooks)) {
-
-            // Insert into 'documents' table
-            docStatement.setString(1, book.getId());
-            docStatement.setString(2, book.getTitle());
-            docStatement.setString(3, book.getAuthor());
-            docStatement.setInt(4, book.getEdition());
-            docStatement.setInt(5, book.getQuantityInStock());
-            docStatement.setString(6, book.getISBN());
-            docStatement.executeUpdate();
-
-            bookStatement.setString(1, book.getId());
-            bookStatement.setString(2, book.getGenre());
-            bookStatement.setInt(3, book.getPageCount());
-            bookStatement.setString(4, book.getImageUrl());
-            bookStatement.executeUpdate();
-
+        if (!documentDAO.addDocument(book)) {
+            return false;
+        }
+        String query = "INSERT INTO books (id, genre, page_count, ISBN, image_url) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, book.getId());
+            statement.setString(2, book.getGenre());
+            statement.setInt(3, book.getPageCount());
+            statement.setString(4, book.getISBN());
+            statement.setString(5, book.getImageUrl());
+            statement.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,73 +36,32 @@ public class BookDAO {
 
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
-        String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, "
-                + "b.genre, b.page_count, b.ISBN, b.image_url "
-                + "FROM documents d JOIN books b ON d.id = b.id";
-
+        String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, d.times_borrowed, " +
+                "b.genre, b.page_count, b.ISBN, b.image_url " +
+                "FROM documents d JOIN books b ON d.id = b.id";
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                String id = resultSet.getString("id");
-                String title = resultSet.getString("title");
-                String author = resultSet.getString("author");
-                int edition = resultSet.getInt("edition");
-                int quantityInStock = resultSet.getInt("quantity_in_stock");
-                int borrowedQuantity = resultSet.getInt("borrowed_quantity");
-                String genre = resultSet.getString("genre");
-                int pageCount = resultSet.getInt("page_count");
-                String ISBN = resultSet.getString("ISBN");
-                String imageUrl = resultSet.getString("image_url");
-
-                Book book = new Book(id, title, author, edition, quantityInStock, genre, pageCount, ISBN, imageUrl);
-                book.setBorrowedQuantity(borrowedQuantity);
-                books.add(book);
+                books.add(mapToBook(resultSet));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return books;
     }
 
-
     public boolean updateBook(Book book) {
-        String queryDocuments = "UPDATE documents SET title = ?, author = ?, edition = ?" +
-                ", quantity_in_stock = ?, borrowed_quantity = ? WHERE id = ?";
-        String queryBooks = "UPDATE books SET genre = ?, page_count = ?, ISBN = ?, image_url = ? WHERE id = ?";
-
-        try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
-             PreparedStatement bookStatement = connection.prepareStatement(queryBooks)) {
-
-            docStatement.setString(1, book.getTitle());
-            docStatement.setString(2, book.getAuthor());
-            docStatement.setInt(3, book.getEdition());
-            docStatement.setInt(4, book.getQuantityInStock());
-            docStatement.setInt(5, book.getBorrowedQuantity());
-            docStatement.setString(6, book.getId());
-            docStatement.executeUpdate();
-
-            bookStatement.setString(1, book.getGenre());
-            bookStatement.setInt(2, book.getPageCount());
-            bookStatement.setString(3, book.getISBN());
-            bookStatement.setString(4, book.getImageUrl());
-            bookStatement.setString(5, book.getId());
-            bookStatement.executeUpdate();
-
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!documentDAO.updateDocument(book)) {
+            return false;
         }
-        return false;
-    }
-
-    public boolean deleteBook(String id) {
-        String queryDocuments = "DELETE FROM documents WHERE id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(queryDocuments)) {
-            statement.setString(1, id);
+        String query = "UPDATE books SET genre = ?, page_count = ?, ISBN = ?, image_url = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, book.getGenre());
+            statement.setInt(2, book.getPageCount());
+            statement.setString(3, book.getISBN());
+            statement.setString(4, book.getImageUrl());
+            statement.setString(5, book.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,9 +69,20 @@ public class BookDAO {
         return false;
     }
 
-    public boolean exists(String id) {
-        String query = "SELECT d.id FROM documents d JOIN books b ON d.id = b.id WHERE d.id = ?";
+    public boolean deleteBook(String id) {
+        String query = "DELETE FROM books WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, id);
+            statement.executeUpdate();
+            return documentDAO.deleteDocument(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    public boolean exists(String id) {
+        String query = "SELECT b.id FROM books b JOIN documents d ON b.id = d.id WHERE b.id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -132,9 +93,45 @@ public class BookDAO {
         return false;
     }
 
-    public List<Book> getAvailableBooks() {
-        return getAllBooks().stream()
-                .filter(book -> book.getQuantityInStock() > 0)
-                .toList();
+    public List<Book> searchBooks(String keyword) {
+        List<Book> books = new ArrayList<>();
+        String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, d.times_borrowed, " +
+                "b.genre, b.page_count, b.ISBN, b.image_url " +
+                "FROM documents d JOIN books b ON d.id = b.id " +
+                "WHERE d.id LIKE ? OR d.title LIKE ? OR d.author LIKE ? OR b.genre LIKE ?"; // Added d.id LIKE ?
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            String searchPattern = "%" + keyword + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
+            statement.setString(3, searchPattern);
+            statement.setString(4, searchPattern);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                books.add(mapToBook(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return books;
+    }
+
+    private Book mapToBook(ResultSet resultSet) throws SQLException {
+        String id = resultSet.getString("id");
+        String title = resultSet.getString("title");
+        String author = resultSet.getString("author");
+        int edition = resultSet.getInt("edition");
+        int quantityInStock = resultSet.getInt("quantity_in_stock");
+        int borrowedQuantity = resultSet.getInt("borrowed_quantity");
+        int timesBorrowed = resultSet.getInt("times_borrowed");
+        String genre = resultSet.getString("genre");
+        int pageCount = resultSet.getInt("page_count");
+        String ISBN = resultSet.getString("ISBN");
+        String imageUrl = resultSet.getString("image_url");
+
+        Book book = new Book(id, title, author, edition, quantityInStock, timesBorrowed, genre, pageCount, ISBN, imageUrl);
+        book.setBorrowedQuantity(borrowedQuantity);
+        return book;
     }
 }

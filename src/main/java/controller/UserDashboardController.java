@@ -118,6 +118,20 @@ public class UserDashboardController {
     private ListView<String> topBooksList;
 
     @FXML
+    private ImageView bookCoverImageView;
+
+    @FXML
+    private Button exitButton;
+
+    @FXML
+    private Button minimizeButton;
+
+    private Button selectedButton;
+
+    /**
+     * Loads a specific FXML scene into the main content area.
+     */
+    @FXML
     private TextField searchBox;
 
     @FXML
@@ -132,7 +146,7 @@ public class UserDashboardController {
             Parent scene = loader.load();
             mainContent.getChildren().setAll(scene);
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("Load Scene Error", "Cannot load the scene: " + e.getMessage());
         }
     }
 
@@ -146,11 +160,6 @@ public class UserDashboardController {
     public void home() {
         loadScene("UserHome.fxml");
         setSelectedButton(homeButton);
-    }
-
-    @FXML
-    public void selectHome() {
-        home();
     }
 
     @FXML
@@ -168,10 +177,23 @@ public class UserDashboardController {
 
     @FXML
     public void logout() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout Confirmation");
+        alert.setHeaderText("Are you sure you want to log out?");
 
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) mainContent.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                showAlert("Logout Error", "Failed to log out: " + e.getMessage());
+            }
+        }
     }
-
-    private Button selectedButton;
 
     private void setSelectedButton(Button button) {
         if (selectedButton != null) {
@@ -180,9 +202,6 @@ public class UserDashboardController {
         button.getStyleClass().add("selected-button");
         selectedButton = button;
     }
-
-    @FXML
-    private ImageView bookCoverImageView;
 
     public void displayBookCover(String isbn) {
         BookDAO bookDAO = new BookDAO();
@@ -199,27 +218,33 @@ public class UserDashboardController {
     }
 
     @FXML
-    private Button exitButton;
-
-    @FXML
     private void exitApplication() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit confirmation");
+        alert.setTitle("Exit Confirmation");
         alert.setHeaderText("Are you sure you want to exit?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
+        if (result.isPresent() && result.get() == ButtonType.OK) {
             System.exit(0);
         }
     }
 
     @FXML
-    private Button minimizeButton;
-
-    @FXML
     private void minimizeApplication(javafx.event.ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setIconified(true);
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void selectHome() {
+        home();
     }
 
     @FXML

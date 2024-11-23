@@ -10,8 +10,8 @@ public class Journal extends Document {
     }
 
     public Journal(String id, String title, String author, int edition,
-                   int quantityInStock, int volume, int publishNumber, String imageUrl) {
-        super(id, title, author, edition, quantityInStock);
+                   int quantityInStock, int timesBorrowed, int volume, int publishNumber, String imageUrl) {
+        super(id, title, author, edition, quantityInStock, timesBorrowed);
         this.volume = volume;
         this.publishNumber = publishNumber;
         this.imageUrl = imageUrl;

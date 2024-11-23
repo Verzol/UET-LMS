@@ -1,5 +1,6 @@
 package DAO;
 
+import models.documents.Magazine;
 import models.documents.Thesis;
 
 import java.sql.*;
@@ -8,33 +9,25 @@ import java.util.List;
 
 public class ThesisDAO {
     private Connection connection;
+    private DocumentDAO documentDAO;
 
     public ThesisDAO() {
         this.connection = DatabaseConnection.getInstance().getConnection();
+        this.documentDAO = new DocumentDAO();
     }
 
     public boolean addThesis(Thesis thesis) {
-        String queryDocuments = "INSERT INTO documents (id, title, author, edition, quantity_in_stock" +
-                ", borrowed_quantity) VALUES (?, ?, ?, ?, ?, ?)";
-        String queryThesis = "INSERT INTO thesis (id, university, supervisor, field) VALUES (?, ?, ?, ?)";
+        if (!documentDAO.addDocument(thesis)) {
+            return false;
+        }
 
-        try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
-             PreparedStatement thesisStatement = connection.prepareStatement(queryThesis)) {
-
-            docStatement.setString(1, thesis.getId());
-            docStatement.setString(2, thesis.getTitle());
-            docStatement.setString(3, thesis.getAuthor());
-            docStatement.setInt(4, thesis.getEdition());
-            docStatement.setInt(5, thesis.getQuantityInStock());
-            docStatement.setInt(6, thesis.getBorrowedQuantity());
-            docStatement.executeUpdate();
-
-            thesisStatement.setString(1, thesis.getId());
-            thesisStatement.setString(2, thesis.getUniversity());
-            thesisStatement.setString(3, thesis.getSupervisor());
-            thesisStatement.setString(4, thesis.getField());
-            thesisStatement.executeUpdate();
-
+        String query = "INSERT INTO thesis (id, university, supervisor, field) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, thesis.getId());
+            statement.setString(2, thesis.getUniversity());
+            statement.setString(3, thesis.getSupervisor());
+            statement.setString(4, thesis.getField());
+            statement.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,10 +36,10 @@ public class ThesisDAO {
     }
 
     public List<Thesis> getAllThesis() {
-        List<Thesis> thesisArrayList = new ArrayList<>();
-        String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, "
-                + "t.university, t.supervisor, t.field "
-                + "FROM documents d JOIN thesis t ON d.id = t.id";
+        List<Thesis> theses = new ArrayList<>();
+        String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, d.times_borrowed, " +
+                "t.university, t.supervisor, t.field " +
+                "FROM documents d JOIN thesis t ON d.id = t.id";
 
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -58,44 +51,33 @@ public class ThesisDAO {
                 int edition = resultSet.getInt("edition");
                 int quantityInStock = resultSet.getInt("quantity_in_stock");
                 int borrowedQuantity = resultSet.getInt("borrowed_quantity");
+                int timesBorrowed = resultSet.getInt("times_borrowed");
                 String university = resultSet.getString("university");
                 String supervisor = resultSet.getString("supervisor");
                 String field = resultSet.getString("field");
 
-                Thesis thesis = new Thesis(id, title, author, edition, quantityInStock, university, supervisor, field);
+                Thesis thesis = new Thesis(id, title, author, edition, quantityInStock, timesBorrowed, university, supervisor, field);
                 thesis.setBorrowedQuantity(borrowedQuantity);
-                thesisArrayList.add(thesis);
+                theses.add(thesis);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return thesisArrayList;
+        return theses;
     }
 
     public boolean updateThesis(Thesis thesis) {
-        String queryDocuments = "UPDATE documents SET title = ?, author = ?, edition = ?,"
-                + " quantity_in_stock = ?, borrowed_quantity = ? WHERE id = ?";
-        String queryThesis = "UPDATE thesis SET university = ?, supervisor = ?, field = ? WHERE id = ?";
+        if (!documentDAO.updateDocument(thesis)) {
+            return false;
+        }
 
-        try (PreparedStatement docStatement = connection.prepareStatement(queryDocuments);
-             PreparedStatement thesisStatement = connection.prepareStatement(queryThesis)) {
-
-            docStatement.setString(1, thesis.getTitle());
-            docStatement.setString(2, thesis.getAuthor());
-            docStatement.setInt(3, thesis.getEdition());
-            docStatement.setInt(4, thesis.getQuantityInStock());
-            docStatement.setInt(5, thesis.getBorrowedQuantity());
-            docStatement.setString(6, thesis.getId());
-            docStatement.executeUpdate();
-
-            thesisStatement.setString(1, thesis.getUniversity());
-            thesisStatement.setString(2, thesis.getSupervisor());
-            thesisStatement.setString(3, thesis.getField());
-            thesisStatement.setString(4, thesis.getId());
-            thesisStatement.executeUpdate();
-
+        String query = "UPDATE thesis SET university = ?, supervisor = ?, field = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, thesis.getUniversity());
+            statement.setString(2, thesis.getSupervisor());
+            statement.setString(3, thesis.getField());
+            statement.setString(4, thesis.getId());
+            statement.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -104,11 +86,11 @@ public class ThesisDAO {
     }
 
     public boolean deleteThesis(String id) {
-        String queryDocuments = "DELETE FROM documents WHERE id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(queryDocuments)) {
+        String query = "DELETE FROM thesis WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, id);
-            return statement.executeUpdate() > 0;
+            statement.executeUpdate();
+            return documentDAO.deleteDocument(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,11 +98,9 @@ public class ThesisDAO {
     }
 
     public boolean exists(String id) {
-        String query = "SELECT id FROM documents WHERE id = ? AND EXISTS (SELECT id FROM thesis WHERE id = ?)";
-
+        String query = "SELECT t.id FROM thesis t JOIN documents d ON t.id = d.id WHERE t.id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, id);
-            statement.setString(2, id);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
@@ -128,5 +108,44 @@ public class ThesisDAO {
         }
         return false;
     }
+    private Thesis mapToThesis(ResultSet resultSet) throws SQLException {
+        String id = resultSet.getString("id");
+        String title = resultSet.getString("title");
+        String author = resultSet.getString("author");
+        int edition = resultSet.getInt("edition");
+        int quantityInStock = resultSet.getInt("quantity_in_stock");
+        int borrowedQuantity = resultSet.getInt("borrowed_quantity");
+        int timesBorrowed = resultSet.getInt("times_borrowed");
+        String university = resultSet.getString("university");
+        String supervisor = resultSet.getString("supervisor");
+        String field = resultSet.getString("field");
 
+        Thesis thesis = new Thesis(id, title, author, edition, quantityInStock, timesBorrowed, university, supervisor, field);
+        thesis.setBorrowedQuantity(borrowedQuantity);
+        return thesis;
+    }
+
+    public List<Thesis> searchThesis(String keyword) {
+        List<Thesis> thesis = new ArrayList<>();
+        String query = "SELECT d.id, d.title, d.author, d.edition, d.quantity_in_stock, d.borrowed_quantity, d.times_borrowed, " +
+                "t.university, t.supervisor, t.field " +
+                "FROM documents d JOIN thesis t ON d.id = t.id " +
+                "WHERE d.id LIKE ? OR d.title LIKE ? OR d.author LIKE ? OR t.university LIKE ? OR t.field LIKE ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            String searchPattern = "%" + keyword + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
+            statement.setString(3, searchPattern);
+            statement.setString(4, searchPattern);
+            statement.setString(5, searchPattern);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                thesis.add(mapToThesis(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return thesis;
+    }
 }

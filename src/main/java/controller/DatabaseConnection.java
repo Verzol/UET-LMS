@@ -4,10 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DatabaseConnection {
-    public Connection databaseLink;
-
-    public DatabaseConnection() {
-    }
+    private Connection databaseLink;
 
     public Connection getConnection() {
         String databaseName = "library_management";
@@ -22,7 +19,6 @@ public class DatabaseConnection {
             System.out.println("Error connecting to the database!");
             e.printStackTrace();
         }
-
         return this.databaseLink;
     }
 }
