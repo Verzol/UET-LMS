@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import service.BookDataService;
 
@@ -26,6 +28,12 @@ public class UserHomeController {
     private GridPane topBooksContainer;
 
     private Connection connection;
+
+    @FXML
+    private TextField searchTextField;  // Để lấy giá trị tìm kiếm
+
+    @FXML
+    private Button searchButton;  // Nút tìm kiếm
 
     public UserHomeController() {
         connection = new DatabaseConnection().getConnection();
@@ -71,26 +79,26 @@ public class UserHomeController {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                String id = resultSet.getString("id");
-                String title = resultSet.getString("title");
-                String genre = resultSet.getString("genre");
-                int pageCount = resultSet.getInt("page_count");
-                String isbn = resultSet.getString("ISBN");
-                String imageUrl = resultSet.getString("image_url");
-                String author = resultSet.getString("author");
-                int quantityInStock = resultSet.getInt("quantity_in_stock");
-                int borrowedQuantity = resultSet.getInt("borrowed_quantity");
-                String description = resultSet.getString("bookdescription");
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Book.fxml"));
                 Node bookNode = loader.load();
 
                 BookController controller = loader.getController();
-                controller.setBookDetails(id, title, genre, pageCount, isbn, imageUrl, author, quantityInStock, borrowedQuantity, description);
+                controller.setBookDetails(
+                        resultSet.getString("id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("genre"),
+                        resultSet.getInt("page_count"),
+                        resultSet.getString("ISBN"),
+                        resultSet.getString("image_url"),
+                        resultSet.getString("author"),
+                        resultSet.getInt("quantity_in_stock"),
+                        resultSet.getInt("borrowed_quantity"),
+                        resultSet.getString("bookdescription")
+                );
 
                 bookNodes.add(bookNode);
             }
-        } catch (Exception e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         return bookNodes;
@@ -110,6 +118,18 @@ public class UserHomeController {
         }
     }
 
+    private void preLoadTopBooks() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            try {
+                List<Node> topBookNodes = loadTopBorrowedBooksFromDatabase();
+                Platform.runLater(() -> displayTopBooks(topBookNodes));
+            } finally {
+                executor.shutdown();
+            }
+        });
+    }
+
     private List<Node> loadTopBorrowedBooksFromDatabase() {
         List<Node> topBookNodes = new ArrayList<>();
         String query = """
@@ -125,22 +145,22 @@ public class UserHomeController {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                String id = resultSet.getString("id");
-                String title = resultSet.getString("title");
-                String genre = resultSet.getString("genre");
-                int pageCount = resultSet.getInt("page_count");
-                String isbn = resultSet.getString("ISBN");
-                String imageUrl = resultSet.getString("image_url");
-                String author = resultSet.getString("author");
-                int quantityInStock = resultSet.getInt("quantity_in_stock");
-                int borrowedQuantity = resultSet.getInt("borrowed_quantity");
-                String description = resultSet.getString("bookdescription");
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Book.fxml"));
                 Node bookNode = loader.load();
 
                 BookController controller = loader.getController();
-                controller.setBookDetails(id, title, genre, pageCount, isbn, imageUrl, author, quantityInStock, borrowedQuantity, description);
+                controller.setBookDetails(
+                        resultSet.getString("id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("genre"),
+                        resultSet.getInt("page_count"),
+                        resultSet.getString("ISBN"),
+                        resultSet.getString("image_url"),
+                        resultSet.getString("author"),
+                        resultSet.getInt("quantity_in_stock"),
+                        resultSet.getInt("borrowed_quantity"),
+                        resultSet.getString("bookdescription")
+                );
 
                 topBookNodes.add(bookNode);
             }
@@ -160,15 +180,65 @@ public class UserHomeController {
         }
     }
 
-    private void preLoadTopBooks() {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            try {
-                List<Node> topBookNodes = loadTopBorrowedBooksFromDatabase();
-                Platform.runLater(() -> displayTopBooks(topBookNodes));
-            } finally {
-                executor.shutdown();
+    @FXML
+    public void handleSearch() {
+        String searchQuery = searchTextField.getText().trim();
+
+        if (!searchQuery.isEmpty()) {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(() -> {
+                try {
+                    List<Node> searchedBooks = searchBooks(searchQuery);
+                    Platform.runLater(() -> {
+                        displayBooks(searchedBooks);
+                    });
+                } finally {
+                    executor.shutdown();
+                }
+            });
+        }
+    }
+
+    private List<Node> searchBooks(String searchQuery) {
+        List<Node> searchedBookNodes = new ArrayList<>();
+        String query = """
+                SELECT b.id, d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
+                       d.author, d.quantity_in_stock, d.borrowed_quantity, d.bookdescription 
+                FROM books b 
+                INNER JOIN documents d ON b.id = d.id 
+                WHERE d.title LIKE ? OR d.author LIKE ?
+                LIMIT 6
+                """;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, "%" + searchQuery + "%");
+            preparedStatement.setString(2, "%" + searchQuery + "%");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Book.fxml"));
+                Node bookNode = loader.load();
+
+                BookController controller = loader.getController();
+                controller.setBookDetails(
+                        resultSet.getString("id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("genre"),
+                        resultSet.getInt("page_count"),
+                        resultSet.getString("ISBN"),
+                        resultSet.getString("image_url"),
+                        resultSet.getString("author"),
+                        resultSet.getInt("quantity_in_stock"),
+                        resultSet.getInt("borrowed_quantity"),
+                        resultSet.getString("bookdescription")
+                );
+
+                searchedBookNodes.add(bookNode);
             }
-        });
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+        return searchedBookNodes;
     }
 }

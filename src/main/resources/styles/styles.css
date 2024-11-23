@@ -149,4 +149,8 @@
     -fx-text-fill: #D3D3D3;
     -fx-border-color: transparent;
 }
+.vbox-padding {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
 

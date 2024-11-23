@@ -31,7 +31,6 @@ public class QuizGameController {
     }
 
 
-
     @FXML
     public void searchBooks(ActionEvent event) {
         String keyword = keywordTextField.getText().trim();
@@ -63,7 +62,6 @@ public class QuizGameController {
             loadAuthorQuestion(authors, keyword);
         }
     }
-
 
 
     private void loadQuestion(List<String> books, String author) {
@@ -191,7 +189,6 @@ public class QuizGameController {
 
         return filteredBooks.isEmpty() ? Collections.singletonList("No alternative books found") : filteredBooks;
     }
-
 
 
     @FXML
