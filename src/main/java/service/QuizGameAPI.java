@@ -21,7 +21,7 @@ public class QuizGameAPI {
 
 
     public static List<String> fetchBooks(String query) {
-        return fetchBooksByQuery(query,true);
+        return fetchBooksByQuery(query, true);
     }
 
 
@@ -88,8 +88,6 @@ public class QuizGameAPI {
 
         return resultList;
     }
-
-
 
 
 }

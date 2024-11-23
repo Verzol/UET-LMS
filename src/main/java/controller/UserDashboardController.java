@@ -39,7 +39,6 @@ public class UserDashboardController {
     private Button entertainmentButton;
 
 
-
     @FXML
     private Label questionLabel;
     @FXML
@@ -270,6 +269,7 @@ public class UserDashboardController {
             }
         }
     }
+
     private void openBookDetailWindow(String selectedBook, String title, String author, String publisher,
                                       String publishedDate, String rating, String description,
                                       String imageUrl) {
@@ -288,6 +288,7 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleCloseListView() {
         searchResultsList.setVisible(false);
