@@ -7,12 +7,15 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+import service.BookDetailController;
+
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public class DashboardController {
@@ -47,7 +50,18 @@ public class DashboardController {
     private Button selectedButton;
 
     @FXML
+    private TextField searchBox;
+
+    @FXML
+    private ListView<String> searchResultsList;
+
+    @FXML
+    private Button closeListViewButton;
+
+    @FXML
     public void initialize() {
+        searchResultsList.setPrefHeight(200);
+        searchResultsList.setMaxHeight(200);
         loadScene("Home.fxml");
         setSelectedButton(HomeButton);
     }
@@ -56,6 +70,12 @@ public class DashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/" + fxmlFile));
             Parent scene = loader.load();
+
+            AnchorPane.setTopAnchor(scene, 0.0);
+            AnchorPane.setBottomAnchor(scene, 0.0);
+            AnchorPane.setLeftAnchor(scene, 0.0);
+            AnchorPane.setRightAnchor(scene, 0.0);
+
             mainContent.getChildren().setAll(scene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,36 +139,81 @@ public class DashboardController {
     }
 
     @FXML
-    private TextField searchBox;
-
-    @FXML
     private void handleSearch() {
-        String query = searchBox.getText();
+        String query = searchBox.getText().trim();
+
         if (query.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("You want to search something?");
+            alert.setHeaderText(null);
+            alert.setContentText("Please enter a title to search.");
             alert.showAndWait();
         } else {
-            List<String> data = Arrays.asList("Harry Potter", "OOP", "DSA", "Boruto");
+            service.GoogleBooksAPI.searchBookByTitle(query, searchResultsList);
 
-            List<String> results = data.stream()
-                    .filter(item -> item.toLowerCase().contains(query.toLowerCase()))
-                    .toList();
-
-            if (results.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("No Results");
-                alert.setHeaderText(null);
-                alert.setContentText("No results found for: " + query);
-                alert.showAndWait();
+            if (!searchResultsList.getItems().isEmpty()) {
+                searchResultsList.setVisible(true);
+                searchResultsList.setManaged(true);
+                closeListViewButton.setVisible(true);
+                closeListViewButton.setManaged(true);
             } else {
-                System.out.println("Search results: " + results);
+                searchResultsList.setVisible(false);
+                searchResultsList.setManaged(false);
+
+                Alert noResultsAlert = new Alert(Alert.AlertType.INFORMATION);
+                noResultsAlert.setHeaderText(null);
+                noResultsAlert.setContentText("No results found for: " + query);
+                noResultsAlert.showAndWait();
             }
         }
     }
 
     @FXML
-    private Button exitButton;
+    private void handleBookClick(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            String selectedBook = searchResultsList.getSelectionModel().getSelectedItem();
+            if (selectedBook != null) {
+                // Xử lý lấy thông tin chi tiết từ Google Books API
+                String[] bookDetails = selectedBook.split("\n");
+
+                String title = bookDetails[0].split(" - ")[0].trim();
+                String author = bookDetails[0].contains("-") ? bookDetails[0].split(" - ")[1].trim() : "Unknown Author";
+                String publisher = bookDetails[1].replace("Publisher: ", "").trim();
+                String publishedDate = bookDetails[2].replace("Published: ", "").trim();
+                String description = bookDetails[3].replace("Description: ", "").trim();
+                String imageUrl = bookDetails[4].replace("Image URL: ", "").trim();
+
+                openBookDetailWindow(selectedBook, title, author, publisher, publishedDate, "", description, imageUrl);
+            }
+        }
+    }
+
+    private void openBookDetailWindow(String selectedBook, String title, String author, String publisher,
+                                      String publishedDate, String rating, String description,
+                                      String imageUrl) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adminfxml/BookDetail.fxml"));
+            Parent root = loader.load();
+
+            BookDetailController detailController = loader.getController();
+            detailController.setBookDetails(title, author, publisher, publishedDate, rating, description, imageUrl);
+
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Book Details");
+            detailStage.setScene(new Scene(root));
+            detailStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleCloseListView() {
+        searchResultsList.setVisible(false);
+        searchResultsList.setManaged(false);
+        closeListViewButton.setVisible(false);
+        closeListViewButton.setManaged(false);
+        searchResultsList.getItems().clear();
+    }
 
     @FXML
     private void exitApplication() {
@@ -161,9 +226,6 @@ public class DashboardController {
             System.exit(0);
         }
     }
-
-    @FXML
-    private Button minimizeButton;
 
     @FXML
     private void minimizeApplication(javafx.event.ActionEvent event) {
