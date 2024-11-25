@@ -2,8 +2,10 @@ package service;
 
 import DAO.DatabaseConnection;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,63 +15,91 @@ import java.sql.SQLException;
 public class ChangePasswordController {
 
     @FXML
-    private TextField userField;
+    private Label usernameLabel;
+
     @FXML
     private PasswordField oldPasswordField;
+
     @FXML
     private PasswordField newPasswordField;
+
     @FXML
     private PasswordField confirmPasswordField;
 
     @FXML
-    public void initialize() {
-        System.out.println("userField: " + userField);
-        System.out.println("oldPasswordField: " + oldPasswordField);
-        System.out.println("newPasswordField: " + newPasswordField);
-        System.out.println("confirmPasswordField: " + confirmPasswordField);
+    private void initialize() {
+
+        String currentUser = UserSession.getUsername();
+        if (currentUser != null && !currentUser.isEmpty()) {
+            usernameLabel.setText(currentUser);
+        } else {
+            showAlert("Error", "No user is currently logged in.", Alert.AlertType.ERROR);
+            closeWindow();
+        }
     }
 
     @FXML
     private void handleChangePassword() {
-        String username = userField.getText();
-        String oldPassword = oldPasswordField.getText();
-        String newPassword = newPasswordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
+        String currentUser = UserSession.getUsername();
 
-
-        if (username.isEmpty() || oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            System.out.println("Please fill all fields.");
+        if (!UserSession.isUserLoggedIn()) {
+            showAlert("Error", "No user is currently logged in.", Alert.AlertType.ERROR);
             return;
         }
 
+        String oldPassword = oldPasswordField.getText().trim();
+        String newPassword = newPasswordField.getText().trim();
+        String confirmPassword = confirmPasswordField.getText().trim();
+
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert("Warning", "Please fill all fields.", Alert.AlertType.WARNING);
+            return;
+        }
 
         if (!newPassword.equals(confirmPassword)) {
-            System.out.println("New password and confirm password do not match.");
+            showAlert("Error", "New password and confirm password do not match.", Alert.AlertType.ERROR);
             return;
         }
 
+        String oldPasswordHash = oldPassword;
+        String newPasswordHash = newPassword;
 
-        if (!checkOldPassword(username, oldPassword)) {
-            System.out.println("Old password is incorrect.");
+        if (!checkOldPassword(currentUser, oldPasswordHash)) {
+            showAlert("Error", "Old password is incorrect.", Alert.AlertType.ERROR);
             return;
         }
 
-        if (updatePassword(username, oldPassword, newPassword)) {
-            System.out.println("Password updated successfully!");
+        if (updatePassword(currentUser, newPasswordHash)) {
+            showAlert("Success", "Password updated successfully!", Alert.AlertType.INFORMATION);
+            closeWindow();
         } else {
-            System.out.println("Failed to update password. Please check your inputs.");
+            showAlert("Error", "Failed to update password. Please try again.", Alert.AlertType.ERROR);
         }
     }
 
-    private boolean updatePassword(String username, String oldPassword, String newPassword) {
-        String query = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
 
+    private void closeWindow() {
+        Stage stage = (Stage) usernameLabel.getScene().getWindow();
+        stage.close();
+    }
+
+
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+    private boolean updatePassword(String username, String newPasswordHash) {
+        String query = "UPDATE person SET password = ? WHERE username = ?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, newPassword);
+            preparedStatement.setString(1, newPasswordHash);
             preparedStatement.setString(2, username);
-            preparedStatement.setString(3, oldPassword);
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -79,13 +109,14 @@ public class ChangePasswordController {
         return false;
     }
 
-    private boolean checkOldPassword(String username, String oldPassword) {
-        String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+
+    private boolean checkOldPassword(String username, String oldPasswordHash) {
+        String query = "SELECT 1 FROM person WHERE username = ? AND password = ?";
         try (Connection connection = DatabaseConnection.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, oldPassword);
+            preparedStatement.setString(2, oldPasswordHash);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
@@ -94,5 +125,7 @@ public class ChangePasswordController {
         }
         return false;
     }
+
+
 
 }

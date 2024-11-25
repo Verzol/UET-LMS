@@ -53,6 +53,8 @@ public class DashboardController {
     private TextField searchBox;
 
     @FXML
+    private Button ChatBotButton;
+    @FXML
     private ListView<String> searchResultsList;
 
     @FXML
@@ -172,7 +174,7 @@ public class DashboardController {
         if (event.getClickCount() == 2) {
             String selectedBook = searchResultsList.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
-                // Xử lý lấy thông tin chi tiết từ Google Books API
+
                 String[] bookDetails = selectedBook.split("\n");
 
                 String title = bookDetails[0].split(" - ")[0].trim();

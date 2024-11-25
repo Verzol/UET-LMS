@@ -12,12 +12,23 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.documents.Book;
+import models.users.User;
+import org.json.JSONObject;
 import service.BookDetailController;
+import utils.SessionManager;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,7 +92,7 @@ public class UserDashboardController {
         }
     }
 
-    private boolean isFindBooksByAuthorMode = true; // true: Tìm sách từ tác giả, false: Tìm tác giả từ sách
+    private boolean isFindBooksByAuthorMode = true;
 
     @FXML
     private ToggleButton modeToggle;
@@ -128,9 +139,7 @@ public class UserDashboardController {
 
     private Button selectedButton;
 
-    /**
-     * Loads a specific FXML scene into the main content area.
-     */
+
     @FXML
     private TextField searchBox;
 
@@ -322,4 +331,154 @@ public class UserDashboardController {
         closeListViewButton.setManaged(false);
         searchResultsList.getItems().clear();
     }
+
+
+    @FXML
+    private ImageView sadImage;
+
+
+@FXML
+    private void openChatBot() {
+        try {
+            // Tải giao diện ChatBot
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChatBotView.fxml"));
+            Parent root = loader.load();
+
+            // Tạo Stage mới cho giao diện chatbot
+            Stage chatBotStage = new Stage();
+            chatBotStage.setTitle("ChatBot");
+            chatBotStage.setScene(new Scene(root));
+            chatBotStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private ImageView avatarImage;
+
+    @FXML
+    private void changeAvatar(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+
+
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Tệp hình ảnh", "*.png", "*.jpg", "*.jpeg", "*.gif");
+        fileChooser.getExtensionFilters().add(filter);
+
+
+        File selectedFile = fileChooser.showOpenDialog(avatarImage.getScene().getWindow());
+
+        if (selectedFile != null) {
+
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Xác nhận");
+            confirmationAlert.setHeaderText("Bạn có chắc chắn muốn đổi avatar?");
+            confirmationAlert.setContentText("Ảnh avatar mới sẽ được lưu thay thế ảnh cũ.");
+
+
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+
+                    String imagesDir = "avatars";
+                    File dir = new File(imagesDir);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+
+
+                    String fileName = "avatar_" + System.currentTimeMillis() + ".png";
+                    File destinationFile = new File(dir, fileName);
+
+
+                    Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+
+                    Image newAvatar = new Image(destinationFile.toURI().toString());
+                    avatarImage.setImage(newAvatar);
+                    setCircularAvatar(newAvatar);
+
+
+                    saveAvatarFileName(fileName);
+
+
+                    initializeUserDashboard();
+
+                } catch (IOException e) {
+                    showAlert("Lỗi", "Không thể lưu ảnh: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+
+
+    private void saveAvatarFileName(String fileName) {
+        String username = SessionManager.getCurrentUsername();
+        if (username != null && !username.isEmpty()) {
+            DatabaseConnection databaseConnection = new DatabaseConnection();
+            try (Connection connection = databaseConnection.getConnection()) {
+                if (connection != null) {
+                    String query = "UPDATE person SET avatar = ? WHERE username = ?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, fileName);
+                        preparedStatement.setString(2, username);
+                        preparedStatement.executeUpdate();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void initializeUserDashboard() {
+        String avatarFileName = loadAvatarFileName();
+        if (avatarFileName != null) {
+            File avatarFile = new File("avatars/" + avatarFileName);
+            if (avatarFile.exists()) {
+                Image avatar = new Image(avatarFile.toURI().toString());
+                avatarImage.setImage(avatar);
+                setCircularAvatar(avatar);
+            }
+        }
+    }
+
+
+    private String loadAvatarFileName() {
+        String username = SessionManager.getCurrentUsername();
+        if (username != null && !username.isEmpty()) {
+            DatabaseConnection databaseConnection = new DatabaseConnection();
+            try (Connection connection = databaseConnection.getConnection()) {
+                if (connection != null) {
+                    String query = "SELECT avatar FROM person WHERE username = ?";
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, username);
+                        ResultSet resultSet = preparedStatement.executeQuery();
+                        if (resultSet.next()) {
+                            return resultSet.getString("avatar");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    private void setCircularAvatar(Image image) {
+
+        double size = Math.min(avatarImage.getFitWidth(), avatarImage.getFitHeight());
+
+
+        Circle clip = new Circle(size / 2, size / 2, size / 2);
+
+
+        avatarImage.setClip(clip);
+
+
+        avatarImage.setImage(image);
+    }
+
 }
+

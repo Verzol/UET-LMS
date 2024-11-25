@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="service.BookDetailController">
+<?import java.net.URL?>
+<AnchorPane prefHeight="502.0" prefWidth="431.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.BookDetailController">
+
     <children>
-        <VBox layoutX="20.0" layoutY="20.0" spacing="10">
 
-            <ImageView fx:id="bookImageView" fitWidth="200.0" fitHeight="300.0" preserveRatio="true" />
+        <TextArea fx:id="descriptionArea" editable="false" layoutX="26.0" layoutY="296.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="166.0" prefWidth="378.0" wrapText="true" />
 
-            <Label fx:id="bookTitle" text="Book Title" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+        <ImageView fx:id="bookImageView" fitHeight="236.0" fitWidth="158.0" layoutX="33.0" layoutY="33.0" preserveRatio="true" />
+        <VBox layoutX="215.0" layoutY="33.0" prefHeight="250.0" prefWidth="210.0">
+            <children>
 
-            <Label fx:id="authorLabel" text="Author: " />
+                <Label fx:id="bookTitle" alignment="BASELINE_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Book Title" />
 
-            <Label fx:id="publisherLabel" text="Publisher: " />
+                <Label fx:id="authorLabel" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="225.0" text="Author: " />
 
-            <Label fx:id="publishedDateLabel" text="Published Date: " />
+                <Label fx:id="publisherLabel" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="226.0" text="Publisher: " />
 
 
-            <Label fx:id="ratingLabel" text="Rating: " />
+                <Label fx:id="ratingLabel" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="226.0" text="Rating: " />
 
-            <TextArea fx:id="descriptionArea" wrapText="true" editable="false" prefHeight="100.0" />
-
+                <Label fx:id="publishedDateLabel" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="226.0" text="Published Date: " />
+            </children>
         </VBox>
     </children>
 </AnchorPane>

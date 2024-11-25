@@ -23,7 +23,7 @@ public class QuizGameController {
     @FXML
     private String correctAnswer;
 
-    private boolean isFindBooksByAuthorMode = true; // Mặc định chế độ tìm sách từ tác giả
+    private boolean isFindBooksByAuthorMode = true;
 
     @FXML
     public void initialize() {
@@ -41,7 +41,7 @@ public class QuizGameController {
         }
 
         if (isFindBooksByAuthorMode) {
-            // Chế độ tìm sách từ tác giả
+
             List<String> books = service.QuizGameAPI.fetchBooksByAuthor(keyword);
 
             if (books.isEmpty()) {
@@ -51,7 +51,7 @@ public class QuizGameController {
 
             loadQuestion(books, keyword);
         } else {
-            // Chế độ tìm tác giả từ sách
+
             List<String> authors = service.QuizGameAPI.fetchAuthorsByBook(keyword);
 
             if (authors.isEmpty()) {
