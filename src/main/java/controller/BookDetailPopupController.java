@@ -67,7 +67,7 @@ public class BookDetailPopupController {
             bookCoverImageView.setImage(new Image("/images/default_book_cover.png"));
         }
 
-        // Set the description in the TextArea
+
         descriptionTextArea.setText(description != null && !description.isEmpty() ? description : "No description available.");
     }
 }

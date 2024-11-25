@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="settingsButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.SettingsController">
+<AnchorPane prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.SettingsController">
     <children>
-        <Label layoutX="300.0" layoutY="150.0" text="Settings">
+        <Label layoutX="300.0" layoutY="50.0" text="Settings">
             <font>
                 <Font name="Segoe UI" size="24.0" />
             </font>
         </Label>
+        <Button layoutX="300.0" layoutY="120.0" prefWidth="150.0" text="Change Password" onAction="#handleChangePassword" />
+        <Button layoutX="500.0" layoutY="120.0" prefWidth="150.0" text="Update Profile" onAction="#handleUpdateProfile" />
+
     </children>
 </AnchorPane>

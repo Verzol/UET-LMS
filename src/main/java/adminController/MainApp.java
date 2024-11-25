@@ -33,13 +33,14 @@ public class MainApp extends Application {
 
             Scene scene = new Scene(root);
 
+
             primaryStage.initStyle(StageStyle.UNDECORATED);
             primaryStage.setScene(scene);
 
             primaryStage.setTitle("UET Library Management");
             primaryStage.show();
 
-            // Khởi tạo kết nối database
+
             DatabaseConnection.getInstance();
         } catch (Exception e) {
             e.printStackTrace();

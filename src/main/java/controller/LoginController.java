@@ -20,6 +20,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+
+
 public class LoginController {
 
     @FXML
@@ -99,9 +101,11 @@ public class LoginController {
                     boolean isAdmin = resultSet.getObject("admin_id") != null;
                     boolean isUser = resultSet.getObject("user_id") != null;
 
-                    // Lưu thông tin người dùng vào SessionManager
+
                     SessionManager.setCurrentUserId(personId);
                     SessionManager.setCurrentUsername(username);
+
+                    service.UserSession.setUsername(username);
 
                     if (isAdmin) {
                         loginMessageLabel.setText("Login Successful! Welcome Admin.");
@@ -131,8 +135,10 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
             Parent dashboardRoot = fxmlLoader.load();
 
-            // Gửi thông tin người dùng vào UserDashboardController
+
             UserDashboardController userDashboardController = fxmlLoader.getController();
+            userDashboardController.initializeUserDashboard();
+
             userDashboardController.selectHome();
 
             Scene currentScene = loginButton.getScene();
@@ -165,4 +171,5 @@ public class LoginController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

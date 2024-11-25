@@ -30,17 +30,8 @@ public class BookDetailController {
     @FXML
     private ImageView bookImageView;
 
-    /**
-     * Cập nhật thông tin chi tiết của sách.
-     *
-     * @param title         Tiêu đề sách.
-     * @param author        Tác giả.
-     * @param publisher     Nhà xuất bản.
-     * @param publishedDate Năm xuất bản.
-     * @param rating        Đánh giá.
-     * @param description   Mô tả sách.
-     * @param imageUrl      URL hình ảnh sách.
-     */
+
+
     public void setBookDetails(String title, String author, String publisher, String publishedDate,
                                String rating, String description,  String imageUrl) {
 
