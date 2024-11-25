@@ -102,7 +102,7 @@ public class InsightsController {
         String totalIssuedBooksQuery = """
             SELECT COUNT(*) AS total_issued_books
             FROM borrow_history bh
-            WHERE bh.return_date IS NULL
+            WHERE bh.return_date < current_date and bh.status = 0
         """;
         try (PreparedStatement statement = connection.prepareStatement(totalIssuedBooksQuery);
              ResultSet resultSet = statement.executeQuery()) {

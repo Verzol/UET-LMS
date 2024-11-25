@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import models.documents.*;
 import utils.SessionManager;
 
@@ -190,12 +189,13 @@ public class BorrowDocumentController {
                 updateStatement.setString(1, documentId);
                 updateStatement.executeUpdate();
 
-                String insertHistoryQuery = "INSERT INTO borrow_history (user_id, document_id, borrow_date) VALUES (?, ?, ?)";
-                PreparedStatement insertStatement = connection.prepareStatement(insertHistoryQuery);
-                insertStatement.setInt(1, currentUserId);
-                insertStatement.setString(2, documentId);
-                insertStatement.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-                insertStatement.executeUpdate();
+                String query = "INSERT INTO borrow_history (user_id, document_id, borrow_date, return_date, status) VALUES (?, ?, ?, DATE_ADD(CURRENT_DATE, INTERVAL 14 DAY), 0)";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setInt(1, currentUserId); // user_id
+                preparedStatement.setString(2, documentId); // document_id
+                preparedStatement.setDate(3, new java.sql.Date(System.currentTimeMillis())); // borrow_date
+                preparedStatement.executeUpdate();
+
 
                 selectedDocument.incrementTimesBorrowed();
                 loadDocumentsFromDatabase();

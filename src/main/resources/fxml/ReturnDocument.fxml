@@ -2,17 +2,29 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="670.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReturnDocumentController">
+<AnchorPane prefHeight="670.0" prefWidth="980.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReturnBooksController">
     <children>
-        <Label layoutX="300.0" layoutY="50.0" text="Return Documents">
+        <Label layoutX="30.0" layoutY="22.0" text="Return Document">
             <font>
-                <Font name="Segoe UI" size="24.0" />
+                <Font name="Segoe UI Bold" size="24" />
             </font>
         </Label>
-        <Button layoutX="300.0" layoutY="120.0" prefWidth="150.0" text="Return Book" />
-        <Button layoutX="500.0" layoutY="120.0" prefWidth="150.0" text="View Returns" />
+
+        <TableView fx:id="tableBorrowedBooks" layoutX="30.0" layoutY="75.0" prefHeight="520.0" prefWidth="920.0" styleClass="colored-table">
+            <columns>
+                <TableColumn fx:id="columnBookId" prefWidth="150.0" style="-fx-background-color: transparent;" text="Book ID" />
+                <TableColumn fx:id="columnTitle" prefWidth="300.0" style="-fx-background-color: transparent;" text="Title" />
+                <TableColumn fx:id="columnAuthor" prefWidth="200.0" style="-fx-background-color: transparent;" text="Author" />
+                <TableColumn fx:id="columnBorrowStatus" prefWidth="250.0" style="-fx-background-color: transparent;" text="Borrow Status" />
+            </columns>
+        </TableView>
+
+        <Button fx:id="buttonReturnBook" layoutX="231.0" layoutY="614.0" onAction="#handleReturnBook" prefHeight="30.0" prefWidth="98.0" styleClass="save-button" text="Return Book" />
+      <Button layoutX="638.0" layoutY="614.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="98.0" stylesheets="@../styles/styles.css" text="Report Error" />
     </children>
 </AnchorPane>

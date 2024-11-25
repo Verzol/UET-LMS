@@ -116,7 +116,7 @@ public class RegisterController {
                         String insertUserQuery = "INSERT INTO user (id, max_documents_allowed) VALUES (?, ?)";
                         try (PreparedStatement insertUserStatement = connection.prepareStatement(insertUserQuery)) {
                             insertUserStatement.setInt(1, personId);
-                            insertUserStatement.setInt(2, 5); // Số lượng tài liệu tối đa mặc định
+                            insertUserStatement.setInt(2, 5);
                             insertUserStatement.executeUpdate();
                         }
                     }
