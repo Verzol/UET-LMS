@@ -5,6 +5,7 @@ public class Book extends Document {
     private String genre;
     private int pageCount;
     private String imageUrl;
+    private BookError bookError;
 
     public Book() {
         super();
@@ -57,5 +58,13 @@ public class Book extends Document {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public BookError getBookError() {
+        return bookError;
+    }
+
+    public void setBookError(BookError bookError) {
+        this.bookError = bookError;
     }
 }

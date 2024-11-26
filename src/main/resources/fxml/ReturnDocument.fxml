@@ -17,14 +17,19 @@
 
         <TableView fx:id="tableBorrowedBooks" layoutX="30.0" layoutY="75.0" prefHeight="520.0" prefWidth="920.0" styleClass="colored-table">
             <columns>
-                <TableColumn fx:id="columnBookId" prefWidth="150.0" style="-fx-background-color: transparent;" text="Book ID" />
-                <TableColumn fx:id="columnTitle" prefWidth="300.0" style="-fx-background-color: transparent;" text="Title" />
+                <TableColumn fx:id="columnBookId" prefWidth="100.0" style="-fx-background-color: transparent;" text="Book ID" />
+                <TableColumn fx:id="columnTitle" prefWidth="250.0" style="-fx-background-color: transparent;" text="Title" />
                 <TableColumn fx:id="columnAuthor" prefWidth="200.0" style="-fx-background-color: transparent;" text="Author" />
-                <TableColumn fx:id="columnBorrowStatus" prefWidth="250.0" style="-fx-background-color: transparent;" text="Borrow Status" />
+                <TableColumn fx:id="columnBorrowStatus" prefWidth="150.0" style="-fx-background-color: transparent;" text="Borrow Status" />
+                <TableColumn fx:id="columnReportedByUserId" prefWidth="120.0" style="-fx-background-color: transparent;" text="Reported By" />
+                <TableColumn fx:id="columnResolutionNotes" prefWidth="200.0" style="-fx-background-color: transparent;" text="Resolution Notes" />
             </columns>
         </TableView>
 
-        <Button fx:id="buttonReturnBook" layoutX="231.0" layoutY="614.0" onAction="#handleReturnBook" prefHeight="30.0" prefWidth="98.0" styleClass="save-button" text="Return Book" />
-      <Button layoutX="638.0" layoutY="614.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="98.0" stylesheets="@../styles/styles.css" text="Report Error" />
+        <Button fx:id="buttonReturnBook" layoutX="180.0" layoutY="614.0" onAction="#handleReturnBook" prefHeight="30.0" prefWidth="150.0" styleClass="save-button" text="Return Book" />
+
+        <Button fx:id="buttonReportError" layoutX="400.0" layoutY="614.0" onAction="#handleReportError" prefHeight="30.0" prefWidth="150.0" styleClass="cancel-button" text="Report Error" />
+
+        <Button fx:id="buttonViewErrorDetails" layoutX="620.0" layoutY="614.0" onAction="#handleViewErrorDetails" prefHeight="30.0" prefWidth="150.0" styleClass="cancel-button" text="View Error Details" />
     </children>
 </AnchorPane>

@@ -10,8 +10,6 @@ import java.util.List;
 
 public class DocumentsService {
 
-
-
     public static class Document {
         private String id;
         private String title;

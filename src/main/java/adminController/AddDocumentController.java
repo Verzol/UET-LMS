@@ -119,6 +119,9 @@ public class AddDocumentController {
     private Label publishNumberLabelJournal;
 
     @FXML
+    private TextField isbnTextField;
+
+    @FXML
     private VBox journalFields;
 
     private final BookDAO bookDAO = new BookDAO();
@@ -244,7 +247,9 @@ public class AddDocumentController {
         newBook.setQuantityInStock(Integer.parseInt(quantityInStockTextField.getText()));
         newBook.setGenre(genreTextField.getText());
         newBook.setPageCount(Integer.parseInt(pageCountTextField.getText()));
+        newBook.setISBN(isbnTextField.getText());
         newBook.setImageUrl(imageUrlTextFieldBook.getText());
+
         bookDAO.addBook(newBook);
     }
 

@@ -164,38 +164,40 @@ public class BorrowDocumentController {
                 String documentId = selectedDocument.getId();
 
                 String checkExistingBorrowQuery = "SELECT COUNT(*) AS borrowed_count FROM borrow_history WHERE user_id = ? AND document_id = ? AND return_date IS NULL";
-                PreparedStatement checkExistingStatement = connection.prepareStatement(checkExistingBorrowQuery);
-                checkExistingStatement.setInt(1, currentUserId);
-                checkExistingStatement.setString(2, documentId);
-                ResultSet checkExistingResult = checkExistingStatement.executeQuery();
+                try (PreparedStatement checkExistingStatement = connection.prepareStatement(checkExistingBorrowQuery)) {
+                    checkExistingStatement.setInt(1, currentUserId);
+                    checkExistingStatement.setString(2, documentId);
+                    ResultSet checkExistingResult = checkExistingStatement.executeQuery();
 
-                if (checkExistingResult.next() && checkExistingResult.getInt("borrowed_count") > 0) {
-                    showAlert("Error", "You have already borrowed this document.");
-                    return;
+                    if (checkExistingResult.next() && checkExistingResult.getInt("borrowed_count") > 0) {
+                        showAlert("Error", "You have already borrowed this document.");
+                        return;
+                    }
                 }
 
                 String countQuery = "SELECT COUNT(*) AS borrowed_count FROM borrow_history WHERE user_id = ? AND return_date IS NULL";
-                PreparedStatement countStatement = connection.prepareStatement(countQuery);
-                countStatement.setInt(1, currentUserId);
-                ResultSet countResult = countStatement.executeQuery();
+                try (PreparedStatement countStatement = connection.prepareStatement(countQuery)) {
+                    countStatement.setInt(1, currentUserId);
+                    ResultSet countResult = countStatement.executeQuery();
 
-                if (countResult.next() && countResult.getInt("borrowed_count") >= MAX_BORROW_LIMIT) {
-                    showAlert("Error", "You cannot borrow more than " + MAX_BORROW_LIMIT + " documents at once.");
-                    return;
+                    if (countResult.next() && countResult.getInt("borrowed_count") >= MAX_BORROW_LIMIT) {
+                        showAlert("Error", "You cannot borrow more than " + MAX_BORROW_LIMIT + " documents at once.");
+                        return;
+                    }
                 }
 
-                String updateDocumentQuery = "UPDATE documents SET borrowed_quantity = borrowed_quantity + 1, times_borrowed = times_borrowed + 1 WHERE id = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateDocumentQuery);
-                updateStatement.setString(1, documentId);
-                updateStatement.executeUpdate();
+                String updateDocumentQuery = "UPDATE documents SET quantity_in_stock = quantity_in_stock - 1, times_borrowed = times_borrowed + 1 WHERE id = ?";
+                try (PreparedStatement updateStatement = connection.prepareStatement(updateDocumentQuery)) {
+                    updateStatement.setString(1, documentId);
+                    updateStatement.executeUpdate();
+                }
 
-                String query = "INSERT INTO borrow_history (user_id, document_id, borrow_date, return_date, status) VALUES (?, ?, ?, DATE_ADD(CURRENT_DATE, INTERVAL 14 DAY), 0)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setInt(1, currentUserId); // user_id
-                preparedStatement.setString(2, documentId); // document_id
-                preparedStatement.setDate(3, new java.sql.Date(System.currentTimeMillis())); // borrow_date
-                preparedStatement.executeUpdate();
-
+                String borrowHistoryQuery = "INSERT INTO borrow_history (user_id, document_id, borrow_date, return_date, status) VALUES (?, ?, CURRENT_DATE, DATE_ADD(CURRENT_DATE, INTERVAL 14 DAY), 0)";
+                try (PreparedStatement borrowStatement = connection.prepareStatement(borrowHistoryQuery)) {
+                    borrowStatement.setInt(1, currentUserId);
+                    borrowStatement.setString(2, documentId);
+                    borrowStatement.executeUpdate();
+                }
 
                 selectedDocument.incrementTimesBorrowed();
                 loadDocumentsFromDatabase();

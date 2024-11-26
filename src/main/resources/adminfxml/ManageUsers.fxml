@@ -10,14 +10,12 @@
 
 <AnchorPane prefHeight="670" prefWidth="980" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageUsersController">
     <children>
-        <!-- Tiêu đề -->
         <Label alignment="CENTER_LEFT" layoutX="20" layoutY="20" styleClass="header-label" text="Manage Users">
             <font>
                 <Font name="Segoe UI Bold" size="32" />
             </font>
         </Label>
 
-        <!-- Bảng hiển thị danh sách người dùng -->
         <TableView fx:id="tableUsers" layoutX="20" layoutY="80" prefHeight="480" prefWidth="940" styleClass="colored-table">
             <columns>
                 <TableColumn fx:id="columnUserId" prefWidth="50" style="-fx-background-color: rgba(0, 0, 0, 0);" text="ID" />
@@ -29,7 +27,6 @@
             </columns>
         </TableView>
 
-        <!-- Các nút thao tác -->
         <HBox alignment="CENTER" layoutX="20" layoutY="580" prefWidth="940" spacing="15">
             <children>
                 <Button onAction="#handleAddUser" prefWidth="120" styleClass="save-button" text="Add User" />

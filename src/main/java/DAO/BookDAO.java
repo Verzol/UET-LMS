@@ -16,6 +16,13 @@ public class BookDAO {
     }
 
     public boolean addBook(Book book) {
+        if (exists(book.getId())) {
+            return false;
+        }
+        if (existsISBN(book.getISBN())) {
+            return false;
+        }
+
         if (!documentDAO.addDocument(book)) {
             return false;
         }
@@ -55,6 +62,10 @@ public class BookDAO {
         if (!documentDAO.updateDocument(book)) {
             return false;
         }
+        if (existsISBN(book.getISBN())) {
+            return false;
+        }
+
         String query = "UPDATE books SET genre = ?, page_count = ?, ISBN = ?, image_url = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, book.getGenre());
@@ -133,5 +144,17 @@ public class BookDAO {
         Book book = new Book(id, title, author, edition, quantityInStock, timesBorrowed, genre, pageCount, ISBN, imageUrl);
         book.setBorrowedQuantity(borrowedQuantity);
         return book;
+    }
+
+    private boolean existsISBN(String ISBN) {
+        String query = "SELECT 1 FROM books WHERE ISBN = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, ISBN);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

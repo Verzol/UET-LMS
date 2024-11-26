@@ -1,6 +1,6 @@
-package DAO;
+package models.documents;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class BookError {
     private int id;
@@ -9,17 +9,24 @@ public class BookError {
     private Date errorDate;
     private boolean fixedStatus;
     private Date fixedDate;
+    private int reportedByUserId;
+    private String resolutionNotes;
+    private BookError bookError;
 
-    public BookError(int id, String documentId, String errorDescription, Date errorDate, boolean fixedStatus, Date fixedDate) {
+
+    public BookError(int id, String documentId, String errorDescription, Date errorDate, boolean fixedStatus, Date fixedDate, int reportedByUserId, String resolutionNotes) {
         this.id = id;
         this.documentId = documentId;
         this.errorDescription = errorDescription;
         this.errorDate = errorDate;
         this.fixedStatus = fixedStatus;
         this.fixedDate = fixedDate;
+        this.reportedByUserId = reportedByUserId;
+        this.resolutionNotes = resolutionNotes;
     }
 
-    // Getters and Setters
+    public BookError() {}
+
     public int getId() {
         return id;
     }
@@ -66,5 +73,29 @@ public class BookError {
 
     public void setFixedDate(Date fixedDate) {
         this.fixedDate = fixedDate;
+    }
+
+    public int getReportedByUserId() {
+        return reportedByUserId;
+    }
+
+    public void setReportedByUserId(int reportedByUserId) {
+        this.reportedByUserId = reportedByUserId;
+    }
+
+    public String getResolutionNotes() {
+        return resolutionNotes;
+    }
+
+    public void setResolutionNotes(String resolutionNotes) {
+        this.resolutionNotes = resolutionNotes;
+    }
+
+    public BookError getBookError() {
+        return bookError;
+    }
+
+    public void setBookError(BookError bookError) {
+        this.bookError = bookError;
     }
 }

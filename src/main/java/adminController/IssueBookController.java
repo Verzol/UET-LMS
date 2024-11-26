@@ -1,20 +1,15 @@
 package adminController;
 
+import javafx.scene.control.*;
+import models.documents.BookError;
 import controller.DatabaseConnection;
-import DAO.BookError;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import utils.SessionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class IssueBookController {
 
@@ -23,6 +18,9 @@ public class IssueBookController {
 
     @FXML
     private Button deleteButton;
+
+    @FXML
+    private Button markAsResolvedButton;
 
     @FXML
     private TableView<BookError> errorTable;
@@ -45,11 +43,20 @@ public class IssueBookController {
     @FXML
     private TableColumn<BookError, java.sql.Date> colFixedDate;
 
+    @FXML
+    private TableColumn<BookError, Integer> colReportedByUserId;
+
+    @FXML
+    private TableColumn<BookError, String> colResolutionNotes;
+
+    @FXML
+    private Button addResolutionNotesButton;
+
     private ObservableList<BookError> errorList;
     private final Connection connection;
 
     public IssueBookController() {
-        this.connection = new DatabaseConnection().getConnection(); // Khởi tạo kết nối
+        this.connection = new DatabaseConnection().getConnection();
     }
 
     @FXML
@@ -65,12 +72,13 @@ public class IssueBookController {
         colErrorDate.setCellValueFactory(new PropertyValueFactory<>("errorDate"));
         colFixedStatus.setCellValueFactory(new PropertyValueFactory<>("fixedStatus"));
         colFixedDate.setCellValueFactory(new PropertyValueFactory<>("fixedDate"));
+        colReportedByUserId.setCellValueFactory(new PropertyValueFactory<>("reportedByUserId")); // New column
+        colResolutionNotes.setCellValueFactory(new PropertyValueFactory<>("resolutionNotes")); // New column
     }
 
-    @FXML
     private void loadErrorData() {
         errorList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM book_errors";  // Câu lệnh SQL lấy tất cả lỗi
+        String query = "SELECT * FROM book_errors";
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -82,7 +90,9 @@ public class IssueBookController {
                         resultSet.getString("error_description"),
                         resultSet.getDate("error_date"),
                         resultSet.getBoolean("fixed_status"),
-                        resultSet.getDate("fixed_date")
+                        resultSet.getDate("fixed_date"),
+                        resultSet.getInt("reported_by_user_id"),
+                        resultSet.getString("resolution_notes")
                 );
                 errorList.add(error);
             }
@@ -126,45 +136,80 @@ public class IssueBookController {
     }
 
     @FXML
-    private void addError(String documentId, String errorDescription) {
-        // Kiểm tra xem sách có tồn tại và có lỗi hay không
-        String checkQuery = "SELECT hasIssue FROM documents WHERE id = ?";
-        try (PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
-            checkStmt.setString(1, documentId);
-            ResultSet rs = checkStmt.executeQuery();
+    private void markAsResolved() {
+        BookError selectedError = errorTable.getSelectionModel().getSelectedItem();
 
-            if (rs.next()) {
-                boolean hasIssue = rs.getBoolean("hasIssue");
+        if (selectedError == null) {
+            showErrorAlert("No item selected to mark as resolved!");
+            return;
+        }
 
-                if (!hasIssue) {
-                    showErrorAlert("The document does not have an issue to report.");
-                    return;
+        if (selectedError.isFixedStatus()) {
+            showErrorAlert("This error is already marked as resolved.");
+            return;
+        }
+
+        String updateQuery = "UPDATE book_errors SET fixed_status = true, fixed_date = CURRENT_DATE WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+            statement.setInt(1, selectedError.getId());
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                String updateDocumentQuery = "UPDATE documents SET hasIssue = false WHERE id = ?";
+                try (PreparedStatement documentStatement = connection.prepareStatement(updateDocumentQuery)) {
+                    documentStatement.setString(1, selectedError.getDocumentId());
+                    documentStatement.executeUpdate();
                 }
 
-                // Thêm lỗi vào bảng book_errors nếu sách có lỗi
-                String insertQuery = "INSERT INTO book_errors (document_id, error_description, error_date, fixed_status, fixed_date) VALUES (?, ?, ?, ?, ?)";
-                try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
-                    insertStmt.setString(1, documentId);
-                    insertStmt.setString(2, errorDescription);
-                    insertStmt.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
-                    insertStmt.setBoolean(4, false);
-                    insertStmt.setDate(5, null);      // Ngày sửa chưa có
-
-                    int rowsAffected = insertStmt.executeUpdate();
-                    if (rowsAffected > 0) {
-                        showSuccessAlert("Error added successfully!");
-                        loadErrorData();
-                    } else {
-                        showErrorAlert("Failed to add error.");
-                    }
-                }
-
+                loadErrorData();
+                showSuccessAlert("Error marked as resolved successfully!");
             } else {
-                showErrorAlert("Document ID not found.");
+                showErrorAlert("Failed to mark the error as resolved.");
             }
 
         } catch (SQLException e) {
-            showErrorAlert("Error while adding error: " + e.getMessage());
+            showErrorAlert("Error while marking as resolved: " + e.getMessage());
+        }
+    }
+
+    public void processReturnedBook(String documentId, boolean hasIssues, String errorDescription) {
+        String updateQuery = "UPDATE documents SET hasIssue = ? WHERE id = ?";
+        try (PreparedStatement updateStmt = connection.prepareStatement(updateQuery)) {
+            updateStmt.setBoolean(1, hasIssues);
+            updateStmt.setString(2, documentId);
+
+            int rowsAffected = updateStmt.executeUpdate();
+            if (rowsAffected > 0 && hasIssues) {
+                recordReturnError(documentId, errorDescription);
+            } else if (rowsAffected > 0) {
+                showSuccessAlert("Book returned successfully with no issues.");
+            } else {
+                showErrorAlert("Failed to update book return status.");
+            }
+
+        } catch (SQLException e) {
+            showErrorAlert("Error during book return processing: " + e.getMessage());
+        }
+    }
+
+    public void recordReturnError(String documentId, String errorDescription) {
+        String insertErrorQuery = "INSERT INTO book_errors (document_id, error_description, error_date, fixed_status, fixed_date, reported_by_user_id) " +
+                "VALUES (?, ?, CURRENT_DATE, false, NULL, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertErrorQuery)) {
+            preparedStatement.setString(1, documentId);
+            preparedStatement.setString(2, errorDescription);
+            preparedStatement.setInt(3, SessionManager.getCurrentUserId()); // Lưu ID người dùng report
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                showSuccessAlert("Error reported successfully!");
+                loadErrorData();
+            } else {
+                showErrorAlert("Failed to report the error.");
+            }
+        } catch (SQLException e) {
+            showErrorAlert("Error during error recording: " + e.getMessage());
         }
     }
 
@@ -182,5 +227,37 @@ public class IssueBookController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void handleAddResolutionNotes() {
+        BookError selectedError = errorTable.getSelectionModel().getSelectedItem();
+
+        if (selectedError == null) {
+            showErrorAlert("No error selected!");
+            return;
+        }
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add Resolution Notes");
+        dialog.setHeaderText("Add resolution notes for error: " + selectedError.getErrorDescription());
+        dialog.setContentText("Resolution Notes:");
+
+        dialog.showAndWait().ifPresent(notes -> {
+            String updateQuery = "UPDATE book_errors SET resolution_notes = ? WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                preparedStatement.setString(1, notes);
+                preparedStatement.setInt(2, selectedError.getId());
+                int rowsUpdated = preparedStatement.executeUpdate();
+
+                if (rowsUpdated > 0) {
+                    showSuccessAlert("Resolution notes updated successfully!");
+                    loadErrorData();
+                } else {
+                    showErrorAlert("Failed to update resolution notes.");
+                }
+            } catch (SQLException e) {
+                showErrorAlert("Error while updating resolution notes: " + e.getMessage());
+            }
+        });
     }
 }

@@ -4,9 +4,13 @@ import controller.DatabaseConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import models.documents.Document;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import models.users.User;
 
 import java.sql.*;
@@ -39,12 +43,18 @@ public class ManageUsersController {
     }
 
     private void setupTableColumns() {
-        columnUserId.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getId()).asObject());
-        columnUsername.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getUsername()));
-        columnFirstName.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getFirstName()));
-        columnLastName.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getLastName()));
-        columnEmail.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEmail()));
-        columnPhone.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getPhone()));
+        columnUserId.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getId()).asObject());
+        columnUsername.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getUsername()));
+        columnFirstName.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getFirstName()));
+        columnLastName.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getLastName()));
+        columnEmail.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEmail()));
+        columnPhone.setCellValueFactory(data
+                -> new javafx.beans.property.SimpleStringProperty(data.getValue().getPhone()));
         tableUsers.setItems(users);
     }
 
@@ -72,31 +82,31 @@ public class ManageUsersController {
 
     @FXML
     private void handleAddUser() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Add User");
-        dialog.setHeaderText("Enter the new user details:");
+        Dialog<ButtonType> dialog = createStyledDialog("Add User", "Enter the new user details:");
 
-        DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.setPrefWidth(400);
-        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        VBox formLayout = new VBox(10);
+        formLayout.getStyleClass().add("vbox-padding");
 
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
-        TextField passwordField = new TextField();
-        passwordField.setPromptText("Password");
-        TextField firstNameField = new TextField();
-        firstNameField.setPromptText("First Name");
-        TextField lastNameField = new TextField();
-        lastNameField.setPromptText("Last Name");
-        TextField emailField = new TextField();
-        emailField.setPromptText("Email");
-        TextField phoneField = new TextField();
-        phoneField.setPromptText("Phone");
+        TextField usernameField = createStyledTextField("Username");
+        TextField passwordField = createStyledTextField("Password");
+        TextField firstNameField = createStyledTextField("First Name");
+        TextField lastNameField = createStyledTextField("Last Name");
+        TextField emailField = createStyledTextField("Email");
+        TextField phoneField = createStyledTextField("Phone");
 
-        dialogPane.setContent(new VBox(10, usernameField, passwordField, firstNameField, lastNameField, emailField, phoneField));
+        formLayout.getChildren().addAll(
+                createLabeledField("Username", usernameField),
+                createLabeledField("Password", passwordField),
+                createLabeledField("First Name", firstNameField),
+                createLabeledField("Last Name", lastNameField),
+                createLabeledField("Email", emailField),
+                createLabeledField("Phone", phoneField)
+        );
+
+        dialog.getDialogPane().setContent(formLayout);
 
         dialog.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
+            if (response.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                 if (usernameField.getText().isEmpty() || emailField.getText().isEmpty()) {
                     showAlert("Validation Error", "Please fill in all required fields.");
                     return;
@@ -133,24 +143,27 @@ public class ManageUsersController {
     private void handleEditUser() {
         User selectedUser = tableUsers.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Edit User");
-            dialog.setHeaderText("Edit the details of the selected user:");
+            Dialog<ButtonType> dialog = createStyledDialog("Edit User", "Edit the details of the selected user:");
 
-            DialogPane dialogPane = dialog.getDialogPane();
-            dialogPane.setPrefWidth(400);
-            dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            TextField usernameField = createStyledTextField(selectedUser.getUsername());
+            TextField firstNameField = createStyledTextField(selectedUser.getFirstName());
+            TextField lastNameField = createStyledTextField(selectedUser.getLastName());
+            TextField emailField = createStyledTextField(selectedUser.getEmail());
+            TextField phoneField = createStyledTextField(selectedUser.getPhone());
 
-            TextField usernameField = new TextField(selectedUser.getUsername());
-            TextField firstNameField = new TextField(selectedUser.getFirstName());
-            TextField lastNameField = new TextField(selectedUser.getLastName());
-            TextField emailField = new TextField(selectedUser.getEmail());
-            TextField phoneField = new TextField(selectedUser.getPhone());
+            VBox formLayout = new VBox(10,
+                    createLabeledField("Username", usernameField),
+                    createLabeledField("First Name", firstNameField),
+                    createLabeledField("Last Name", lastNameField),
+                    createLabeledField("Email", emailField),
+                    createLabeledField("Phone", phoneField)
+            );
+            formLayout.getStyleClass().add("vbox-padding");
 
-            dialogPane.setContent(new VBox(10, usernameField, firstNameField, lastNameField, emailField, phoneField));
+            dialog.getDialogPane().setContent(formLayout);
 
             dialog.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
+                if (response.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                     if (usernameField.getText().isEmpty() || emailField.getText().isEmpty()) {
                         showAlert("Validation Error", "Please fill in all required fields.");
                         return;
@@ -173,7 +186,42 @@ public class ManageUsersController {
             });
         } else {
             showAlert("Selection Error", "No user selected for editing!");
-        }    }
+        }
+    }
+
+    private Dialog<ButtonType> createStyledDialog(String title, String headerText) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(headerText);
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
+
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
+        Button cancelButton = (Button) dialog.getDialogPane().lookupButton(cancelButtonType);
+        okButton.getStyleClass().add("save-button");
+        cancelButton.getStyleClass().add("cancel-button");
+
+        return dialog;
+    }
+
+    private TextField createStyledTextField(String promptText) {
+        TextField textField = new TextField();
+        textField.setPromptText(promptText);
+        textField.setStyle("-fx-font-size: 14px; -fx-border-radius: 4px; -fx-background-radius: 4px;");
+        return textField;
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     @FXML
     private void handleDeleteUser() {
@@ -199,7 +247,8 @@ public class ManageUsersController {
             });
         } else {
             showAlert("Selection Error", "No user selected for deletion!");
-        }    }
+        }
+    }
 
     @FXML
     private void handleViewHistory() {
@@ -214,55 +263,59 @@ public class ManageUsersController {
                 preparedStatement.setInt(1, selectedUser.getId());
                 ResultSet resultSet = preparedStatement.executeQuery();
 
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setTitle("Borrow History");
-                dialog.setHeaderText("Borrow history for: " + selectedUser.getUsername());
-                dialog.getDialogPane().setPrefSize(800, 600);
+                Stage stage = new Stage();
+                stage.setTitle("Borrow History: " + selectedUser.getUsername());
+                stage.setWidth(600);
+                stage.setHeight(400);
 
                 TableView<ObservableList<String>> historyTable = new TableView<>();
                 historyTable.getStyleClass().add("colored-table");
+
                 TableColumn<ObservableList<String>, String> colTitle = new TableColumn<>("Title");
                 TableColumn<ObservableList<String>, String> colAuthor = new TableColumn<>("Author");
                 TableColumn<ObservableList<String>, String> colBorrowDate = new TableColumn<>("Borrow Date");
                 TableColumn<ObservableList<String>, String> colReturnDate = new TableColumn<>("Return Date");
 
-                colTitle.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(0)));
-                colAuthor.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(1)));
-                colBorrowDate.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(2)));
-                colReturnDate.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(3)));
+                setupColumnWithWrappingAndTooltip(colTitle, 0);
+                setupColumnWithWrappingAndTooltip(colAuthor, 1);
+                setupColumnWithWrappingAndTooltip(colBorrowDate, 2);
+                setupColumnWithWrappingAndTooltip(colReturnDate, 3);
+
+                colTitle.setStyle("-fx-background-color: transparent;");
+                colAuthor.setStyle("-fx-background-color: transparent;");
+                colBorrowDate.setStyle("-fx-background-color: transparent;");
+                colReturnDate.setStyle("-fx-background-color: transparent;");
 
                 historyTable.getColumns().addAll(colTitle, colAuthor, colBorrowDate, colReturnDate);
 
+                historyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
                 ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+
                 while (resultSet.next()) {
                     ObservableList<String> row = FXCollections.observableArrayList();
                     row.add(resultSet.getString("title"));
                     row.add(resultSet.getString("author"));
                     row.add(resultSet.getString("borrow_date"));
-                    row.add(resultSet.getString("return_date") != null ? resultSet.getString("return_date") : "Not Returned");
+                    row.add(resultSet.getString("return_date") != null
+                            ? resultSet.getString("return_date")
+                            : "Not Returned");
                     data.add(row);
                 }
 
                 historyTable.setItems(data);
-                historyTable.setPrefHeight(500);
-
-                // Thêm nút "Close" vào Dialog
-                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                historyTable.setPrefHeight(400);
+                historyTable.setPrefWidth(600);
 
                 VBox layout = new VBox(10, historyTable);
-                layout.setStyle("-fx-padding: 20; -fx-background-color: white; -fx-border-color: #CDCDCD; -fx-border-radius: 10;");
+                layout.setStyle("-fx-padding: 10; -fx-background-color: white; " +
+                        "-fx-border-color: #CCCCCC; -fx-border-radius: 10;");
+                layout.setPrefSize(600, 400);
 
-                dialog.getDialogPane().setContent(layout);
-
-                // Đảm bảo nút Close hoạt động
-                dialog.setResultConverter(dialogButton -> {
-                    if (dialogButton == ButtonType.CLOSE) {
-                        dialog.close();
-                    }
-                    return null;
-                });
-
-                dialog.showAndWait();
+                Scene scene = new Scene(layout, 600, 400);
+                scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.show();
 
             } catch (SQLException e) {
                 showAlert("View History Error", e.getMessage());
@@ -272,11 +325,43 @@ public class ManageUsersController {
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void setupColumnWithWrappingAndTooltip(TableColumn<ObservableList<String>, String> column, int index) {
+        column.setCellFactory(tc -> {
+            TableCell<ObservableList<String>, String> cell = new TableCell<>() {
+                private final Text text = new Text();
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setTooltip(null);
+                    } else {
+                        text.setText(item);
+                        text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // Bọc văn bản
+                        setGraphic(text);
+
+                        Tooltip tooltip = new Tooltip(item);
+                        setTooltip(tooltip);
+                    }
+                }
+            };
+            return cell;
+        });
+
+        column.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().get(index))
+        );
+    }
+
+    private HBox createLabeledField(String labelText, TextField textField) {
+        Label label = new Label(labelText + ":");
+        label.getStyleClass().add("header-label");
+        label.setPrefWidth(120);
+        textField.setPrefWidth(250);
+
+        HBox hBox = new HBox(10, label, textField);
+        hBox.setStyle("-fx-alignment: center-left;");
+        return hBox;
     }
 }

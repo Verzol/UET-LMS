@@ -14,18 +14,13 @@
 
 <AnchorPane fx:id="manageBooksPane" prefHeight="670.0" prefWidth="980.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageDocumentController">
    <children>
-      <!-- Tiêu đề -->
       <Label alignment="CENTER_LEFT" layoutX="20.0" layoutY="14.0" styleClass="header-label" text="Manage Document">
          <font>
             <Font name="Segoe UI Bold" size="32" />
          </font>
       </Label>
-
-      <!-- Nhãn và ComboBox chọn item -->
       <Label layoutX="20.0" layoutY="75.0" text="Select Item:" />
       <ComboBox fx:id="itemSelectorComboBox" layoutX="102.0" layoutY="69.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="200.0" styleClass="textFiled" />
-
-      <!-- Search bar -->
       <HBox alignment="CENTER" layoutX="328.0" layoutY="69.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="302.0" spacing="10" styleClass="textFiled">
          <children>
             <TextField fx:id="searchBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="270.0" promptText="Want to find document?" styleClass="transparent" />
@@ -39,8 +34,6 @@
                </graphic></Button>
          </children>
       </HBox>
-
-      <!-- Bảng hiển thị danh sách tài liệu -->
       <TableView fx:id="itemTableView" layoutX="20.0" layoutY="109.0" prefHeight="480" prefWidth="940" styleClass="colored-table" stylesheets="@../styles/styles.css">
          <columns>
             <TableColumn fx:id="idColumn" prefWidth="50" style="-fx-background-color: transparent;" text="ID" />
@@ -54,8 +47,6 @@
             <TableColumn fx:id="imageUrlColumn" prefWidth="150" style="-fx-background-color: transparent;" text="Image URL" />
          </columns>
       </TableView>
-
-      <!-- Các nút thao tác -->
       <HBox alignment="CENTER" layoutX="20.0" layoutY="607.0" prefWidth="940" spacing="15">
          <children>
             <Button fx:id="showDocumentDetails" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#showDocumentDetails" prefWidth="120.0" styleClass="save-button" text="Details" />

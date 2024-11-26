@@ -14,14 +14,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="homeButton" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.HomeController">
+<AnchorPane fx:id="homeButton" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.HomeController">
    <children>
-      <Label layoutX="59.0" layoutY="22.0" prefHeight="52.0" prefWidth="355.0" text="Dashboard">
+      <Label layoutX="59.0" layoutY="14.0" prefHeight="52.0" prefWidth="355.0" styleClass="header-label" text="Dashboard">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
-      <HBox layoutX="59.0" layoutY="82.0" prefHeight="121.0" prefWidth="852.0" spacing="10.0">
+      <HBox layoutX="59.0" layoutY="83.0" prefHeight="121.0" prefWidth="852.0" spacing="10.0">
          <children>
             <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #38AFFF;" styleClass="card" stylesheets="@../styles/styles.css">
                <children>
@@ -63,7 +63,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="192.0">
                      <children>
-                        <Label prefHeight="21.0" prefWidth="90.0" text="Total Books">
+                        <Label prefHeight="26.0" prefWidth="162.0" text="Total Documents">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -129,7 +129,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="205.0">
                      <children>
-                        <Label prefHeight="25.0" prefWidth="101.0" text="Total Users" textFill="WHITE">
+                        <Label prefHeight="25.0" prefWidth="101.0" text="Issue Books" textFill="WHITE">
                            <font>
                               <Font size="16.0" />
                            </font>

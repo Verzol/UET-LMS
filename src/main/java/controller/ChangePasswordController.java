@@ -1,4 +1,4 @@
-package service;
+package controller;
 
 import DAO.DatabaseConnection;
 import javafx.fxml.FXML;
@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
+import service.UserSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

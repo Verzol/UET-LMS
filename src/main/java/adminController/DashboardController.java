@@ -58,14 +58,17 @@ public class DashboardController {
     private ListView<String> searchResultsList;
 
     @FXML
-    private Button closeListViewButton;
-
-    @FXML
     public void initialize() {
+        searchResultsList.setVisible(false);
+        searchResultsList.setManaged(false);
+
         searchResultsList.setPrefHeight(200);
         searchResultsList.setMaxHeight(200);
         loadScene("Home.fxml");
         setSelectedButton(HomeButton);
+
+        searchBox.setOnKeyReleased(event -> handleSearch());
+        searchResultsList.setOnMouseClicked(this::handleBookClick);
     }
 
     private void loadScene(String fxmlFile) {
@@ -130,8 +133,30 @@ public class DashboardController {
 
     @FXML
     private void logout() {
-        loadScene("LogOut.fxml");
-        setSelectedButton(logoutButton);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout Confirmation");
+        alert.setHeaderText("Are you sure you want to log out?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) mainContent.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException e) {
+                showAlert("Logout Error", "Failed to log out: " + e.getMessage());
+            }
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
@@ -144,28 +169,20 @@ public class DashboardController {
     private void handleSearch() {
         String query = searchBox.getText().trim();
 
-        if (query.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setContentText("Please enter a title to search.");
-            alert.showAndWait();
-        } else {
+        if (!query.isEmpty()) {
             service.GoogleBooksAPI.searchBookByTitle(query, searchResultsList);
 
             if (!searchResultsList.getItems().isEmpty()) {
                 searchResultsList.setVisible(true);
                 searchResultsList.setManaged(true);
-                closeListViewButton.setVisible(true);
-                closeListViewButton.setManaged(true);
             } else {
                 searchResultsList.setVisible(false);
                 searchResultsList.setManaged(false);
-
-                Alert noResultsAlert = new Alert(Alert.AlertType.INFORMATION);
-                noResultsAlert.setHeaderText(null);
-                noResultsAlert.setContentText("No results found for: " + query);
-                noResultsAlert.showAndWait();
             }
+        } else {
+            searchResultsList.setVisible(false);
+            searchResultsList.setManaged(false);
+            searchResultsList.getItems().clear();
         }
     }
 
@@ -173,18 +190,22 @@ public class DashboardController {
     private void handleBookClick(MouseEvent event) {
         if (event.getClickCount() == 2) {
             String selectedBook = searchResultsList.getSelectionModel().getSelectedItem();
-            if (selectedBook != null) {
+            if (selectedBook != null && !selectedBook.isEmpty()) {
+                try {
+                    String[] bookDetails = selectedBook.split("\n");
 
-                String[] bookDetails = selectedBook.split("\n");
+                    String title = bookDetails[0].split(" - ")[0].trim();
+                    String author = bookDetails[0].contains("-") ? bookDetails[0].split(" - ")[1].trim() : "Unknown Author";
+                    String publisher = bookDetails.length > 1 ? bookDetails[1].replace("Publisher: ", "").trim() : "Unknown Publisher";
+                    String publishedDate = bookDetails.length > 2 ? bookDetails[2].replace("Published: ", "").trim() : "Unknown Date";
+                    String description = bookDetails.length > 3 ? bookDetails[3].replace("Description: ", "").trim() : "No Description";
+                    String imageUrl = bookDetails.length > 4 ? bookDetails[4].replace("Image URL: ", "").trim() : "";
 
-                String title = bookDetails[0].split(" - ")[0].trim();
-                String author = bookDetails[0].contains("-") ? bookDetails[0].split(" - ")[1].trim() : "Unknown Author";
-                String publisher = bookDetails[1].replace("Publisher: ", "").trim();
-                String publishedDate = bookDetails[2].replace("Published: ", "").trim();
-                String description = bookDetails[3].replace("Description: ", "").trim();
-                String imageUrl = bookDetails[4].replace("Image URL: ", "").trim();
-
-                openBookDetailWindow(selectedBook, title, author, publisher, publishedDate, "", description, imageUrl);
+                    openBookDetailWindow(selectedBook, title, author, publisher, publishedDate, "", description, imageUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showErrorAlert("Invalid book format", "The selected book format is invalid.");
+                }
             }
         }
     }
@@ -205,16 +226,8 @@ public class DashboardController {
             detailStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            showErrorAlert("Error loading details", "Could not load the book details window.");
         }
-    }
-
-    @FXML
-    private void handleCloseListView() {
-        searchResultsList.setVisible(false);
-        searchResultsList.setManaged(false);
-        closeListViewButton.setVisible(false);
-        closeListViewButton.setManaged(false);
-        searchResultsList.getItems().clear();
     }
 
     @FXML
@@ -233,5 +246,13 @@ public class DashboardController {
     private void minimizeApplication(javafx.event.ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setIconified(true);
+    }
+
+    private void showErrorAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

@@ -12,7 +12,7 @@
 
 <ScrollPane fitToWidth="true" prefHeight="721.0" prefWidth="578.0" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-background-radius: 8;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.AddDocumentController">
    <content>
-      <VBox alignment="TOP_CENTER" prefHeight="716.0" prefWidth="574.0" spacing="20.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 25; -fx-border-color: #dcdcdc; -fx-border-width: 1; -fx-background-color: transparent;">
+      <VBox alignment="TOP_CENTER" prefHeight="716.0" prefWidth="574.0" spacing="20.0" style="-fx-padding: 25;">
          <children>
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Add New Document">
                <font>
@@ -64,6 +64,7 @@
                   </Label>
                   <TextField fx:id="genreTextField" promptText="Enter Genre" style="-fx-background-radius: 10;" styleClass="textFiled" />
                   <TextField fx:id="pageCountTextField" promptText="Enter Page Count" style="-fx-background-radius: 10;" styleClass="textFiled" />
+                  <TextField fx:id="isbnTextField" promptText="Enter ISBN" style="-fx-background-radius: 10;" styleClass="textFiled" /> <!-- Added ISBN Field -->
                   <TextField fx:id="imageUrlTextFieldBook" promptText="Enter Image URL" style="-fx-background-radius: 10;" styleClass="textFiled" />
                </children>
             </VBox>

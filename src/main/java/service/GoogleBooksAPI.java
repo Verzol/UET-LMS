@@ -1,34 +1,12 @@
 package service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import javafx.scene.control.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import javax.json.*;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import javax.json.JsonObject;
 
 public class GoogleBooksAPI {
 
@@ -42,12 +20,14 @@ public class GoogleBooksAPI {
             URL url = new URL(requestUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
 
             int responseCode = conn.getResponseCode();
 
-            if (responseCode != 200) {
+            if (responseCode != HttpURLConnection.HTTP_OK) {
                 listView.getItems().clear();
-                listView.getItems().add("Error: Unable to fetch data (HTTP " + responseCode + ")");
+                listView.getItems().add("Error: Unable to fetch data (HTTP " + responseCode + ").");
                 return;
             }
 
@@ -69,32 +49,39 @@ public class GoogleBooksAPI {
             }
 
             JSONArray items = json.getJSONArray("items");
-            System.out.println("Updating ListView...");
             listView.getItems().clear();
             for (int i = 0; i < items.length(); i++) {
                 JSONObject book = items.getJSONObject(i).getJSONObject("volumeInfo");
 
-                String bookTitle = book.getString("title");
-                String authors = book.has("authors") ? book.getJSONArray("authors").join(", ").replaceAll("\"", "") : "Unknown Author";
-                String publisher = book.has("publisher") ? book.getString("publisher") : "Unknown Publisher";
-                String publishedDate = book.has("publishedDate") ? book.getString("publishedDate") : "Unknown Year";
-                String description = book.has("description") ? book.getString("description") : "No description available.";
+                String bookTitle = book.optString("title", "Unknown Title");
+
+                JSONArray authorsArray = book.optJSONArray("authors");
+                String authors = "Unknown Author";
+                if (authorsArray != null) {
+                    authors = authorsArray.toList().stream()
+                            .map(Object::toString)
+                            .reduce((a, b) -> a + ", " + b)
+                            .orElse("Unknown Author");
+                }
+
+                String publisher = book.optString("publisher", "Unknown Publisher");
+                String publishedDate = book.optString("publishedDate", "Unknown Year");
+                String description = book.optString("description", "No description available.");
                 String imageUrl = book.has("imageLinks") ?
                         book.getJSONObject("imageLinks").optString("thumbnail", "No image available") :
                         "No image available";
 
-                String bookDetails = bookTitle + " - " + authors + "\nPublisher: " + publisher + "\nPublished: " + publishedDate + "\nDescription: " + description + "\nImage URL: " + imageUrl;
+                String bookDetails = bookTitle + " - " + authors + "\nPublisher: " + publisher +
+                        "\nPublished: " + publishedDate + "\nDescription: " + description +
+                        "\nImage URL: " + imageUrl;
+
                 listView.getItems().add(bookDetails);
-                System.out.println("Added book: " + bookTitle);
             }
 
         } catch (Exception e) {
-            System.out.println("Error while connecting to API: " + e.getMessage());
             listView.getItems().clear();
-            listView.getItems().add("Error: " + e.getMessage());
+            listView.getItems().add("Error: Unable to fetch data. Please try again.");
             e.printStackTrace();
         }
     }
-
-
 }
