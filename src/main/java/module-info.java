@@ -21,4 +21,5 @@ module com.example.uetlms {
     opens service to javafx.fxml;
     opens game to javafx.fxml;
 
+    requires com.fasterxml.jackson.databind;
 }
