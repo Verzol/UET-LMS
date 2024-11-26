@@ -172,6 +172,7 @@ public class LoginController {
 
         Scene currentScene = loginButton.getScene();
 
+        // Set background color of loginMessageLabel only
         loginMessageLabel.setStyle("-fx-background-color: " + (isError ? "#ff0000" : "#00ff00") + ";");
 
         FadeTransition fadeIn = new FadeTransition(Duration.millis(500), loginMessageLabel);
