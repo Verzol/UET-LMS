@@ -2,8 +2,12 @@ package service;
 
 import DAO.DatabaseConnection;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+
+import java.nio.Buffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -21,6 +25,9 @@ public class UpdateProfileController {
 
     @FXML
     private TextField phoneField;
+
+    @FXML
+    private Button closeScene;
 
     @FXML
     private void handleUpdateProfile() {
@@ -113,4 +120,11 @@ public class UpdateProfileController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    private void closeWindow() {
+        Stage stage = (Stage) closeScene.getScene().getWindow();
+        stage.close();
+    }
+
 }

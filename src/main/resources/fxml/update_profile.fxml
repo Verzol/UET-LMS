@@ -4,21 +4,22 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.UpdateProfileController">
+<AnchorPane prefHeight="400.0" prefWidth="485.0" styleClass="transparent" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.UpdateProfileController">
     <children>
-        <Label layoutX="50.0" layoutY="40.0" text="First Name" />
-        <TextField fx:id="firstNameField" layoutX="150.0" layoutY="40.0" />
+        <Label alignment="CENTER" layoutX="-11.0" layoutY="-2.0" prefHeight="57.0" prefWidth="515.0" style="-fx-background-color: #5652AB;" styleClass="header-label" text="Update Profile" textFill="WHITE">
+            <font>
+                <Font name="Segoe UI Bold" size="22" />
+            </font>
+        </Label>
 
-        <Label layoutX="50.0" layoutY="80.0" text="Last Name" />
-        <TextField fx:id="lastNameField" layoutX="150.0" layoutY="80.0" />
+        <Button fx:id="closeScene" layoutX="456.0" layoutY="8.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="35.0" prefWidth="41.0" styleClass="close-button" stylesheets="@../styles/styles.css" text="X" />
+        <TextField fx:id="firstNameField" layoutX="150.0" layoutY="100.0" prefHeight="35.0" prefWidth="211.0" promptText="Enter new first name" />
+        <TextField fx:id="lastNameField" layoutX="150.0" layoutY="160.0" prefHeight="35.0" prefWidth="211.0" promptText="Enter new last name" />
+        <TextField fx:id="emailField" layoutX="150.0" layoutY="220.0" prefHeight="35.0" prefWidth="211.0" promptText="Enter new email" />
+        <TextField fx:id="phoneField" layoutX="150.0" layoutY="280.0" prefHeight="35.0" prefWidth="211.0" promptText="Enter new phone number" />
 
-        <Label layoutX="50.0" layoutY="120.0" text="Email" />
-        <TextField fx:id="emailField" layoutX="150.0" layoutY="120.0" />
-
-        <Label layoutX="50.0" layoutY="160.0" text="Phone" />
-        <TextField fx:id="phoneField" layoutX="150.0" layoutY="160.0" />
-
-        <Button layoutX="150.0" layoutY="200.0" onAction="#handleUpdateProfile" text="Update" textFill="#18004f" />
+        <Button layoutX="185.0" layoutY="341.0" onAction="#handleUpdateProfile" prefHeight="25.0" prefWidth="134.0" style="-fx-background-color: green;" styleClass="selected-button" stylesheets="@../styles/styles.css" text="Update" textFill="WHITE" />
     </children>
 </AnchorPane>

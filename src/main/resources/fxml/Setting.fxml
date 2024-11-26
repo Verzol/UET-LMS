@@ -18,22 +18,22 @@
                 </image>
             </ImageView>
             <Label fx:id="userName" alignment="CENTER" prefHeight="27.0" prefWidth="346.0" style="-fx-font-size: 18; -fx-font-weight: bold;" text="User Name" />
-            <Label fx:id="userEmail" prefHeight="45.0" prefWidth="341.0" style="-fx-font-size: 14; -fx-text-fill: #666666;" text="user.email@example.com">
+            <Label fx:id="userEmail" prefHeight="45.0" prefWidth="341.0" text="user.email@example.com">
             <font>
-               <Font name="Nunito Regular" size="14.0" />
+               <Font size="16.0" />
             </font></Label>
-            <Label fx:id="userPhone" prefHeight="44.0" prefWidth="320.0" style="-fx-font-size: 14; -fx-text-fill: #666666;" text="Phone: 123-456-7890">
+            <Label fx:id="userPhone" prefHeight="44.0" prefWidth="320.0" text="Phone: 123-456-7890">
             <font>
-               <Font name="Nunito Regular" size="14.0" />
+               <Font size="16.0" />
             </font></Label>
          <Label fx:id="totalBookBorrowed" prefHeight="45.0" prefWidth="330.0" text="Label">
             <font>
-               <Font name="Nunito Regular" size="14.0" />
+               <Font size="16.0" />
             </font></Label>
         </VBox>
         <VBox layoutX="470.0" layoutY="50.0" prefHeight="570.0" prefWidth="475.0" spacing="20.0" style="-fx-background-color: #FFFFFF; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.5, 0, 0);">
             <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Additional Settings" />
-            <Button fx:id="handleChangePassword" onAction="#handleChangePassword" prefHeight="30.0" prefWidth="444.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14; -fx-border-radius: 20; -fx-background-radius: 20;" text="Change Password" />
+            <Button fx:id="handleChangePassword" onAction="#handleChangePassword" prefHeight="30.0" prefWidth="443.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14; -fx-border-radius: 20; -fx-background-radius: 20;" text="Change Password" />
             <Button fx:id="handleUpdateProfile" onAction="#handleUpdateProfile" prefHeight="30.0" prefWidth="447.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14; -fx-border-radius: 20; -fx-background-radius: 20;" text="Update Profile" />
          <PieChart fx:id="categoryPieChart" prefHeight="383.0" prefWidth="461.0" />
         </VBox>

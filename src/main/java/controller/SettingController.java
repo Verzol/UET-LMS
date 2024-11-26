@@ -15,7 +15,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import utils.SessionManager;
 
 import java.io.File;
@@ -277,6 +279,8 @@ public class SettingController {
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
