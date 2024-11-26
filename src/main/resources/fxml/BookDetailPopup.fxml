@@ -8,59 +8,78 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="500.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 10; -fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookDetailPopupController">
+<VBox prefHeight="534.0" prefWidth="810.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 10; -fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookDetailPopupController">
     <children>
-        <Label fx:id="bookTitleLabel" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Book Title" wrapText="true" />
-        <HBox prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <ImageView fx:id="bookCoverImageView" fitHeight="250.0" fitWidth="200.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0); -fx-padding: 10;" />
-                <VBox prefHeight="250.0" prefWidth="211.0">
-                    <children>
-                        <Label fx:id="authorLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Author: ">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </Label>
-                        <Label fx:id="genreLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Genre: ">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </Label>
-                        <Label fx:id="pageCountLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Page Count: ">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </Label>
-                        <Label fx:id="isbnLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="ISBN: ">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </Label>
-                        <Label fx:id="quantityInStockLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="In Stock: ">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </Label>
-                        <Label fx:id="borrowedQuantityLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Borrowed: ">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </Label>
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
-        <VBox spacing="15.0" style="-fx-pref-width: 200px;">
-            <VBox spacing="10.0">
-                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Description:" />
-                <ScrollPane fitToWidth="true" fitToHeight="true" prefHeight="400.0" prefWidth="450.0" style="-fx-background-color: #f9f9f9; -fx-border-color: #dddddd; -fx-border-radius: 5; -fx-padding: 5;">
-                    <content>
-                        <TextArea fx:id="descriptionTextArea" wrapText="true" editable="false" prefHeight="380.0" prefWidth="430.0" style="-fx-font-size: 14px;" />
-                    </content>
-                </ScrollPane>
+        <!-- Book Title -->
+        <Label fx:id="bookTitleLabel" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Book Title" wrapText="true" />
+
+        <!-- Book Information Section -->
+        <HBox alignment="TOP_LEFT" prefHeight="599.0" prefWidth="892.0" spacing="20.0">
+            <ImageView fx:id="bookCoverImageView" fitHeight="428.0" fitWidth="322.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);" />
+            <VBox alignment="TOP_LEFT" prefHeight="543.0" prefWidth="479.0" spacing="10.0">
+                <Label fx:id="authorLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Author: " />
+                <Label fx:id="genreLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Genre: " />
+                <Label fx:id="pageCountLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Page Count: " />
+                <Label fx:id="isbnLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="ISBN: " />
+                <Label fx:id="quantityInStockLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="In Stock: " />
+                <Label fx:id="borrowedQuantityLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Borrowed: " />
+            <HBox prefHeight="28.0" prefWidth="426.0">
+               <children>
+                  <Label fx:id="getRatingLabel" text="Rating: ">
+                     <font>
+                        <Font name="Nunito Regular" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="totalRate" prefHeight="20.0" prefWidth="208.0" text="Total rate">
+                     <font>
+                        <Font name="Nunito Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+      
+                       <!-- Description Section -->
+              <VBox prefHeight="129.0" prefWidth="426.0" spacing="10.0">
+                  <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Description" />
+                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="250.0" style="-fx-background-color: #f9f9f9; -fx-border-color: #dddddd; -fx-border-radius: 5;">
+                      <content>
+                          <TextArea fx:id="descriptionTextArea" editable="false" prefHeight="61.0" prefWidth="409.0" style="-fx-font-size: 14px;" wrapText="true" />
+                      </content>
+                  </ScrollPane>
+              </VBox>
+      
+                       <!-- Rating Section -->
+              <VBox prefHeight="70.0" prefWidth="426.0" spacing="10.0">
+                  <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Rating" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="442.0" spacing="10.0">
+                      <Button fx:id="rate1StarButton" prefHeight="35.0" prefWidth="41.0" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★" textFill="#ffb700" />
+                      <Button fx:id="rate2StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★" textFill="#ffb700" />
+                      <Button fx:id="rate3StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★★" textFill="#ffb700" />
+                      <Button fx:id="rate4StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★★★" textFill="#ffb700" />
+                      <Button fx:id="rate5StarButton" prefHeight="35.0" prefWidth="120.0" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★★★★" textFill="#ffb700" />
+                  </HBox>
+                  <Label fx:id="ratingLabel" style="-fx-font-size: 14px; -fx-text-fill: #555555;" text="You have not rated yet." />
+              </VBox>
             </VBox>
-            <Button fx:id="closeButton" onAction="#closePopup" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px; -fx-font-size: 14px; -fx-border-radius: 5;" text="Close" />
-        </VBox>
+        </HBox>
+      <HBox prefHeight="19.0" prefWidth="768.0">
+         <children>
+      
+                          <!-- Close Button -->
+              <Button fx:id="closeButton" onAction="#closePopup" prefHeight="40.0" prefWidth="82.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px;" text="Close">
+               <HBox.margin>
+                  <Insets right="570.0" />
+               </HBox.margin></Button>
+               <Button fx:id="submitReportButton" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #FF5722; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px;" text="Report">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin></Button>
+         </children>
+      </HBox>
     </children>
 </VBox>

@@ -340,11 +340,9 @@ public class UserDashboardController {
 @FXML
     private void openChatBot() {
         try {
-            // Tải giao diện ChatBot
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChatBotView.fxml"));
             Parent root = loader.load();
 
-            // Tạo Stage mới cho giao diện chatbot
             Stage chatBotStage = new Stage();
             chatBotStage.setTitle("ChatBot");
             chatBotStage.setScene(new Scene(root));
