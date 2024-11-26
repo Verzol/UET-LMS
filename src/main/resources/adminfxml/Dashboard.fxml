@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.DashboardController">
+<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.DashboardController">
     <children>
         <BorderPane layoutY="7.0" prefHeight="720.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
@@ -87,24 +87,6 @@
                             <VBox.margin>
                                 <Insets />
                             </VBox.margin>
-                        </Button>
-                        <Button fx:id="returnBooksButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#returnBooks" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Return books" textFill="WHITE">
-                            <font>
-                                <Font name="Segoe UI" size="16.0" />
-                            </font>
-                            <graphic>
-                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../image/return.png" />
-                                    </image>
-                                </ImageView>
-                            </graphic>
-                            <padding>
-                                <Insets left="30.0" />
-                            </padding>
-                            <opaqueInsets>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </opaqueInsets>
                         </Button>
                         <Button fx:id="issueBooksButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#issueBooks" prefHeight="50.0" prefWidth="216.0" styleClass="transparent" stylesheets="@../styles/styles.css" text="Issue books" textFill="WHITE">
                             <font>
@@ -207,32 +189,13 @@
                         </Pane>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="307.0" spacing="5.0">
                             <children>
-                                <TextField fx:id="searchBox"
-                                           maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                                           onAction="#handleSearch"
-                                           prefHeight="30.0" prefWidth="268.0"
-                                           promptText="Search" styleClass="transparent"
-                                           stylesheets="@../styles/styles.css">
+                                <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
                                     <font>
                                         <Font name="Segoe UI" size="15.0" />
                                     </font>
                                 </TextField>
-                                <ListView fx:id="searchResultsList"
-                                          maxHeight="-Infinity"
-                                          maxWidth="-Infinity"
-                                          minHeight="-Infinity"
-                                          minWidth="-Infinity"
-                                          prefHeight="195.0"
-                                          prefWidth="307.0"
-                                          onMouseClicked="#handleBookClick"
-                                          styleClass="search-results-list"
-                                          visible="false"
-                                          managed="false" />
-                                <Button fx:id="closeListViewButton"
-                                        text="Close Results"
-                                        onAction="#handleCloseListView"
-                                        visible="false"
-                                        managed="false" />
+                                <ListView fx:id="searchResultsList" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleBookClick" prefHeight="195.0" prefWidth="307.0" styleClass="search-results-list" visible="false" />
+                                <Button fx:id="closeListViewButton" managed="false" onAction="#handleCloseListView" text="Close Results" visible="false" />
                             </children>
                         </VBox>
                         <Pane prefHeight="62.0" prefWidth="417.0" style="-fx-background-color: #fff;" />
