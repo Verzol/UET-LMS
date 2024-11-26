@@ -12,7 +12,7 @@
         <?import javafx.scene.layout.VBox?>
         <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserHomeController">
+<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserHomeController">
     <children>
 
         <VBox prefHeight="90.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;">
@@ -22,15 +22,8 @@
                 </font>
             </Label>
             <HBox alignment="CENTER_LEFT" spacing="10.0" style="padding: 10; padding-top: 20px;">
-
                 <TextField fx:id="searchTextField" prefWidth="200.0" promptText="Search books..." />
-
-                <Button fx:id="searchButton"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-pref-width: 100; -fx-pref-height: 30; -fx-border-radius: 5px; -fx-background-radius: 5px;"
-                        text="Search"
-                        onAction="#handleSearch"/>
-
-
+                <Button fx:id="searchButton" onAction="#handleSearch" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-pref-width: 100; -fx-pref-height: 30; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Search" />
             </HBox>
         </VBox>
 
@@ -49,6 +42,7 @@
                     </content>
                 </ScrollPane>
             </center>
+
             <left>
                 <VBox prefHeight="590.0" prefWidth="173.0" BorderPane.alignment="CENTER">
                     <children>
@@ -70,5 +64,6 @@
                 </VBox>
             </left>
         </BorderPane>
+
     </children>
 </AnchorPane>

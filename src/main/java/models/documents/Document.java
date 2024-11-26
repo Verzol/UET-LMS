@@ -12,6 +12,7 @@ public abstract class Document implements Borrowable, Identifiable {
     private int borrowedQuantity;
     private int timesBorrowed;
     private String borrowStatus;
+    private boolean hasIssues;
 
     public Document(String id, String title, String author, int edition, int quantityInStock, int timesBorrowed) {
         this.id = id;
@@ -22,6 +23,7 @@ public abstract class Document implements Borrowable, Identifiable {
         this.borrowedQuantity = 0;
         this.timesBorrowed = timesBorrowed;
         this.borrowStatus = "Available";
+        this.hasIssues = false;
     }
 
     public Document() {
@@ -154,5 +156,13 @@ public abstract class Document implements Borrowable, Identifiable {
 
     public void incrementTimesBorrowed() {
         this.timesBorrowed++;
+    }
+
+    public boolean isHasIssues() {
+        return hasIssues;
+    }
+
+    public void setHasIssues(boolean hasIssues) {
+        this.hasIssues = hasIssues;
     }
 }

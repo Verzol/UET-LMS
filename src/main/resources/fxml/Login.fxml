@@ -29,7 +29,7 @@
                   <Font name="System Bold" size="29.0" />
                </font>
             </Label>
-            <Label fx:id="loginMessageLabel" layoutX="727.0" layoutY="152.0" prefHeight="17.0" prefWidth="320.0" textFill="#ff0000" />
+            <Label fx:id="loginMessageLabel" alignment="CENTER" layoutX="73.0" layoutY="60.0" prefHeight="43.0" prefWidth="320.0" styleClass="transparent" stylesheets="@../styles/styles.css" textFill="WHITE" />
             <TextField fx:id="accountField" layoutX="727.0" layoutY="223.0" prefHeight="40.0" prefWidth="320.0" promptText="Enter username" styleClass="text-field" stylesheets="@../styles/login_and_register_style.css">
                <font>
                   <Font size="20.0" />

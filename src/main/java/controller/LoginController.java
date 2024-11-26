@@ -1,18 +1,20 @@
 package controller;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import utils.SessionManager;
 
 import java.io.IOException;
@@ -71,7 +73,7 @@ public class LoginController {
         if (!username.isEmpty() && !password.isEmpty()) {
             validateLogin(username, password);
         } else {
-            loginMessageLabel.setText("Please enter a valid username and password!");
+            showFadeMessage("Please enter a valid username and password!", true);
         }
     }
 
@@ -79,7 +81,7 @@ public class LoginController {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         try (Connection connection = databaseConnection.getConnection()) {
             if (connection == null) {
-                loginMessageLabel.setText("Database connection failed!");
+                showFadeMessage("Database connection failed!", true);
                 return;
             }
 
@@ -101,23 +103,23 @@ public class LoginController {
                     boolean isAdmin = resultSet.getObject("admin_id") != null;
                     boolean isUser = resultSet.getObject("user_id") != null;
 
-
+                    // Lưu thông tin người dùng vào SessionManager
                     SessionManager.setCurrentUserId(personId);
                     SessionManager.setCurrentUsername(username);
 
                     service.UserSession.setUsername(username);
 
                     if (isAdmin) {
-                        loginMessageLabel.setText("Login Successful! Welcome Admin.");
+                        showFadeMessage("Login Successful! Welcome Admin.", false);
                         openAdminDashboardScreen();
                     } else if (isUser) {
-                        loginMessageLabel.setText("Login Successful! Welcome User.");
+                        showFadeMessage("Login Successful! Welcome User.", false);
                         openUserDashboardScreen();
                     } else {
-                        loginMessageLabel.setText("Invalid role assigned.");
+                        showFadeMessage("Invalid role assigned.", true);
                     }
                 } else {
-                    loginMessageLabel.setText("Login Failed! Incorrect username or password.");
+                    showFadeMessage("Login Failed! Incorrect username or password.", true);
                 }
             }
         } catch (Exception e) {
@@ -135,10 +137,8 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
             Parent dashboardRoot = fxmlLoader.load();
 
-
+            // Gửi thông tin người dùng vào UserDashboardController
             UserDashboardController userDashboardController = fxmlLoader.getController();
-            userDashboardController.initializeUserDashboard();
-
             userDashboardController.selectHome();
 
             Scene currentScene = loginButton.getScene();
@@ -165,11 +165,34 @@ public class LoginController {
     }
 
     private void showErrorAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
+    private void showFadeMessage(String message, boolean isError) {
+        loginMessageLabel.setText(message);
+        loginMessageLabel.setStyle(isError ? "-fx-text-fill: #ff0000;" : "-fx-text-fill: #00a000;");
+
+        Scene currentScene = loginButton.getScene();
+
+        // Set background color of loginMessageLabel only
+        loginMessageLabel.setStyle("-fx-background-color: " + (isError ? "#ff0000" : "#00ff00") + ";");
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), loginMessageLabel);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.setCycleCount(1);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), loginMessageLabel);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setCycleCount(1);
+        fadeOut.setDelay(Duration.seconds(2));
+
+        fadeIn.setOnFinished(e -> fadeOut.play());
+        fadeIn.play();
+    }
 }

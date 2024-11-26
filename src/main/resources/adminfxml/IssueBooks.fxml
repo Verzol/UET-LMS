@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="issueBooksButton" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.IssueBooksController">
-    <children>
-        <Label layoutX="300.0" layoutY="150.0" text="Issue Books">
-            <font>
-                <Font name="Segoe UI" size="24.0" />
-            </font>
-        </Label>
-    </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="adminController.IssueBookController">
+    <VBox spacing="10" alignment="CENTER">
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="refreshButton" text="Refresh" onAction="#refreshTable" />
+            <Button fx:id="deleteButton" text="Delete" onAction="#deleteError" />
+        </HBox>
+        <TableView fx:id="errorTable" prefWidth="800" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colDocumentId" text="Document ID" prefWidth="150"/>
+                <TableColumn fx:id="colErrorDescription" text="Error Description" prefWidth="200"/>
+                <TableColumn fx:id="colErrorDate" text="Error Date" prefWidth="100"/>
+                <TableColumn fx:id="colFixedStatus" text="Fixed Status" prefWidth="100"/>
+                <TableColumn fx:id="colFixedDate" text="Fixed Date" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>
