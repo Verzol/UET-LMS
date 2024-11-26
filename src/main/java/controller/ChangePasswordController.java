@@ -3,6 +3,7 @@ package controller;
 import DAO.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
@@ -26,6 +27,9 @@ public class ChangePasswordController {
 
     @FXML
     private PasswordField confirmPasswordField;
+
+    @FXML
+    private Button closeScene;
 
     @FXML
     private void initialize() {
@@ -65,6 +69,10 @@ public class ChangePasswordController {
         String oldPasswordHash = oldPassword;
         String newPasswordHash = newPassword;
 
+        if (oldPassword.equals(newPassword)) {
+            showAlert("Error", "New password and old password cannot be same.", Alert.AlertType.ERROR);
+        }
+
         if (!checkOldPassword(currentUser, oldPasswordHash)) {
             showAlert("Error", "Old password is incorrect.", Alert.AlertType.ERROR);
             return;
@@ -78,7 +86,7 @@ public class ChangePasswordController {
         }
     }
 
-
+    @FXML
     private void closeWindow() {
         Stage stage = (Stage) usernameLabel.getScene().getWindow();
         stage.close();
