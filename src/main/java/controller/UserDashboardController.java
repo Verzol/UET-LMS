@@ -79,12 +79,12 @@ public class UserDashboardController {
     public void entertainment() {
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/QuizGame.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Entertainment.fxml"));
             Scene scene = new Scene(loader.load());
 
 
             Stage stage = new Stage();
-            stage.setTitle("Book Quiz Game");
+            stage.setTitle("Gamee");
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
