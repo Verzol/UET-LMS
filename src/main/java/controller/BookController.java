@@ -35,13 +35,7 @@ public class BookController {
     public void setBookDetails(String bookId, String title, String genre, int pageCount, String isbn,
                                String imageUrl, String author, int quantityInStock, int borrowedQuantity, String bookdescription) {
         this.bookId = bookId;
-        if (this.bookTitleLabel == null) {
-            this.bookTitleLabel = new Label("Title1");
-        } else if (this.bookTitleLabel.getText() == null || this.bookTitleLabel.getText().isEmpty()) {
-            this.bookTitleLabel.setText("Title1");
-        }
-
-        bookTitleLabel.setText(title);
+        bookTitleLabel.setText(title != null && !title.isEmpty() ? title : "Title1");
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
             try {
@@ -64,41 +58,44 @@ public class BookController {
             popupStage.setTitle("Book Details");
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
-            Connection connection = new DatabaseConnection().getConnection();
-            String query = """
-                    SELECT d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
-                           d.author, d.quantity_in_stock, d.borrowed_quantity, d.bookdescription
-                    FROM books b 
-                    INNER JOIN documents d ON b.id = d.id 
-                    WHERE b.id = ?
-                    """;
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, this.bookId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            BookDetailPopupController popupController = fxmlLoader.getController();
+            popupController.setDocumentId(this.bookId);
 
-            if (resultSet.next()) {
-                BookDetailPopupController popupController = fxmlLoader.getController();
-                popupController.setBookDetails(
-                        resultSet.getString("title"),
-                        resultSet.getString("genre"),
-                        resultSet.getInt("page_count"),
-                        resultSet.getString("ISBN"),
-                        resultSet.getString("image_url"),
-                        resultSet.getString("author"),
-                        resultSet.getInt("quantity_in_stock"),
-                        resultSet.getInt("borrowed_quantity"),
-                        resultSet.getString("bookdescription")
-                );
+            try (Connection connection = new DatabaseConnection().getConnection()) {
+                String query = """
+                        SELECT d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
+                               d.author, d.quantity_in_stock, d.borrowed_quantity, d.bookdescription
+                        FROM books b 
+                        INNER JOIN documents d ON b.id = d.id 
+                        WHERE b.id = ?
+                        """;
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, this.bookId);
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        if (resultSet.next()) {
+                            popupController = fxmlLoader.getController();
+                            popupController.setBookDetails(
+                                    resultSet.getString("title"),
+                                    resultSet.getString("genre"),
+                                    resultSet.getInt("page_count"),
+                                    resultSet.getString("ISBN"),
+                                    resultSet.getString("image_url"),
+                                    resultSet.getString("author"),
+                                    resultSet.getInt("quantity_in_stock"),
+                                    resultSet.getInt("borrowed_quantity"),
+                                    resultSet.getString("bookdescription")
+                            );
+                        }
+                    }
+                }
             }
 
-            popupStage.setScene(new Scene(popupRoot, 450, 550));
+            popupStage.setScene(new Scene(popupRoot, 810, 600));
             popupStage.showAndWait();
 
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException | SQLException e) {
             showErrorAlert("Error", "Unable to open the book details popup.");
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 

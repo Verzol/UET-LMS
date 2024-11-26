@@ -12,7 +12,8 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.SessionManager;
@@ -21,8 +22,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-
 
 public class LoginController {
 
@@ -90,7 +89,7 @@ public class LoginController {
                 FROM person p
                 LEFT JOIN user u ON p.id = u.id
                 LEFT JOIN admin a ON p.id = a.id
-                WHERE p.username = ? AND p.password = ?
+                WHERE p.username = ? AND p.password = ? 
             """;
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(verifyLogin)) {
@@ -103,7 +102,6 @@ public class LoginController {
                     boolean isAdmin = resultSet.getObject("admin_id") != null;
                     boolean isUser = resultSet.getObject("user_id") != null;
 
-                    // Lưu thông tin người dùng vào SessionManager
                     SessionManager.setCurrentUserId(personId);
                     SessionManager.setCurrentUsername(username);
 
@@ -178,7 +176,6 @@ public class LoginController {
 
         Scene currentScene = loginButton.getScene();
 
-        // Set background color of loginMessageLabel only
         loginMessageLabel.setStyle("-fx-background-color: " + (isError ? "#ff0000" : "#00ff00") + ";");
 
         FadeTransition fadeIn = new FadeTransition(Duration.millis(500), loginMessageLabel);
@@ -194,5 +191,41 @@ public class LoginController {
 
         fadeIn.setOnFinished(e -> fadeOut.play());
         fadeIn.play();
+    }
+
+    @FXML
+    public void initialize() {
+        accountField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        passwordField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        loginButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        cancelButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
+    }
+
+    private void handleArrowAndEnterKeys(KeyEvent event) {
+        if (event.getCode() == KeyCode.UP) {
+            if (event.getSource() == passwordField) {
+                accountField.requestFocus();
+            } else if (event.getSource() == loginButton) {
+                passwordField.requestFocus();
+            } else if (event.getSource() == cancelButton) {
+                loginButton.requestFocus();
+            }
+        } else if (event.getCode() == KeyCode.DOWN) {
+            if (event.getSource() == accountField) {
+                passwordField.requestFocus();
+            } else if (event.getSource() == passwordField) {
+                loginButton.requestFocus();
+            } else if (event.getSource() == loginButton) {
+                cancelButton.requestFocus();
+            }
+        } else if (event.getCode() == KeyCode.ENTER) {
+            if (event.getSource() == accountField || event.getSource() == passwordField) {
+                loginButton.fire();
+            } else if (event.getSource() == loginButton) {
+                loginButton.fire();
+            } else if (event.getSource() == cancelButton) {
+                cancelButton.fire();
+            }
+        }
     }
 }

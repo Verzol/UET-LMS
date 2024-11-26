@@ -1,18 +1,21 @@
 package controller;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.Scene;
-import javafx.scene.Parent;
-import java.io.IOException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.util.Duration;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,10 +58,10 @@ public class RegisterController {
             if (passwordField.getText().equals(confirmPasswordField.getText())) {
                 registerUser();
             } else {
-                registrationMessageLabel.setText("Passwords do not match!");
+                showFadeMessage("Passwords do not match!", true);
             }
         } else {
-            registrationMessageLabel.setText("Please complete all fields!");
+            showFadeMessage("Please complete all fields!", true);
         }
     }
 
@@ -77,12 +80,11 @@ public class RegisterController {
         Connection connection = databaseConnection.getConnection();
 
         if (connection == null) {
-            registrationMessageLabel.setText("Database connection failed!");
+            showFadeMessage("Database connection failed!", true);
             return;
         }
 
         try {
-            // Kiểm tra username hoặc email đã tồn tại chưa
             String checkUserQuery = "SELECT * FROM person WHERE username = ? OR email = ?";
             try (PreparedStatement checkUserStatement = connection.prepareStatement(checkUserQuery)) {
                 checkUserStatement.setString(1, usernameField.getText());
@@ -90,12 +92,11 @@ public class RegisterController {
                 ResultSet resultSet = checkUserStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    registrationMessageLabel.setText("Username or email already exists!");
+                    showFadeMessage("Username or email already exists!", true);
                     return;
                 }
             }
 
-            // Thêm người dùng vào bảng `person`
             String insertPersonQuery = "INSERT INTO person (username, password, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement insertPersonStatement = connection.prepareStatement(insertPersonQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 insertPersonStatement.setString(1, usernameField.getText());
@@ -107,12 +108,10 @@ public class RegisterController {
                 int affectedRows = insertPersonStatement.executeUpdate();
 
                 if (affectedRows > 0) {
-                    // Lấy ID tự tăng từ bảng `person`
                     ResultSet generatedKeys = insertPersonStatement.getGeneratedKeys();
                     if (generatedKeys.next()) {
                         int personId = generatedKeys.getInt(1);
 
-                        // Thêm thông tin vào bảng `user`
                         String insertUserQuery = "INSERT INTO user (id, max_documents_allowed) VALUES (?, ?)";
                         try (PreparedStatement insertUserStatement = connection.prepareStatement(insertUserQuery)) {
                             insertUserStatement.setInt(1, personId);
@@ -121,14 +120,14 @@ public class RegisterController {
                         }
                     }
 
-                    registrationMessageLabel.setText("Registration Successful!");
+                    showFadeMessage("Registration Successful!", false);
                     clearFields();
                 } else {
-                    registrationMessageLabel.setText("Registration Failed!");
+                    showFadeMessage("Registration Failed!", true);
                 }
             }
         } catch (Exception e) {
-            registrationMessageLabel.setText("An error occurred: " + e.getMessage());
+            showFadeMessage("An error occurred: " + e.getMessage(), true);
             e.printStackTrace();
         }
     }
@@ -148,8 +147,31 @@ public class RegisterController {
         }
     }
 
+    private void showFadeMessage(String message, boolean isError) {
+        registrationMessageLabel.setText(message);
+        registrationMessageLabel.setStyle(
+                "-fx-text-fill: white;" +
+                        "-fx-background-color: " + (isError ? "#ff0000;" : "#00a000;") +
+                        "-fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;"
+        );
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), registrationMessageLabel);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.setCycleCount(1);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(500), registrationMessageLabel);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setCycleCount(1);
+        fadeOut.setDelay(Duration.seconds(2));
+
+        fadeIn.setOnFinished(e -> fadeOut.play());
+        fadeIn.play();
+    }
+
     private void showErrorAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -165,4 +187,66 @@ public class RegisterController {
         passwordField.clear();
         confirmPasswordField.clear();
     }
+
+    @FXML
+    public void initialize() {
+        firstNameField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        lastNameField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        usernameField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        emailField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        phoneField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        passwordField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        confirmPasswordField.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        signUpButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
+        cancelButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
+    }
+
+    private void handleArrowAndEnterKeys(KeyEvent event) {
+        if (event.getCode() == KeyCode.UP) {
+            if (event.getSource() == confirmPasswordField) {
+                passwordField.requestFocus();
+            } else if (event.getSource() == passwordField) {
+                phoneField.requestFocus();
+            } else if (event.getSource() == phoneField) {
+                emailField.requestFocus();
+            } else if (event.getSource() == emailField) {
+                usernameField.requestFocus();
+            } else if (event.getSource() == usernameField) {
+                lastNameField.requestFocus();
+            } else if (event.getSource() == lastNameField) {
+                firstNameField.requestFocus();
+            } else if (event.getSource() == signUpButton) {
+                confirmPasswordField.requestFocus();
+            } else if (event.getSource() == cancelButton) {
+                signUpButton.requestFocus();
+            }
+        } else if (event.getCode() == KeyCode.DOWN) {
+            if (event.getSource() == firstNameField) {
+                lastNameField.requestFocus();
+            } else if (event.getSource() == lastNameField) {
+                usernameField.requestFocus();
+            } else if (event.getSource() == usernameField) {
+                emailField.requestFocus();
+            } else if (event.getSource() == emailField) {
+                phoneField.requestFocus();
+            } else if (event.getSource() == phoneField) {
+                passwordField.requestFocus();
+            } else if (event.getSource() == passwordField) {
+                confirmPasswordField.requestFocus();
+            } else if (event.getSource() == confirmPasswordField) {
+                signUpButton.requestFocus();
+            } else if (event.getSource() == signUpButton) {
+                cancelButton.requestFocus();
+            } else if (event.getSource() == cancelButton) {
+                signUpButton.requestFocus();
+            }
+        } else if (event.getCode() == KeyCode.ENTER) {
+            if (event.getSource() == confirmPasswordField) {
+                signUpButton.fire();
+            } else if (event.getSource() == cancelButton) {
+                cancelButton.fire();
+            }
+        }
+    }
+
 }
