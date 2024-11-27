@@ -80,6 +80,7 @@ This project is a Library Management Application designed in Java, utilizing Sce
 ## UML Diagram
 
 ![UML drawio](https://github.com/user-attachments/assets/7834251f-4fec-4ffb-be53-c52e9da63988)
+![UML](https://github.com/user-attachments/assets/cd04111a-87c3-4c52-b84b-7d401690784a)
 
 ## Future Improvements
 - Enhance the search functionality with advanced filters.
