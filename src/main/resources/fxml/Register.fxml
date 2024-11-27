@@ -15,9 +15,9 @@
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" style="-fx-background-color: #2d0ea8;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <children>
 
-        <ImageView fitHeight="700.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="797.0" fitWidth="1290.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../image/Background.gif" />
+                <Image url="@../image/newbg_gtm.gif" />
             </image>
         </ImageView>
 
