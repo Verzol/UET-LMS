@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import java.net.URL?>
-<AnchorPane prefHeight="502.0" prefWidth="431.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.BookDetailController">
+<AnchorPane prefHeight="502.0" prefWidth="431.0" style="-fx-background-color: #E9EDF2;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.BookDetailController">
 
     <children>
 

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="670" prefWidth="980" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageUsersController">
+<AnchorPane prefHeight="670" prefWidth="980" style="-fx-background-color: #E9EDF2;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageUsersController">
     <children>
 
         <TableView fx:id="tableUsers" layoutX="20" layoutY="80" prefHeight="499.0" prefWidth="940" styleClass="colored-table">

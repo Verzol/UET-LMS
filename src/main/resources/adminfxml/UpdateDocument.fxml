@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="572.0" prefWidth="480.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.UpdateDocumentController">
+<AnchorPane prefHeight="572.0" prefWidth="480.0" style="-fx-background-color: #E9EDF2;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.UpdateDocumentController">
     <children>
         <VBox alignment="CENTER" layoutX="40.0" layoutY="30.0" spacing="10.0">
             <children>
