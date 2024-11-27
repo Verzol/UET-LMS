@@ -1,15 +1,15 @@
 package controller;
 
-import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,15 +27,22 @@ public class BookController {
     @FXML
     private ImageView bookCoverImageView;
 
-    @FXML
-    private Button detailButton;
-
     private String bookId;
+
+    @FXML
+    public void initialize() {
+        // Add double-click event to bookCoverImageView
+        bookCoverImageView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Detect double-click
+                handleDetailClick();
+            }
+        });
+    }
 
     public void setBookDetails(String bookId, String title, String genre, int pageCount, String isbn,
                                String imageUrl, String author, int quantityInStock, int borrowedQuantity, String bookdescription) {
         this.bookId = bookId;
-        bookTitleLabel.setText(title != null && !title.isEmpty() ? title : "Title1");
+        bookTitleLabel.setText(title != null && !title.isEmpty() ? title : "Unknown Title");
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
             try {
@@ -48,8 +55,7 @@ public class BookController {
         }
     }
 
-    @FXML
-    public void handleDetailButtonAction(ActionEvent event) {
+    public void handleDetailClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/BookDetailPopup.fxml"));
             Parent popupRoot = fxmlLoader.load();
@@ -73,7 +79,6 @@ public class BookController {
                     preparedStatement.setString(1, this.bookId);
                     try (ResultSet resultSet = preparedStatement.executeQuery()) {
                         if (resultSet.next()) {
-                            popupController = fxmlLoader.getController();
                             popupController.setBookDetails(
                                     resultSet.getString("title"),
                                     resultSet.getString("genre"),

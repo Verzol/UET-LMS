@@ -1,13 +1,14 @@
 package adminController;
 
-import controller.DatabaseConnection;
+import DAO.DatabaseConnection;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
@@ -15,6 +16,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class InsightsController {
 
@@ -35,210 +38,136 @@ public class InsightsController {
     @FXML
     private BarChart<String, Number> booksBorrowedBarChart;
 
-    @FXML
-    private Label totalUsersLabel;
-
-    @FXML
-    private Label totalBooksLabel;
-
-    @FXML
-    private Label totalBorrowedBooksLabel;
-
-    @FXML
-    private Label totalIssuedBooksLabel;
+    public InsightsController() {
+        this.connection = DatabaseConnection.getInstance().getConnection();
+        this.executor = Executors.newSingleThreadExecutor();
+    }
 
     @FXML
     private void initialize() {
-        try {
-            System.out.println("Initializing InsightsController...");
-            setupGenrePieChart();
-            setupOverdueListView();
-            setupTopBorrowersListView();
-            setupBarChart();
-            setupTotalStats();
-        } catch (Exception e) {
-            showError("Initialization Error", "An error occurred while initializing the dashboard: " + e.getMessage());
-        }
+        loadDashboardData();
     }
 
-    public InsightsController() {
-        this.connection = new DatabaseConnection().getConnection();
+    private final ExecutorService executor;
+
+    private void loadDashboardData() {
+        Task<Void> loadDataTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                ObservableList<PieChart.Data> pieChartData = getGenrePieChartData();
+                ObservableList<String> overdueData = getOverdueBorrowingRecords();
+                ObservableList<String> topBorrowersData = getTopBorrowers();
+                XYChart.Series<String, Number> barChartData = getBooksBorrowedChartData();
+
+                Platform.runLater(() -> {
+                    genrePieChart.setData(pieChartData);
+                    overdueListView.setItems(overdueData);
+                    topBorrowersListView.setItems(topBorrowersData);
+                    booksBorrowedBarChart.getData().clear();
+                    booksBorrowedBarChart.getData().add(barChartData);
+                    booksBorrowedBarChart.getXAxis().setTickLabelRotation(45);
+                });
+
+                return null;
+            }
+        };
+
+        loadDataTask.setOnFailed(event -> {
+            Throwable exception = loadDataTask.getException();
+            exception.printStackTrace();
+            Platform.runLater(() -> alertLabel.setText("Error loading data!"));
+        });
+
+        executor.submit(loadDataTask);
     }
 
-    private void setupTotalStats() {
-        String totalUsersQuery = "SELECT COUNT(*) AS total_users FROM person";
-        try (PreparedStatement statement = connection.prepareStatement(totalUsersQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                int totalUsers = resultSet.getInt("total_users");
-                totalUsersLabel.setText(String.format("%,d", totalUsers));
-            }
-        } catch (SQLException e) {
-            showError("Database Error", "Failed to load total users: " + e.getMessage());
-        }
-
-        String totalBooksQuery = "SELECT SUM(quantity_in_stock) AS total_books FROM documents";
-        try (PreparedStatement statement = connection.prepareStatement(totalBooksQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                int totalBooks = resultSet.getInt("total_books");
-                totalBooksLabel.setText(String.format("%,d", totalBooks));
-            }
-        } catch (SQLException e) {
-            showError("Database Error", "Failed to load total books: " + e.getMessage());
-        }
-
-        String totalBorrowedBooksQuery = "SELECT SUM(borrowed_quantity) AS total_borrowed_books FROM documents";
-        try (PreparedStatement statement = connection.prepareStatement(totalBorrowedBooksQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                int totalBorrowedBooks = resultSet.getInt("total_borrowed_books");
-                totalBorrowedBooksLabel.setText(String.format("%,d", totalBorrowedBooks));
-            }
-        } catch (SQLException e) {
-            showError("Database Error", "Failed to load total borrowed books: " + e.getMessage());
-        }
-
-        String totalIssuedBooksQuery = """
-            SELECT COUNT(*) AS total_issued_books
-            FROM borrow_history bh
-            WHERE bh.return_date < current_date and bh.status = 0
-        """;
-        try (PreparedStatement statement = connection.prepareStatement(totalIssuedBooksQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                int totalIssuedBooks = resultSet.getInt("total_issued_books");
-                totalIssuedBooksLabel.setText(String.format("%,d", totalIssuedBooks));
-            }
-        } catch (SQLException e) {
-            showError("Database Error", "Failed to load total issued books: " + e.getMessage());
-        }
-    }
-
-    private void setupGenrePieChart() {
+    private ObservableList<PieChart.Data> getGenrePieChartData() throws SQLException {
         String query = "SELECT genre, COUNT(*) AS count FROM books GROUP BY genre";
-
-        try (var statement = connection.createStatement();
-             var resultSet = statement.executeQuery(query)) {
-
-            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 String genre = resultSet.getString("genre");
                 int count = resultSet.getInt("count");
-
                 pieChartData.add(new PieChart.Data(genre, count));
             }
-
-            genrePieChart.setData(pieChartData);
-        } catch (Exception e) {
-            showError("PieChart Error", "Failed to set up the genre PieChart: " + e.getMessage());
         }
+        return pieChartData;
     }
 
-
-    private void setupOverdueListView() {
+    private ObservableList<String> getOverdueBorrowingRecords() throws SQLException {
         ObservableList<String> overdueData = FXCollections.observableArrayList();
-
         String query = """
-    SELECT p.username, COUNT(bh.id) AS overdue_count
-    FROM borrow_history bh
-    JOIN user u ON bh.user_id = u.id
-    JOIN person p ON u.id = p.id
-    WHERE bh.return_date < CURRENT_DATE AND bh.status = 0
-    GROUP BY p.username
-    """;
-
-        try (PreparedStatement statement = this.connection.prepareStatement(query);
+            SELECT p.username, COUNT(bh.id) AS overdue_count
+            FROM borrow_history bh
+            JOIN user u ON bh.user_id = u.id
+            JOIN person p ON u.id = p.id
+            WHERE bh.return_date < CURRENT_DATE AND bh.status = 0
+            GROUP BY p.username
+        """;
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
-
             while (resultSet.next()) {
                 String username = resultSet.getString("username");
                 int overdueCount = resultSet.getInt("overdue_count");
                 overdueData.add(username + " - " + overdueCount + " Book(s) Overdue");
             }
-
-            overdueListView.setItems(overdueData);
-
-        } catch (SQLException e) {
-            showError("Database Error", "Failed to load overdue data: " + e.getMessage());
         }
+        return overdueData;
     }
 
-
-
-
-    private void setupTopBorrowersListView() {
+    private ObservableList<String> getTopBorrowers() throws SQLException {
         ObservableList<String> topBorrowersData = FXCollections.observableArrayList();
-
         String query = """
-        SELECT p.username, COUNT(bh.id) AS books_borrowed
-        FROM borrow_history bh
-        JOIN user u ON bh.user_id = u.id
-        JOIN person p ON u.id = p.id
-        GROUP BY p.username
-        ORDER BY books_borrowed DESC
-        LIMIT 10
-    """;
-
-        try (PreparedStatement statement = this.connection.prepareStatement(query);
+            SELECT p.username, COUNT(bh.id) AS books_borrowed
+            FROM borrow_history bh
+            JOIN user u ON bh.user_id = u.id
+            JOIN person p ON u.id = p.id
+            GROUP BY p.username
+            ORDER BY books_borrowed DESC
+            LIMIT 10
+        """;
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
-
             while (resultSet.next()) {
                 String username = resultSet.getString("username");
                 int booksBorrowed = resultSet.getInt("books_borrowed");
                 topBorrowersData.add(username + " - " + booksBorrowed + " Books Borrowed");
             }
-
-            topBorrowersListView.setItems(topBorrowersData);
-
-        } catch (SQLException e) {
-            showError("Database Error", "Failed to load top borrowers data: " + e.getMessage());
         }
+        return topBorrowersData;
     }
 
-    private void setupBarChart() {
+    private XYChart.Series<String, Number> getBooksBorrowedChartData() throws SQLException {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Books Borrowed by Month");
-
         String query = """
-    SELECT month_table.month_num, COALESCE(borrowed_data.total_borrowed, 0) AS total_borrowed
-    FROM (
-        SELECT 1 AS month_num UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
-        SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL
-        SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL
-        SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12
-    ) AS month_table
-    LEFT JOIN (
-        SELECT MONTH(borrow_date) AS month_num, COUNT(*) AS total_borrowed
-        FROM borrow_history
-        GROUP BY MONTH(borrow_date)
-    ) AS borrowed_data
-    ON month_table.month_num = borrowed_data.month_num
-    ORDER BY month_table.month_num ASC
-    """;
-
+            SELECT month_table.month_num, COALESCE(borrowed_data.total_borrowed, 0) AS total_borrowed
+            FROM (
+                SELECT 1 AS month_num UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
+                SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL
+                SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL
+                SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12
+            ) AS month_table
+            LEFT JOIN (
+                SELECT MONTH(borrow_date) AS month_num, COUNT(*) AS total_borrowed
+                FROM borrow_history
+                GROUP BY MONTH(borrow_date)
+            ) AS borrowed_data
+            ON month_table.month_num = borrowed_data.month_num
+            ORDER BY month_table.month_num ASC
+        """;
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
-
             while (resultSet.next()) {
                 int month = resultSet.getInt("month_num");
                 int totalBorrowed = resultSet.getInt("total_borrowed");
                 String monthName = getMonthName(month);
-
                 series.getData().add(new XYChart.Data<>(monthName, totalBorrowed));
             }
-
-            booksBorrowedBarChart.getData().clear();
-            booksBorrowedBarChart.getData().add(series);
-            booksBorrowedBarChart.getXAxis().setTickLabelRotation(45);
-
-        } catch (SQLException e) {
-            showError("BarChart Error", "Failed to load BarChart data: " + e.getMessage());
         }
+        return series;
     }
-
-
 
     private String getMonthName(int month) {
         return switch (month) {
@@ -256,14 +185,5 @@ public class InsightsController {
             case 12 -> "December";
             default -> "Unknown";
         };
-    }
-
-
-    private void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

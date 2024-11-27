@@ -146,7 +146,7 @@
                             </VBox.margin>
                         </Button>
                   <Pane prefHeight="199.0" prefWidth="220.0" />
-                        <Button fx:id="sadIconButton" mnemonicParsing="false" prefHeight="52.0" prefWidth="52.0" styleClass="transparent" onMouseClicked="#openChatBot">
+                        <Button fx:id="sadIconButton" mnemonicParsing="false" onMouseClicked="#openChatBot" prefHeight="52.0" prefWidth="52.0" styleClass="transparent">
                      <graphic>
                         <ImageView fitHeight="66.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -161,67 +161,71 @@
             <center>
                 <AnchorPane fx:id="mainContent" stylesheets="@../styles/styles.css" />
             </center>
-            <top>
-                <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
-                    <children>
-                        <Pane prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #5652AB;">
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Pane>
-                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="307.0" spacing="5.0">
-                            <children>
-                                <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
-                                    <font>
-                                        <Font name="Segoe UI" size="15.0" />
-                                    </font>
-                                </TextField>
-                                <ListView fx:id="searchResultsList" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleBookClick" prefHeight="195.0" prefWidth="307.0" styleClass="search-results-list" visible="false" />
-                                <Button fx:id="closeListViewButton" managed="false" onAction="#handleCloseListView" text="Close Results" visible="false" />
-                            </children>
+         <top>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #5652AB;">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Pane>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="305.0" styleClass="textFiled" stylesheets="@../styles/styles.css">
+                     <children>
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="269.0" spacing="5.0" stylesheets="@../styles/styles.css">
+                           <children>
+                              <TextField fx:id="searchBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleSearch" prefHeight="30.0" prefWidth="268.0" promptText="Search" styleClass="transparent" stylesheets="@../styles/styles.css">
+                                 <font>
+                                    <Font name="Segoe UI" size="15.0" />
+                                 </font>
+                              </TextField>
+                           </children>
                         </VBox>
-                        <Pane prefHeight="62.0" prefWidth="417.0" style="-fx-background-color: #fff;" />
-                        <HBox prefHeight="52.0" prefWidth="169.0">
-                            <children>
-                                <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="176.0" style="-fx-background-color: #fff;">
-                                    <children>
-                                        <ImageView fx:id="avatarImage" fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#changeAvatar">
-                                        <HBox.margin>
-                                            <Insets right="10.0" />
-                                        </HBox.margin>
-                                        <image>
-                                            <Image url="@../image/avatar.png" />
-                                        </image>
-                                    </ImageView>
-
-                                    </children>
-                                </HBox>
-                            </children>
+                        <ImageView fitHeight="20.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/icons8-search-32.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <Pane prefHeight="62.0" prefWidth="417.0" style="-fx-background-color: #fff;" />
+                  <HBox prefHeight="52.0" prefWidth="169.0">
+                     <children>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="176.0" style="-fx-background-color: #fff;">
+                           <children>
+                              <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                                 <image>
+                                    <Image url="@../image/avatar.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="42.0" prefWidth="32.0" style="-fx-background-color: #fff;" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Button fx:id="minimizeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#minimizeApplication" prefHeight="32.0" prefWidth="32.0" styleClass="minimize-button" stylesheets="@../styles/styles.css" text="–" textFill="WHITE">
-                                    <HBox.margin>
-                                        <Insets right="5.0" />
-                                    </HBox.margin>
-                                    <font>
-                                        <Font name="Nunito Bold" size="15.0" />
-                                    </font>
-                                </Button>
-                                <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exitApplication" prefHeight="32.0" prefWidth="32.0" styleClass="close-button" stylesheets="@../styles/styles.css" text="X" textFill="WHITE">
-                                    <font>
-                                        <Font name="Nunito Bold" size="15.0" />
-                                    </font>
-                                </Button>
-                            </children>
-                            <padding>
-                                <Insets right="8.0" />
-                            </padding>
-                        </HBox>
-                    </children>
-                </HBox>
-            </top>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="32.0" spacing="5.0" style="-fx-background-color: #fff;" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="minimizeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#minimizeApplication" prefHeight="32.0" prefWidth="32.0" styleClass="minimize-button" stylesheets="@../styles/styles.css" text="–" textFill="WHITE">
+                           <font>
+                              <Font name="Nunito Bold" size="15.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="exitButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exitApplication" prefHeight="32.0" prefWidth="32.0" styleClass="close-button" stylesheets="@../styles/styles.css" text="X" textFill="WHITE">
+                           <font>
+                              <Font name="Nunito Bold" size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </HBox>
+               </children>
+            </HBox>
+         </top>
         </BorderPane>
+      <ListView fx:id="searchResultsList" layoutX="231.0" layoutY="44.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="208.0" prefWidth="302.0" style="-fx-background-radius: 10;" />
 
     </children>
 </AnchorPane>

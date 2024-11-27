@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="534.0" prefWidth="810.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 10; -fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookDetailPopupController">
+<VBox prefHeight="534.0" prefWidth="810.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 10; -fx-padding: 20;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookDetailPopupController">
     <children>
         <!-- Book Title -->
         <Label fx:id="bookTitleLabel" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Book Title" wrapText="true" />
@@ -57,11 +57,11 @@
               <VBox prefHeight="70.0" prefWidth="426.0" spacing="10.0">
                   <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="Rating" />
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="442.0" spacing="10.0">
-                      <Button fx:id="rate1StarButton" prefHeight="35.0" prefWidth="41.0" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★" textFill="#ffb700" />
-                      <Button fx:id="rate2StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★" textFill="#ffb700" />
-                      <Button fx:id="rate3StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★★" textFill="#ffb700" />
-                      <Button fx:id="rate4StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★★★" textFill="#ffb700" />
-                      <Button fx:id="rate5StarButton" prefHeight="35.0" prefWidth="120.0" style="-fx-font-size: 16px; -fx-background-color: transparent;" text="★★★★★" textFill="#ffb700" />
+                      <Button fx:id="rate1StarButton" prefHeight="35.0" prefWidth="41.0" style="-fx-font-size: 16px; -fx-background-color: transparent;" stylesheets="@../styles/styles.css" text="★" textFill="#ffb700" />
+                      <Button fx:id="rate2StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" stylesheets="@../styles/styles.css" text="★★" textFill="#ffb700" />
+                      <Button fx:id="rate3StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" stylesheets="@../styles/styles.css" text="★★★" textFill="#ffb700" />
+                      <Button fx:id="rate4StarButton" style="-fx-font-size: 16px; -fx-background-color: transparent;" stylesheets="@../styles/styles.css" text="★★★★" textFill="#ffb700" />
+                      <Button fx:id="rate5StarButton" prefHeight="35.0" prefWidth="120.0" style="-fx-font-size: 16px; -fx-background-color: transparent;" stylesheets="@../styles/styles.css" text="★★★★★" textFill="#ffb700" />
                   </HBox>
                   <Label fx:id="ratingLabel" style="-fx-font-size: 14px; -fx-text-fill: #555555;" text="You have not rated yet." />
               </VBox>
@@ -74,10 +74,6 @@
               <Button fx:id="closeButton" onAction="#closePopup" prefHeight="40.0" prefWidth="82.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px;" text="Close">
                <HBox.margin>
                   <Insets right="570.0" />
-               </HBox.margin></Button>
-               <Button fx:id="submitReportButton" prefHeight="40.0" prefWidth="91.0" style="-fx-background-color: #FF5722; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px;" text="Report">
-               <HBox.margin>
-                  <Insets left="30.0" />
                </HBox.margin></Button>
          </children>
       </HBox>

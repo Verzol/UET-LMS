@@ -6,173 +6,60 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="homeButton" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #EAEAEA;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.HomeController">
+<AnchorPane fx:id="homeButton" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #F8F9FA;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.HomeController">
    <children>
-      <Label layoutX="59.0" layoutY="14.0" prefHeight="52.0" prefWidth="355.0" styleClass="header-label" text="Dashboard">
-         <font>
-            <Font name="System Bold" size="25.0" />
-         </font>
-      </Label>
-      <HBox layoutX="59.0" layoutY="83.0" prefHeight="121.0" prefWidth="852.0" spacing="10.0">
+      <HBox alignment="CENTER" layoutX="20.0" layoutY="83.0" spacing="20.0">
+         <VBox prefWidth="220.0" style="-fx-background-color: #38AFFF; -fx-background-radius: 15;">
+            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;" text="Total Documents" />
+            <Label fx:id="totalDocuments" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
+         </VBox>
+         <VBox prefWidth="220.0" style="-fx-background-color: #FFEA31; -fx-background-radius: 15;">
+            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #343A40; -fx-font-weight: bold;" text="Available Documents" />
+            <Label fx:id="totalAvailableDocuments" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #343A40;" text="0" />
+         </VBox>
+         <VBox prefWidth="220.0" style="-fx-background-color: #69C33B; -fx-background-radius: 15;">
+            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;" text="Borrowed Documents" />
+            <Label fx:id="totalBorrowedDocuments" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
+         </VBox>
+         <VBox prefWidth="220.0" style="-fx-background-color: #EB3F31; -fx-background-radius: 15;">
+            <padding><Insets bottom="15.0" left="15.0" right="15.0" top="15.0" /></padding>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-weight: bold;" text="Total Times Borrowed" />
+            <Label fx:id="totalTimesBorrowed" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white;" text="0" />
+         </VBox>
+      </HBox>
+      <HBox layoutX="34.0" layoutY="230.0" prefHeight="396.0" prefWidth="931.0" spacing="10.0">
+         <VBox alignment="TOP_CENTER" prefWidth="550.0">
+            <Label styleClass="section-label" text="Top Borrowed Books Chart">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <BarChart fx:id="barChart" animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="504.0" style="-fx-bar-fill: blue;">
+               <xAxis>
+                  <CategoryAxis label="Books" styleClass="section-label" fx:id="xAxis" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis fx:id="yAxis" label="Borrow Count" styleClass="section-label" />
+               </yAxis>
+            </BarChart>
+         </VBox>
+         <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="401.0" prefWidth="350.0">
+            <Label styleClass="section-label" text="Top Borrowed Books" />
+            <ListView fx:id="topBooksList" prefHeight="383.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #D6D8DA; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10;" />
+         </VBox>
+      </HBox>
+      <HBox layoutX="20.0" layoutY="14.0" prefHeight="50.0" prefWidth="940.0" spacing="20" style="-fx-background-color: #5652AB; -fx-padding: 10; -fx-background-radius: 10;">
          <children>
-            <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #38AFFF;" styleClass="card" stylesheets="@../styles/styles.css">
-               <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="205.0">
-                     <children>
-                        <Label prefHeight="25.0" prefWidth="132.0" text="Total Users">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <Pane prefHeight="48.0" prefWidth="27.0" />
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/icons8-user-32.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <Label prefHeight="57.0" prefWidth="77.0" text="30">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Segoe UI Bold" size="47.0" />
-                     </font>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <padding>
-                  <Insets left="20.0" right="20.0" />
-               </padding>
-            </VBox>
-            <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #FFEA31;" styleClass="card" stylesheets="@../styles/styles.css">
-               <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="192.0">
-                     <children>
-                        <Label prefHeight="26.0" prefWidth="162.0" text="Total Documents">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <Pane prefHeight="48.0" prefWidth="46.0" />
-                        <ImageView fitHeight="32.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/icons8-book-32.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <Label prefHeight="57.0" prefWidth="77.0" text="30">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Segoe UI Bold" size="47.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets left="20.0" right="20.0" />
-               </padding>
-            </VBox>
-            <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #69C33B;" styleClass="card" stylesheets="@../styles/styles.css">
-               <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="205.0">
-                     <children>
-                        <Label prefHeight="21.0" prefWidth="135.0" text="Borrowed Books">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <Pane prefHeight="48.0" prefWidth="4.0" />
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/icons8-borrow-book-32 (1).png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <Label prefHeight="57.0" prefWidth="77.0" text="30">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Segoe UI Bold" size="47.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets left="20.0" right="20.0" />
-               </padding>
-            </VBox>
-            <VBox prefHeight="127.0" prefWidth="205.0" style="-fx-background-color: #EB3F31;" styleClass="card" stylesheets="@../styles/styles.css">
-               <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="205.0">
-                     <children>
-                        <Label prefHeight="25.0" prefWidth="101.0" text="Issue Books" textFill="WHITE">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <Pane prefHeight="48.0" prefWidth="42.0" />
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/issue-books.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <Label prefHeight="57.0" prefWidth="77.0" text="30" textFill="WHITE">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Segoe UI Bold" size="47.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets left="20.0" right="20.0" />
-               </padding>
-            </VBox>
+            <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Dashboard" />
          </children>
       </HBox>
-      <BarChart layoutX="59.0" layoutY="255.0" prefHeight="400.0" prefWidth="515.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </BarChart>
-      <ListView layoutX="609.0" layoutY="270.0" prefHeight="358.0" prefWidth="301.0" />
-      <Label layoutX="609.0" layoutY="243.0" prefHeight="21.0" prefWidth="104.0" text="Top Books">
-         <font>
-            <Font name="Segoe UI Bold" size="20.0" />
-         </font>
-      </Label>
    </children>
 </AnchorPane>

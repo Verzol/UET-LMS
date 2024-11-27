@@ -12,23 +12,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.documents.Book;
-import models.users.User;
-import org.json.JSONObject;
 import service.BookDetailController;
-import utils.SessionManager;
 
-import java.awt.event.ActionEvent;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,103 +24,55 @@ public class UserDashboardController {
 
     @FXML
     private AnchorPane mainContent;
-
     @FXML
     private Button homeButton;
-
     @FXML
     private Button borrowDocumentButton;
-
     @FXML
     private Button returnDocumentButton;
-
     @FXML
     private Button entertainmentButton;
-
-
     @FXML
     private Label questionLabel;
     @FXML
     private Button option1, option2, option3, option4;
-
-    public void loadQuestion() {
-
-        String question = "Which book is written by Author X?";
-        questionLabel.setText(question);
-        option1.setText("Option 1");
-        option2.setText("Option 2");
-        option3.setText("Option 3");
-        option4.setText("Option 4");
-    }
-
-    @FXML
-    private void checkAnswer(ActionEvent event) {
-        Button clickedButton = (Button) event.getSource();
-        if (clickedButton.getText().equals("Correct Answer")) {
-            System.out.println("Correct!");
-        } else {
-            System.out.println("Wrong!");
-        }
-    }
-
-    @FXML
-    public void entertainment() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/QuizGame.fxml"));
-            Scene scene = new Scene(loader.load());
-
-
-            Stage stage = new Stage();
-            stage.setTitle("Book Quiz Game");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean isFindBooksByAuthorMode = true;
-
     @FXML
     private ToggleButton modeToggle;
-
     @FXML
     private TextField keywordTextField;
-
-
     @FXML
     private Button settingButton;
-
     @FXML
     private Button logoutButton;
-
     @FXML
     private BarChart<String, Number> barChart;
-
     @FXML
     private ListView<String> topBooksList;
-
     @FXML
     private ImageView bookCoverImageView;
-
     @FXML
     private Button exitButton;
-
     @FXML
     private Button minimizeButton;
-
     private Button selectedButton;
-
-
     @FXML
     private TextField searchBox;
-
     @FXML
     private ListView<String> searchResultsList;
 
     @FXML
-    private Button closeListViewButton;
+    public void initialize() {
+        searchResultsList.setVisible(false);
+        searchResultsList.setManaged(false);
+
+        searchResultsList.setPrefHeight(200);
+        searchResultsList.setMaxHeight(200);
+        loadScene("UserHome.fxml");
+        setSelectedButton(homeButton);
+
+        searchBox.setOnKeyReleased(event -> handleSearch());
+        searchResultsList.setOnMouseClicked(this::handleBookClick);
+    }
 
     private void loadScene(String fxmlFile) {
         try {
@@ -161,7 +101,6 @@ public class UserDashboardController {
         loadScene("ReturnDocument.fxml");
         setSelectedButton(returnDocumentButton);
     }
-
 
     @FXML
     public void setting() {
@@ -245,28 +184,20 @@ public class UserDashboardController {
     private void handleSearch() {
         String query = searchBox.getText().trim();
 
-        if (query.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setContentText("Please enter a title to search.");
-            alert.showAndWait();
-        } else {
+        if (!query.isEmpty()) {
             service.GoogleBooksAPI.searchBookByTitle(query, searchResultsList);
 
             if (!searchResultsList.getItems().isEmpty()) {
                 searchResultsList.setVisible(true);
                 searchResultsList.setManaged(true);
-                closeListViewButton.setVisible(true);
-                closeListViewButton.setManaged(true);
             } else {
                 searchResultsList.setVisible(false);
                 searchResultsList.setManaged(false);
-
-                Alert noResultsAlert = new Alert(Alert.AlertType.INFORMATION);
-                noResultsAlert.setHeaderText(null);
-                noResultsAlert.setContentText("No results found for: " + query);
-                noResultsAlert.showAndWait();
             }
+        } else {
+            searchResultsList.setVisible(false);
+            searchResultsList.setManaged(false);
+            searchResultsList.getItems().clear();
         }
     }
 
@@ -309,20 +240,6 @@ public class UserDashboardController {
     }
 
     @FXML
-    private void handleCloseListView() {
-        searchResultsList.setVisible(false);
-        searchResultsList.setManaged(false);
-        closeListViewButton.setVisible(false);
-        closeListViewButton.setManaged(false);
-        searchResultsList.getItems().clear();
-    }
-
-
-    @FXML
-    private ImageView sadImage;
-
-
-@FXML
     private void openChatBot() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ChatBotView.fxml"));
@@ -336,132 +253,18 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
-    @FXML
-    private ImageView avatarImage;
 
     @FXML
-    private void changeAvatar(MouseEvent event) {
-        FileChooser fileChooser = new FileChooser();
-
-
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Tệp hình ảnh", "*.png", "*.jpg", "*.jpeg", "*.gif");
-        fileChooser.getExtensionFilters().add(filter);
-
-
-        File selectedFile = fileChooser.showOpenDialog(avatarImage.getScene().getWindow());
-
-        if (selectedFile != null) {
-
-            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmationAlert.setTitle("Xác nhận");
-            confirmationAlert.setHeaderText("Bạn có chắc chắn muốn đổi avatar?");
-            confirmationAlert.setContentText("Ảnh avatar mới sẽ được lưu thay thế ảnh cũ.");
-
-
-            Optional<ButtonType> result = confirmationAlert.showAndWait();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                try {
-
-                    String imagesDir = "avatars";
-                    File dir = new File(imagesDir);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-
-
-                    String fileName = "avatar_" + System.currentTimeMillis() + ".png";
-                    File destinationFile = new File(dir, fileName);
-
-
-                    Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-
-                    Image newAvatar = new Image(destinationFile.toURI().toString());
-                    avatarImage.setImage(newAvatar);
-                    setCircularAvatar(newAvatar);
-
-
-                    saveAvatarFileName(fileName);
-
-
-                    initializeUserDashboard();
-
-                } catch (IOException e) {
-                    showAlert("Lỗi", "Không thể lưu ảnh: " + e.getMessage());
-                }
-            }
+    public void entertainment() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Entertainment.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Gamee");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-
-
-    private void saveAvatarFileName(String fileName) {
-        String username = SessionManager.getCurrentUsername();
-        if (username != null && !username.isEmpty()) {
-            DatabaseConnection databaseConnection = new DatabaseConnection();
-            try (Connection connection = databaseConnection.getConnection()) {
-                if (connection != null) {
-                    String query = "UPDATE person SET avatar = ? WHERE username = ?";
-                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                        preparedStatement.setString(1, fileName);
-                        preparedStatement.setString(2, username);
-                        preparedStatement.executeUpdate();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void initializeUserDashboard() {
-        String avatarFileName = loadAvatarFileName();
-        if (avatarFileName != null) {
-            File avatarFile = new File("avatars/" + avatarFileName);
-            if (avatarFile.exists()) {
-                Image avatar = new Image(avatarFile.toURI().toString());
-                avatarImage.setImage(avatar);
-                setCircularAvatar(avatar);
-            }
-        }
-    }
-
-
-    private String loadAvatarFileName() {
-        String username = SessionManager.getCurrentUsername();
-        if (username != null && !username.isEmpty()) {
-            DatabaseConnection databaseConnection = new DatabaseConnection();
-            try (Connection connection = databaseConnection.getConnection()) {
-                if (connection != null) {
-                    String query = "SELECT avatar FROM person WHERE username = ?";
-                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                        preparedStatement.setString(1, username);
-                        ResultSet resultSet = preparedStatement.executeQuery();
-                        if (resultSet.next()) {
-                            return resultSet.getString("avatar");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-    private void setCircularAvatar(Image image) {
-
-        double size = Math.min(avatarImage.getFitWidth(), avatarImage.getFitHeight());
-
-
-        Circle clip = new Circle(size / 2, size / 2, size / 2);
-
-
-        avatarImage.setClip(clip);
-
-
-        avatarImage.setImage(image);
-    }
-
 }
-

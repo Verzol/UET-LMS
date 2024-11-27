@@ -184,6 +184,8 @@ public class UpdateDocumentController {
         }
 
         try {
+            boolean success = false;
+
             switch (type) {
                 case "Book" -> {
                     Book book = (Book) document;
@@ -194,8 +196,8 @@ public class UpdateDocumentController {
                     book.setISBN(additionalField3.getText());
                     book.setImageUrl(additionalField4.getText());
                     book.setQuantityInStock(Integer.parseInt(quantityField.getText()));
-                    book.setEdition(Integer.parseInt(editionField.getText())); // Update edition
-                    bookDAO.updateBook(book);
+                    book.setEdition(Integer.parseInt(editionField.getText()));
+                    success = bookDAO.updateBook(book);
                 }
                 case "Magazine" -> {
                     Magazine magazine = (Magazine) document;
@@ -205,8 +207,8 @@ public class UpdateDocumentController {
                     magazine.setMonth(additionalField2.getText());
                     magazine.setImageUrl(additionalField3.getText());
                     magazine.setQuantityInStock(Integer.parseInt(quantityField.getText()));
-                    magazine.setEdition(Integer.parseInt(editionField.getText())); // Update edition
-                    magazineDAO.updateMagazine(magazine);
+                    magazine.setEdition(Integer.parseInt(editionField.getText()));
+                    success = magazineDAO.updateMagazine(magazine);
                 }
                 case "Thesis" -> {
                     Thesis thesis = (Thesis) document;
@@ -216,8 +218,8 @@ public class UpdateDocumentController {
                     thesis.setSupervisor(additionalField2.getText());
                     thesis.setField(additionalField3.getText());
                     thesis.setQuantityInStock(Integer.parseInt(quantityField.getText()));
-                    thesis.setEdition(Integer.parseInt(editionField.getText())); // Update edition
-                    thesisDAO.updateThesis(thesis);
+                    thesis.setEdition(Integer.parseInt(editionField.getText()));
+                    success = thesisDAO.updateThesis(thesis);
                 }
                 case "Journal" -> {
                     Journal journal = (Journal) document;
@@ -227,14 +229,19 @@ public class UpdateDocumentController {
                     journal.setPublishNumber(Integer.parseInt(additionalField2.getText()));
                     journal.setImageUrl(additionalField3.getText());
                     journal.setQuantityInStock(Integer.parseInt(quantityField.getText()));
-                    journal.setEdition(Integer.parseInt(editionField.getText())); // Update edition
-                    journalDAO.updateJournal(journal);
+                    journal.setEdition(Integer.parseInt(editionField.getText()));
+                    success = journalDAO.updateJournal(journal);
                 }
                 default -> showErrorAlert("Unknown document type: " + type);
             }
-            showSuccessAlert("Update successful!");
-            updated = true;
-            closeWindow();
+
+            if (success) {
+                showSuccessAlert("Update successful!");
+                updated = true;
+                closeWindow();
+            } else {
+                showErrorAlert("Update failed. Please try again!");
+            }
         } catch (NumberFormatException e) {
             showErrorAlert("Invalid number format for fields!");
         } catch (Exception e) {

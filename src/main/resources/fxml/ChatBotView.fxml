@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="593.0" prefWidth="604.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChatBotController">
+<AnchorPane prefHeight="593.0" prefWidth="604.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ChatBotController">
 
 
     <children>
@@ -26,7 +26,7 @@
         </HBox>
         <Label alignment="CENTER" layoutY="-4.0" prefHeight="61.0" prefWidth="608.0" style="-fx-background-color: #5652AB;" text="Chatting with Aigle" textFill="WHITE">
             <font>
-                <Font name="Nunito Bold" size="23.0" />
+                <Font name="System Bold" size="23.0" />
             </font>
         </Label>
         <ImageView fitHeight="49.0" fitWidth="62.0" layoutX="545.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">

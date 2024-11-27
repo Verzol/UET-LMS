@@ -14,27 +14,7 @@
 
 <AnchorPane fx:id="manageBooksPane" prefHeight="670.0" prefWidth="980.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageDocumentController">
    <children>
-      <Label alignment="CENTER_LEFT" layoutX="20.0" layoutY="14.0" styleClass="header-label" text="Manage Document">
-         <font>
-            <Font name="Segoe UI Bold" size="32" />
-         </font>
-      </Label>
-      <Label layoutX="20.0" layoutY="75.0" text="Select Item:" />
-      <ComboBox fx:id="itemSelectorComboBox" layoutX="102.0" layoutY="69.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="200.0" styleClass="textFiled" />
-      <HBox alignment="CENTER" layoutX="328.0" layoutY="69.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="302.0" spacing="10" styleClass="textFiled">
-         <children>
-            <TextField fx:id="searchBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="270.0" promptText="Want to find document?" styleClass="transparent" />
-            <Button fx:id="searchButton" onAction="#searchAndDisplay" prefHeight="34.0" prefWidth="32.0" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/icons8-search-32.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-         </children>
-      </HBox>
-      <TableView fx:id="itemTableView" layoutX="20.0" layoutY="109.0" prefHeight="480" prefWidth="940" styleClass="colored-table" stylesheets="@../styles/styles.css">
+      <TableView fx:id="itemTableView" layoutX="20.0" layoutY="82.0" prefHeight="496.0" prefWidth="940" styleClass="colored-table" stylesheets="@../styles/styles.css">
          <columns>
             <TableColumn fx:id="idColumn" prefWidth="50" style="-fx-background-color: transparent;" text="ID" />
             <TableColumn fx:id="isbnColumn" prefWidth="130" style="-fx-background-color: transparent;" text="ISBN" />
@@ -54,6 +34,35 @@
             <Button fx:id="updateDocumentButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#updateDocument" prefWidth="120.0" styleClass="save-button" text="Update" />
             <Button fx:id="deleteDocumentButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#deleteDocument" prefWidth="120.0" styleClass="cancel-button" text="Delete" />
             <Button fx:id="refreshButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#refreshTable" prefWidth="120.0" styleClass="close-button" stylesheets="@../styles/styles.css" text="Reload" />
+         </children>
+      </HBox>
+      <HBox layoutX="20.0" layoutY="14.0" prefHeight="50.0" prefWidth="940.0" spacing="20" style="-fx-background-color: #5652AB; -fx-padding: 10; -fx-background-radius: 10;">
+         <children>
+            <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Manage Document" />
+            <HBox alignment="CENTER" prefHeight="35.0" prefWidth="216.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="66.0" text="Select Item:" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="itemSelectorComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="126.0" styleClass="textFiled" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="302.0" spacing="10" styleClass="textFiled">
+               <children>
+                  <TextField fx:id="searchBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="270.0" promptText="Want to find document?" styleClass="transparent" />
+                  <Button fx:id="searchButton" onAction="#searchAndDisplay" prefHeight="34.0" prefWidth="32.0" style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/icons8-search-32.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </HBox>
    </children>

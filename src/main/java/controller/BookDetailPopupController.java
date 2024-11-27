@@ -23,10 +23,10 @@ public class BookDetailPopupController {
     private ImageView bookCoverImageView;
 
     @FXML
-    private TextArea descriptionTextArea, reportTextArea;
+    private TextArea descriptionTextArea;
 
     @FXML
-    private Button closeButton, rate1StarButton, rate2StarButton, rate3StarButton, rate4StarButton, rate5StarButton, submitReportButton;
+    private Button closeButton, rate1StarButton, rate2StarButton, rate3StarButton, rate4StarButton, rate5StarButton;
 
     @FXML
     private Label getRatingLabel, totalRate;
@@ -59,6 +59,7 @@ public class BookDetailPopupController {
 
         if (saveRatingToDatabase(documentId, userId, stars)) {
             System.out.println("Rating saved successfully for document: " + documentId);
+            updateRatingStatistics(documentId);
         } else {
             System.out.println("Failed to save rating. Please try again.");
         }
@@ -81,25 +82,12 @@ public class BookDetailPopupController {
     }
 
     @FXML
-    private void handleSubmitReport() {
-        String report = reportTextArea.getText();
-        if (report != null && !report.trim().isEmpty()) {
-            System.out.println("Report submitted: " + report);
-            reportTextArea.clear();
-        } else {
-            System.out.println("No report content provided.");
-        }
-    }
-
-    @FXML
     private void initialize() {
         rate1StarButton.setOnAction(e -> handleRating(1));
         rate2StarButton.setOnAction(e -> handleRating(2));
         rate3StarButton.setOnAction(e -> handleRating(3));
         rate4StarButton.setOnAction(e -> handleRating(4));
         rate5StarButton.setOnAction(e -> handleRating(5));
-
-        submitReportButton.setOnAction(e -> handleSubmitReport());
     }
 
     public void setBookDetails(String title, String genre, int pageCount, String isbn, String imageUrl, String author, int quantityInStock, int borrowedQuantity, String description) {

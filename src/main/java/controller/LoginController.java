@@ -135,7 +135,6 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
             Parent dashboardRoot = fxmlLoader.load();
 
-            // Gửi thông tin người dùng vào UserDashboardController
             UserDashboardController userDashboardController = fxmlLoader.getController();
             userDashboardController.selectHome();
 

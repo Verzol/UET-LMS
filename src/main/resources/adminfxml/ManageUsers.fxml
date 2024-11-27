@@ -6,17 +6,11 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="670" prefWidth="980" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.ManageUsersController">
     <children>
-        <Label alignment="CENTER_LEFT" layoutX="20" layoutY="20" styleClass="header-label" text="Manage Users">
-            <font>
-                <Font name="Segoe UI Bold" size="32" />
-            </font>
-        </Label>
 
-        <TableView fx:id="tableUsers" layoutX="20" layoutY="80" prefHeight="480" prefWidth="940" styleClass="colored-table">
+        <TableView fx:id="tableUsers" layoutX="20" layoutY="80" prefHeight="499.0" prefWidth="940" styleClass="colored-table">
             <columns>
                 <TableColumn fx:id="columnUserId" prefWidth="50" style="-fx-background-color: rgba(0, 0, 0, 0);" text="ID" />
                 <TableColumn fx:id="columnUsername" prefWidth="150" style="-fx-background-color: rgba(0, 0, 0, 0);" text="Username" />
@@ -27,7 +21,7 @@
             </columns>
         </TableView>
 
-        <HBox alignment="CENTER" layoutX="20" layoutY="580" prefWidth="940" spacing="15">
+        <HBox alignment="CENTER" layoutX="20.0" layoutY="604.0" prefWidth="940" spacing="15">
             <children>
                 <Button onAction="#handleAddUser" prefWidth="120" styleClass="save-button" text="Add User" />
                 <Button onAction="#handleEditUser" prefWidth="120" styleClass="save-button" text="Edit User" />
@@ -35,5 +29,10 @@
                 <Button onAction="#handleViewHistory" prefWidth="120" styleClass="close-button" text="View History" />
             </children>
         </HBox>
+      <HBox layoutX="20.0" layoutY="14.0" prefHeight="50.0" prefWidth="940.0" spacing="20" style="-fx-background-color: #5652AB; -fx-padding: 10; -fx-background-radius: 10;">
+         <children>
+            <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Manage Users" />
+         </children>
+      </HBox>
     </children>
 </AnchorPane>

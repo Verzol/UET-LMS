@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.HBox?>
 
 <AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-padding: 20;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.IssueBookController">
-     <HBox alignment="CENTER" layoutX="267.0" layoutY="615.0" spacing="10" style="-fx-alignment: center;">
+     <HBox alignment="CENTER" layoutX="269.0" layoutY="599.0" spacing="10" style="-fx-alignment: center;">
          <Button fx:id="refreshButton" onAction="#refreshTable" prefHeight="30.0" prefWidth="100.0" styleClass="save-button" text="Refresh" />
          <Button fx:id="deleteButton" onAction="#deleteError" prefHeight="30.0" prefWidth="100.0" styleClass="cancel-button" text="Delete" />
          <Button fx:id="markAsResolvedButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#markAsResolved" styleClass="save-button" text="Mark as Resolved" />
          <Button fx:id="addResolutionNotesButton" onAction="#handleAddResolutionNotes" prefHeight="30.0" prefWidth="100.0" styleClass="save-button" text="Add Notes" />
      </HBox>
-     <TableView fx:id="errorTable" layoutX="37.0" layoutY="76.0" prefHeight="519.0" prefWidth="897.0" styleClass="colored-table">
+     <TableView fx:id="errorTable" layoutX="20.0" layoutY="82.0" prefHeight="490.0" prefWidth="940.0" styleClass="colored-table">
          <columns>
              <TableColumn fx:id="colId" prefWidth="50" style="-fx-background-color: transparent;" text="ID" />
              <TableColumn fx:id="colDocumentId" prefWidth="150" style="-fx-background-color: transparent;" text="Document ID" />
@@ -26,5 +26,9 @@
              <TableColumn fx:id="colResolutionNotes" prefWidth="250" style="-fx-background-color: transparent;" text="Resolution Notes" />
          </columns>
      </TableView>
-   <Label layoutX="35.0" layoutY="22.0" styleClass="header-label" text="Issue Books" />
+   <HBox layoutX="20.0" layoutY="14.0" prefHeight="50.0" prefWidth="940.0" spacing="20" style="-fx-background-color: #5652AB; -fx-padding: 10; -fx-background-radius: 10;">
+      <children>
+         <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Issue Books" />
+      </children>
+   </HBox>
 </AnchorPane>

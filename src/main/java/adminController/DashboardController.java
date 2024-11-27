@@ -44,9 +44,6 @@ public class DashboardController {
     @FXML
     private Button logoutButton;
 
-    @FXML
-    private Button returnBooksButton;
-
     private Button selectedButton;
 
     @FXML
@@ -157,12 +154,6 @@ public class DashboardController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    private void returnBooks() {
-        loadScene("ReturnBooks.fxml");
-        setSelectedButton(returnBooksButton);
     }
 
     @FXML

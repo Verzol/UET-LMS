@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="150.0" spacing="10.0" style="-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 5; -fx-padding: 5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookController">
+<VBox alignment="CENTER" prefHeight="220.0" prefWidth="140.0" spacing="10.0" style="-fx-border-color: #E0E0E0; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-padding: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.1, 0, 4);" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookController">
     <children>
-        <!-- Hiển thị tên sách -->
-        <Label fx:id="bookTitleLabel" maxWidth="130.0" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Book Title" wrapText="true">
+        <ImageView fx:id="bookCoverImageView" fitHeight="150.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0.1, 0, 4);" />
+        <Label fx:id="bookTitleLabel" maxWidth="120.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #444444; -fx-padding: 5; -fx-text-alignment: center;" text="Book Title" wrapText="true" alignment="CENTER">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
-
-        <!-- Hiển thị ảnh bìa sách -->
-        <ImageView fx:id="bookCoverImageView" fitHeight="172.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true" />
-
-        <!-- Nút xem chi tiết -->
-        <Button fx:id="detailButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" stylesheets="@../styles/styles.css" text="Detail" onAction="#handleDetailButtonAction">
-            <font>
-                <Font name="Nunito Black" size="12.0" />
-            </font>
-        </Button>
     </children>
 </VBox>
