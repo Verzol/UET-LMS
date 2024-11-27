@@ -20,8 +20,8 @@
 
 
 
-                <TextField fx:id="userInput" prefHeight="30.0" prefWidth="563.0" promptText="Type your message here..." style="-fx-background-color: white ; -fx-border-color: #ccc; -fx-border-radius: 5;" />
-                <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="30.0" prefWidth="60.0" style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5;" text="Send" />
+                <TextField fx:id="userInput" prefHeight="38.0" prefWidth="555.0" promptText="Type your message here..." style="-fx-background-color: white ; -fx-border-color: #ccc; -fx-border-radius: 5;" />
+                <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="33.0" prefWidth="57.0" style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5;" text="Send" />
             </children>
         </HBox>
         <Label alignment="CENTER" layoutY="-4.0" prefHeight="61.0" prefWidth="608.0" style="-fx-background-color: #5652AB;" text="Chatting with Aigle" textFill="WHITE">
