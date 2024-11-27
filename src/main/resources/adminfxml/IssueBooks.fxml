@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-padding: 20;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.IssueBookController">
+<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-padding: 20; -fx-background-color: #E9EDF2;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.IssueBookController">
      <HBox alignment="CENTER" layoutX="269.0" layoutY="599.0" spacing="10" style="-fx-alignment: center;">
          <Button fx:id="refreshButton" onAction="#refreshTable" prefHeight="30.0" prefWidth="100.0" styleClass="save-button" text="Refresh" />
          <Button fx:id="deleteButton" onAction="#deleteError" prefHeight="30.0" prefWidth="100.0" styleClass="cancel-button" text="Delete" />

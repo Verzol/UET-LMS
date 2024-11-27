@@ -12,8 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import service.BookDetailController;
+import utils.SessionManager;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -39,9 +42,6 @@ public class DashboardController {
     private Button insightsButton;
 
     @FXML
-    private Button settingsButton;
-
-    @FXML
     private Button logoutButton;
 
     private Button selectedButton;
@@ -51,8 +51,12 @@ public class DashboardController {
 
     @FXML
     private Button ChatBotButton;
+
     @FXML
     private ListView<String> searchResultsList;
+
+    @FXML
+    private ImageView avatarImageView;
 
     @FXML
     public void initialize() {
@@ -120,12 +124,6 @@ public class DashboardController {
     private void insights() {
         loadScene("Insights.fxml");
         setSelectedButton(insightsButton);
-    }
-
-    @FXML
-    private void settings() {
-        loadScene("Settings.fxml");
-        setSelectedButton(settingsButton);
     }
 
     @FXML

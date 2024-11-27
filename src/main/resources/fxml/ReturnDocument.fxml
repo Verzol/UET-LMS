@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="670.0" prefWidth="980.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReturnBooksController">
+<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #E9EDF2;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReturnBooksController">
     <children>
         <Label layoutX="30.0" layoutY="14.0" styleClass="header-label" text="Return Document">
             <font>

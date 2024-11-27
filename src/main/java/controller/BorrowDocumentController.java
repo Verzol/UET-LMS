@@ -42,7 +42,7 @@ public class BorrowDocumentController {
 
     private ObservableList<Document> documents = FXCollections.observableArrayList();
     private Connection connection;
-    private final int MAX_BORROW_LIMIT = 5;
+    private final int MAX_BORROW_LIMIT = 20;
 
     public void initialize() {
         this.connection = DatabaseConnection.getInstance().getConnection();
@@ -163,7 +163,8 @@ public class BorrowDocumentController {
                 int currentUserId = getCurrentUserId();
                 String documentId = selectedDocument.getId();
 
-                String checkExistingBorrowQuery = "SELECT COUNT(*) AS borrowed_count FROM borrow_history WHERE user_id = ? AND document_id = ? AND return_date IS NULL";
+                String checkExistingBorrowQuery = "SELECT COUNT(*) AS borrowed_count FROM borrow_history " +
+                        "WHERE user_id = ? AND document_id = ? AND return_date IS NULL";
                 try (PreparedStatement checkExistingStatement = connection.prepareStatement(checkExistingBorrowQuery)) {
                     checkExistingStatement.setInt(1, currentUserId);
                     checkExistingStatement.setString(2, documentId);
@@ -180,9 +181,13 @@ public class BorrowDocumentController {
                     countStatement.setInt(1, currentUserId);
                     ResultSet countResult = countStatement.executeQuery();
 
-                    if (countResult.next() && countResult.getInt("borrowed_count") >= MAX_BORROW_LIMIT) {
-                        showAlert("Error", "You cannot borrow more than " + MAX_BORROW_LIMIT + " documents at once.");
-                        return;
+                    if (countResult.next()) {
+                        int currentBorrowedCount = countResult.getInt("borrowed_count");
+
+                        if (currentBorrowedCount >= MAX_BORROW_LIMIT) {
+                            showAlert("Error", "You cannot borrow more than " + MAX_BORROW_LIMIT + " documents at once.");
+                            return;
+                        }
                     }
                 }
 

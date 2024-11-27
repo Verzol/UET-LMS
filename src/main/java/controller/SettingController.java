@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -49,7 +50,6 @@ public class SettingController {
     @FXML
     private PieChart categoryPieChart;
 
-
     private final Connection connection;
 
     public SettingController() {
@@ -74,7 +74,7 @@ public class SettingController {
                         preparedStatement.setString(1, username);
                         ResultSet resultSet = preparedStatement.executeQuery();
                         if (resultSet.next()) {
-                            return resultSet.getString("avatar"); // Tên file ảnh
+                            return resultSet.getString("avatar");
                         }
                     }
                 }
@@ -96,8 +96,6 @@ public class SettingController {
             }
         }
     }
-
-
 
     private void loadUserInfo() {
         int userId = SessionManager.getCurrentUserId();
@@ -140,7 +138,7 @@ public class SettingController {
         String avatarPath = rs.getString("avatar");
         int borrowedCount = rs.getInt("borrowed_count");
 
-        userName.setText((firstName != null && lastName != null) ?  firstName + " " + lastName : "Unknown User");
+        userName.setText((firstName != null && lastName != null) ? firstName + " " + lastName : "Unknown User");
         userEmail.setText(email != null ? "Email: " + email : "N/A");
         userPhone.setText(phone != null ? "Phone: " + phone : "N/A");
         totalBookBorrowed.setText(String.valueOf("Borrowed Quantity: " + borrowedCount));
@@ -151,7 +149,12 @@ public class SettingController {
     private void loadAvatar(String avatarPath) {
         if (avatarPath != null && !avatarPath.isEmpty()) {
             try {
-                Image avatarImageFromDB = new Image("file:" + avatarPath);
+                File avatarFile = new File(avatarPath);
+                if (!avatarFile.exists()) {
+                    useDefaultAvatar();
+                    return;
+                }
+                Image avatarImageFromDB = new Image(avatarFile.toURI().toString());
                 avatarImage.setImage(avatarImageFromDB);
                 setCircularAvatar(avatarImageFromDB);
             } catch (Exception e) {
@@ -165,14 +168,13 @@ public class SettingController {
 
     private void setupGenrePieChart() {
         int userId = SessionManager.getCurrentUserId();
-            String query = """
+        String query = """
         SELECT b.genre, COUNT(*) AS count
         FROM borrow_history bh
         JOIN books b ON bh.document_id = b.id
         WHERE bh.user_id = ? AND (bh.status = 1 OR bh.status = 0)
         GROUP BY b.genre;
-        
-            """;
+        """;
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
@@ -193,14 +195,13 @@ public class SettingController {
         }
     }
 
-
-
-
     private void useDefaultAvatar() {
-        Image defaultAvatar = new Image(getClass().getResourceAsStream("/images/default_avatar.png"));
+        Image defaultAvatar = new Image(getClass()
+                .getResourceAsStream("/images/avatar_1732543662041.png"));
         avatarImage.setImage(defaultAvatar);
         setCircularAvatar(defaultAvatar);
     }
+
 
     private void setCircularAvatar(Image image) {
         double size = Math.min(avatarImage.getFitWidth(), avatarImage.getFitHeight());
@@ -220,12 +221,20 @@ public class SettingController {
     }
 
     @FXML
-    private void changeAvatar(MouseEvent event) {
+    private Button changeAvatarButton;
+
+    @FXML
+    private void changeAvatar() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(avatarImage.getScene().getWindow());
 
         if (selectedFile != null) {
+            if (selectedFile.length() > 5 * 1024 * 1024) {
+                showAlert("File Too Large", "Please select an image smaller than 5MB.");
+                return;
+            }
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation");
             confirmationAlert.setHeaderText("Change Avatar");
@@ -237,6 +246,8 @@ public class SettingController {
             }
         }
     }
+
+    private UserDashboardController dashboardController;
 
     private void saveNewAvatar(File selectedFile) {
         String imagesDir = "avatars";
@@ -252,9 +263,11 @@ public class SettingController {
 
         try {
             Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            updateAvatarInDatabase(fileName);
-            loadUserInfo();
+            SessionManager.setCurrentAvatarPath("avatars/" + fileName);
+            initializeUserAvatar();
+            showAlert("Success", "Avatar changed successfully!");
         } catch (IOException e) {
+            e.printStackTrace();
             showAlert("Error", "Unable to save avatar: " + e.getMessage());
         }
     }
@@ -269,7 +282,22 @@ public class SettingController {
             stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Database Error", "An error occurred while saving the avatar.");
+            showAlert("Database Error", "An error occurred while saving the avatar to the database.");
+        }
+    }
+
+    private void initializeUserAvatar() {
+        String avatarPath = SessionManager.getCurrentAvatarPath();
+        if (avatarPath != null && !avatarPath.isEmpty()) {
+            File avatarFile = new File(avatarPath);
+            if (avatarFile.exists()) {
+                Image avatar = new Image(avatarFile.toURI().toString());
+                avatarImage.setImage(avatar);
+            } else {
+                useDefaultAvatar();
+            }
+        } else {
+            useDefaultAvatar();
         }
     }
 

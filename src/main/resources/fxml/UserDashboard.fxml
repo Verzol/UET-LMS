@@ -192,7 +192,7 @@
                      <children>
                         <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="176.0" style="-fx-background-color: #fff;">
                            <children>
-                              <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="avatarImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <HBox.margin>
                                     <Insets right="10.0" />
                                  </HBox.margin>

@@ -12,11 +12,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import models.documents.Book;
 import service.BookDetailController;
+import utils.SessionManager;
+import controller.SettingController;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,6 +78,9 @@ public class UserDashboardController {
 
         searchBox.setOnKeyReleased(event -> handleSearch());
         searchResultsList.setOnMouseClicked(this::handleBookClick);
+
+        SessionManager.addAvatarChangeListener(this::onAvatarChanged);
+        updateAvatarImageView();
     }
 
     private void loadScene(String fxmlFile) {
@@ -266,5 +275,67 @@ public class UserDashboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private ImageView avatarImageView;
+
+    private String loadAvatarFromDatabase() {
+        int userId = SessionManager.getCurrentUserId();
+        String query = "SELECT avatar FROM person WHERE id = ?";
+
+        try (PreparedStatement stmt = new DatabaseConnection().getConnection().prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("avatar");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Database Error", "Unable to load avatar: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private void updateAvatarImageView() {
+        String avatarPath = SessionManager.getCurrentAvatarPath();
+
+        if (avatarPath == null || avatarPath.isEmpty()) {
+            avatarPath = loadAvatarFromDatabase();
+            SessionManager.setCurrentAvatarPath(avatarPath);
+        }
+
+        if (avatarPath != null && !avatarPath.isEmpty()) {
+            File avatarFile = new File(avatarPath);
+            if (avatarFile.exists()) {
+                Image avatarImage = new Image(avatarFile.toURI().toString());
+                avatarImageView.setImage(avatarImage);
+                setCircularAvatar(avatarImageView);
+            } else {
+                useDefaultAvatar();
+            }
+        } else {
+            useDefaultAvatar();
+        }
+    }
+
+    private void useDefaultAvatar() {
+        Image defaultAvatar = new Image(getClass().getResourceAsStream("/images/avatar_1732543662041.png"));
+        avatarImageView.setFitWidth(40.0);
+        avatarImageView.setFitHeight(40.0);
+        avatarImageView.setPreserveRatio(true);
+        avatarImageView.setImage(defaultAvatar);
+        setCircularAvatar(avatarImageView);
+    }
+
+    private void setCircularAvatar(ImageView imageView) {
+        double size = Math.min(imageView.getFitWidth(), imageView.getFitHeight());
+        Circle clip = new Circle(size / 2, size / 2, size / 2);
+        imageView.setClip(clip);
+    }
+
+    private void onAvatarChanged(String newAvatarPath) {
+        updateAvatarImageView();
     }
 }

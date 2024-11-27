@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="homeButton" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #F8F9FA;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.HomeController">
+<AnchorPane fx:id="homeButton" prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #E9EDF2;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminController.HomeController">
    <children>
       <HBox alignment="CENTER" layoutX="20.0" layoutY="83.0" spacing="20.0">
          <VBox prefWidth="220.0" style="-fx-background-color: #38AFFF; -fx-background-radius: 15;">

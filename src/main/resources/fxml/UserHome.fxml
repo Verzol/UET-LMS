@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #F9F9F9;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserHomeController">
+<AnchorPane prefHeight="670.0" prefWidth="980.0" style="-fx-background-color: #E9EDF2;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserHomeController">
     <children>
         <HBox layoutX="20.0" layoutY="14.0" prefHeight="50.0" prefWidth="940.0" spacing="20" style="-fx-background-color: #5652AB; -fx-padding: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.1, 0, 4);">
             <Label style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="Dashboard" />
