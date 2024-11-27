@@ -21,7 +21,7 @@
             <Image url="@../image/Background.gif" />
          </image>
       </ImageView>
-      <AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../styles/styles.css">
+      <AnchorPane fx:id="anchorPane" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../styles/styles.css">
          <children>
             <Rectangle arcHeight="60.0" arcWidth="60.0" fill="#e8e8e8" height="623.0" layoutX="623.0" layoutY="60.0" opacity="0.59" stroke="BLACK" strokeType="INSIDE" width="528.0" />
             <Label alignment="CENTER" layoutX="723.0" layoutY="109.0" prefHeight="43.0" prefWidth="328.0" text="Welcome to UET - LMS" textFill="#003e8a">
@@ -29,7 +29,7 @@
                   <Font name="System Bold" size="29.0" />
                </font>
             </Label>
-            <Label fx:id="loginMessageLabel" alignment="CENTER" layoutX="73.0" layoutY="60.0" prefHeight="43.0" prefWidth="320.0" styleClass="transparent" stylesheets="@../styles/styles.css" textFill="WHITE" />
+            <Label fx:id="loginMessageLabel" alignment="CENTER" layoutX="73.0" layoutY="60.0" prefHeight="43.0" prefWidth="320.0" style="-fx-border-radius: 30;" textFill="WHITE" />
             <TextField fx:id="accountField" layoutX="727.0" layoutY="223.0" prefHeight="40.0" prefWidth="320.0" promptText="Enter username" styleClass="text-field" stylesheets="@../styles/login_and_register_style.css">
                <font>
                   <Font size="20.0" />
@@ -48,7 +48,7 @@
                         <Insets right="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" prefHeight="32.0" prefWidth="80.0" styleClass="button" stylesheets="@../styles/login_and_register_style.css" text="Login">
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" prefHeight="32.0" prefWidth="80.0" styleClass="login-button" stylesheets="@../styles/login_and_register_style.css" text="Login">
                      <font>
                         <Font name="Nunito Regular" size="12.0" />
                      </font>

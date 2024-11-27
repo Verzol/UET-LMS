@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -31,9 +35,8 @@ public class BookController {
 
     @FXML
     public void initialize() {
-        // Add double-click event to bookCoverImageView
         bookCoverImageView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) { // Detect double-click
+            if (event.getClickCount() == 2) {
                 handleDetailClick();
             }
         });
@@ -69,12 +72,12 @@ public class BookController {
 
             try (Connection connection = new DatabaseConnection().getConnection()) {
                 String query = """
-                        SELECT d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
-                               d.author, d.quantity_in_stock, d.borrowed_quantity, d.bookdescription
-                        FROM books b 
-                        INNER JOIN documents d ON b.id = d.id 
-                        WHERE b.id = ?
-                        """;
+                    SELECT d.title, b.genre, b.page_count, b.ISBN, b.image_url, 
+                           d.author, d.quantity_in_stock, d.borrowed_quantity, d.bookdescription
+                    FROM books b 
+                    INNER JOIN documents d ON b.id = d.id 
+                    WHERE b.id = ? 
+                    """;
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setString(1, this.bookId);
                     try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -93,16 +96,26 @@ public class BookController {
                         }
                     }
                 }
+
             }
 
             popupStage.setScene(new Scene(popupRoot, 810, 600));
-            popupStage.showAndWait();
+            popupStage.initStyle(StageStyle.UNDECORATED);
+            popupStage.show();
+
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.5), popupRoot);
+            scaleTransition.setFromX(0.5);
+            scaleTransition.setFromY(0.5);
+            scaleTransition.setToX(1.0);
+            scaleTransition.setToY(1.0);
+            scaleTransition.play();
 
         } catch (IOException | SQLException e) {
             showErrorAlert("Error", "Unable to open the book details popup.");
             e.printStackTrace();
         }
     }
+
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

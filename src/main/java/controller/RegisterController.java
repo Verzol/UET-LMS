@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
@@ -53,17 +54,32 @@ public class RegisterController {
     private Label registrationMessageLabel;
 
     @FXML
+    private AnchorPane anchorPane;
+
+    @FXML
     public void signUpButtonAction(ActionEvent event) {
         if (isInputValid()) {
-            if (passwordField.getText().equals(confirmPasswordField.getText())) {
-                registerUser();
-            } else {
+            String password = passwordField.getText();
+            String confirmPassword = confirmPasswordField.getText();
+            String email = emailField.getText();
+            String phone = phoneField.getText();
+
+            if (password.length() < 8) {
+                showFadeMessage("Password must be at least 8 characters long!", true);
+            } else if (!password.equals(confirmPassword)) {
                 showFadeMessage("Passwords do not match!", true);
+            } else if (!email.contains("@")) {
+                showFadeMessage("Invalid email address!", true);
+            } else if (phone.length() != 10) {
+                showFadeMessage("Invalid phone number!", true);
+            } else {
+                registerUser();
             }
         } else {
             showFadeMessage("Please complete all fields!", true);
         }
     }
+
 
     private boolean isInputValid() {
         return !firstNameField.getText().isEmpty() &&
@@ -199,6 +215,8 @@ public class RegisterController {
         confirmPasswordField.setOnKeyPressed(this::handleArrowAndEnterKeys);
         signUpButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
         cancelButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
+
+        applyFadeInTransition(anchorPane);
     }
 
     private void handleArrowAndEnterKeys(KeyEvent event) {
@@ -247,6 +265,14 @@ public class RegisterController {
                 cancelButton.fire();
             }
         }
+    }
+
+    private void applyFadeInTransition(Parent root) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(1000), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.setCycleCount(1);
+        fadeIn.play();
     }
 
 }

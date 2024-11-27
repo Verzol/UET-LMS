@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.SessionManager;
@@ -42,6 +44,9 @@ public class LoginController {
 
     @FXML
     private Hyperlink registerLink;
+
+    @FXML
+    private AnchorPane anchorPane;
 
     @FXML
     public void openRegisterScreen(ActionEvent event) {
@@ -198,6 +203,8 @@ public class LoginController {
         passwordField.setOnKeyPressed(this::handleArrowAndEnterKeys);
         loginButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
         cancelButton.setOnKeyPressed(this::handleArrowAndEnterKeys);
+
+        applyFadeInTransition(anchorPane);
     }
 
     private void handleArrowAndEnterKeys(KeyEvent event) {
@@ -226,5 +233,13 @@ public class LoginController {
                 cancelButton.fire();
             }
         }
+    }
+
+    private void applyFadeInTransition(Parent root) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(1000), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.setCycleCount(1);
+        fadeIn.play();
     }
 }

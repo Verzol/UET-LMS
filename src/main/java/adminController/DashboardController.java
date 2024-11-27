@@ -39,9 +39,6 @@ public class DashboardController {
     private Button insightsButton;
 
     @FXML
-    private Button settingsButton;
-
-    @FXML
     private Button logoutButton;
 
     private Button selectedButton;
@@ -122,11 +119,6 @@ public class DashboardController {
         setSelectedButton(insightsButton);
     }
 
-    @FXML
-    private void settings() {
-        loadScene("Settings.fxml");
-        setSelectedButton(settingsButton);
-    }
 
     @FXML
     private void logout() {
