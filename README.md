@@ -7,25 +7,17 @@ Library Management Application
 
 This project is a Library Management Application designed in Java, utilizing SceneBuilder for UI design and JavaFX for the user interface. The application supports basic library management functions, including CRUD operations, book search by ISBN, author name, or book title, as well as a simple entertainment game for users.
 
-
-
 ## Authors
-- Group Aigle
 
 - Giang Tuan Minh - 23020551
 - Dinh Van An - 23020507
 - Le Van Tam 23020567
-
-
 
 ## Features
 
 - CRUD Operations: Add new documents, update information, delete documents, view all documents.
 - Search books: Search by ISBN, by title and author.
 - Entertainment: Game for users;
-
-
-
 
 ## Installation
 
@@ -73,7 +65,7 @@ This project is a Library Management Application designed in Java, utilizing Sce
 ![image](https://github.com/user-attachments/assets/165ee8e6-1fb9-4de1-8b08-cf23cc502f0b)
 
 7. Chatbot
-- You can click to the "Chatbot" to chat with the bot using Gemini API.
+- You can click to the "Chatbot" to chat with the bot (Gemini).
 
 ![image](https://github.com/user-attachments/assets/a323ed0e-0670-4f6d-8718-2c78ac142dfe)
 
@@ -87,6 +79,7 @@ This project is a Library Management Application designed in Java, utilizing Sce
 - Improve the game with better features.
 - Optimize the performance.
 - Improve chatbot for right purpose of management.
+
 ## Project Status
 - The project is currently complete and ready for educational use.
 
